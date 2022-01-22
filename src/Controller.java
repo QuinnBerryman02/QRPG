@@ -1,7 +1,5 @@
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /*
  * Created by Abraham Campbell on 15/01/2020.
@@ -30,164 +28,82 @@ SOFTWARE.
 
 //Singeton pattern
 public class Controller implements KeyListener {
-        
-	   private static boolean KeyAPressed= false;
-	   private static boolean KeySPressed= false;
-	   private static boolean KeyDPressed= false;
-	   private static boolean KeyWPressed= false;
-	   private static boolean KeySpacePressed= false;
+	private static boolean keyAPressed = false;
+	private static boolean keySPressed = false;
+	private static boolean keyDPressed = false;
+	private static boolean keyWPressed = false;
+	private static boolean keySpacePressed = false;
 	   
-	   private static final Controller instance = new Controller();
-	   
-	 public Controller() { 
-	}
-	 
-	 public static Controller getInstance(){
-	        return instance;
-	    }
-	   
-	@Override
-	// Key pressed , will keep triggering 
-	public void keyTyped(KeyEvent e) { 
-		 
+	private static final Controller instance = new Controller();
+	  
+	public static Controller getInstance(){
+	    return instance;
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) 
-	{ 
-		switch (e.getKeyChar()) 
-		{
-			case 'a':setKeyAPressed(true);break;  
-			case 's':setKeySPressed(true);break;
-			case 'w':setKeyWPressed(true);break;
-			case 'd':setKeyDPressed(true);break;
-			case ' ':setKeySpacePressed(true);break;   
-		    default:
-		    	//System.out.println("Controller test:  Unknown key pressed");
-		        break;
+	public void keyTyped(KeyEvent e) {}
+
+	@Override
+	public void keyPressed(KeyEvent e) { 
+		switch (e.getKeyChar()) {
+			case 'a': keyAPressed = true; break;  
+			case 's': keySPressed = true; break;
+			case 'w': keyWPressed = true; break;
+			case 'd': keyDPressed = true; break;
+			case ' ': keySpacePressed = true; break; 
+		    default: break;
 		}  
-		
-	 // You can implement to keep moving while pressing the key here . 
-		
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) 
-	{ 
-		switch (e.getKeyChar()) 
-		{
-			case 'a':setKeyAPressed(false);break;  
-			case 's':setKeySPressed(false);break;
-			case 'w':setKeyWPressed(false);break;
-			case 'd':setKeyDPressed(false);break;
-			case ' ':setKeySpacePressed(false);break;   
-		    default:
-		    	//System.out.println("Controller test:  Unknown key pressed");
-		        break;
+	public void keyReleased(KeyEvent e) { 
+		switch (e.getKeyChar()) {
+			case 'a': keyAPressed = false; break;  
+			case 's': keySPressed = false; break;
+			case 'w': keyWPressed = false; break;
+			case 'd': keyDPressed = false; break;
+			case ' ': keySpacePressed = false; break; 
+		    default: break;
 		}  
-		 //upper case 
-	
 	}
-
-
+ 
 	public boolean isKeyAPressed() {
-		return KeyAPressed;
+		return keyAPressed;
 	}
 
-
-	public void setKeyAPressed(boolean keyAPressed) {
-		KeyAPressed = keyAPressed;
+	public void setKeyAPressed(boolean value) {
+		keyAPressed = value;
 	}
-
 
 	public boolean isKeySPressed() {
-		return KeySPressed;
+		return keySPressed;
 	}
 
-
-	public void setKeySPressed(boolean keySPressed) {
-		KeySPressed = keySPressed;
+	public void setKeySPressed(boolean value) {
+		keySPressed = value;
 	}
-
 
 	public boolean isKeyDPressed() {
-		return KeyDPressed;
+		return keyDPressed;
 	}
 
-
-	public void setKeyDPressed(boolean keyDPressed) {
-		KeyDPressed = keyDPressed;
+	public void setKeyDPressed(boolean value) {
+		keyDPressed = value;
 	}
-
 
 	public boolean isKeyWPressed() {
-		return KeyWPressed;
+		return keyWPressed;
 	}
 
-
-	public void setKeyWPressed(boolean keyWPressed) {
-		KeyWPressed = keyWPressed;
+	public void setKeyWPressed(boolean value) {
+		keyWPressed = value;
 	}
-
 
 	public boolean isKeySpacePressed() {
-		return KeySpacePressed;
+		return keySpacePressed;
 	}
 
-
-	public void setKeySpacePressed(boolean keySpacePressed) {
-		KeySpacePressed = keySpacePressed;
-	} 
-	
-	 
+	public void setKeySpacePressed(boolean value) {
+		keySpacePressed = value;
+	}
 }
-
-/*
- * 
- * KEYBOARD :-) . can you add a mouse or a gamepad 
-
- *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ @@@@@@@@@@@@@@@
-
-  @@@     @@@@    @@@@    @@@@    @@@@     @@@     @@@     @@@     @@@     @@@  
-
-  @@@     @@@     @@@     @@@@     @@@     @@@     @@@     @@@     @@@     @@@  
-
-  @@@     @@@     @@@     @@@@    @@@@     @@@     @@@     @@@     @@@     @@@  
-
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-@     @@@     @@@     @@@      @@      @@@     @@@     @@@     @@@     @@@     @
-
-@     @@@   W   @@@     @@@      @@      @@@     @@@     @@@     @@@     @@@     @
-
-@@    @@@@     @@@@    @@@@    @@@@    @@@@     @@@     @@@     @@@     @@@     @
-
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@N@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-@@@     @@@      @@      @@      @@      @@@     @@@     @@@     @@@     @@@    
-
-@@@   A   @@@  S     @@  D     @@      @@@     @@@     @@@     @@@     @@@     @@@    
-
-@@@@ @  @@@@@@@@@@@@ @@@@@@@    @@@@@@@@@@@@    @@@@@@@@@@@@     @@@@   @@@@@   
-
-    @@@     @@@@    @@@@    @@@@    $@@@     @@@     @@@     @@@     @@@     @@@
-
-    @@@ $   @@@      @@      @@ /Q   @@ ]M   @@@     @@@     @@@     @@@     @@@
-
-    @@@     @@@      @@      @@      @@      @@@     @@@     @@@     @@@     @@@
-
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
-
-@       @@@                                                @@@       @@@       @
-
-@       @@@              SPACE KEY       @@@        @@ PQ     
-
-@       @@@                                                @@@        @@        
-
-@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
- * 
- * 
- * 
- * 
- * 
- */
