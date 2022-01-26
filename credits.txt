@@ -1,0 +1,3 @@
+[faces, casting, attack, walking] are from https://opengameart.org/users/charlesgabriel
+by either "Antifarea" or "CharlesGabriel" (The original walking ones are by Antifarea and the subsequent art by CharlesGabriel as far as I know)
+and under CC-BY 3.0

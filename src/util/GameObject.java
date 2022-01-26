@@ -24,16 +24,11 @@ SOFTWARE.
    (MIT LICENSE ) e.g do what you want with this :-) 
  */ 
 public class GameObject {
-	private Point3f centre= new Point3f(0,0,0);			// Centre of object, using 3D as objects may be scaled  
-	private int width = 10;
-	private int height = 10;
-	private boolean hasTextured=false;
-	private String textureLocation; 
-	private String blanktexture="res/blankSprite.png";
+	protected Point3f centre= new Point3f(0,0,0);			// Centre of object, using 3D as objects may be scaled  
+	protected int width = 10;
+	protected int height = 10;
 	
-    public GameObject(String textureLocation, int width, int height, Point3f centre) { 
-    	this.hasTextured = true;
-    	this.textureLocation = textureLocation;
+    public GameObject(int width, int height, Point3f centre) { 
     	this.width = width;
 		this.height = height;
 		this.centre = centre;
@@ -54,9 +49,4 @@ public class GameObject {
 	public int getHeight() {
 		return height;
 	}
-
-	public String getTexture() {
-		return hasTextured ? textureLocation : blanktexture;
-	}
-  
 }

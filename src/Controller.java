@@ -32,6 +32,8 @@ public class Controller implements KeyListener {
 	private static boolean keySPressed = false;
 	private static boolean keyDPressed = false;
 	private static boolean keyWPressed = false;
+	private static boolean keyQPressed = false;
+	private static boolean keyEPressed = false;
 	private static boolean keySpacePressed = false;
 	   
 	private static final Controller instance = new Controller();
@@ -50,6 +52,8 @@ public class Controller implements KeyListener {
 			case 's': keySPressed = true; break;
 			case 'w': keyWPressed = true; break;
 			case 'd': keyDPressed = true; break;
+			case 'q': keyQPressed = true; break;
+			case 'e': keyEPressed = true; break;
 			case ' ': keySpacePressed = true; break; 
 		    default: break;
 		}  
@@ -62,6 +66,8 @@ public class Controller implements KeyListener {
 			case 's': keySPressed = false; break;
 			case 'w': keyWPressed = false; break;
 			case 'd': keyDPressed = false; break;
+			case 'q': keyQPressed = false; break;
+			case 'e': keyEPressed = false; break;
 			case ' ': keySpacePressed = false; break; 
 		    default: break;
 		}  
@@ -105,5 +111,20 @@ public class Controller implements KeyListener {
 
 	public void setKeySpacePressed(boolean value) {
 		keySpacePressed = value;
+	}
+
+	public boolean isKeyEPressed() {
+		return keyEPressed;
+	}
+
+	public boolean isKeyQPressed() {
+		return keyQPressed;
+	}
+	public void setKeyEPressed(boolean keyEPressed) {
+		Controller.keyEPressed = keyEPressed;
+	}
+
+	public void setKeyQPressed(boolean keyQPressed) {
+		Controller.keyQPressed = keyQPressed;
 	}
 }

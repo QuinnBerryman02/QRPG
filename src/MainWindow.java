@@ -15,8 +15,6 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import util.UnitTests;
-
 /*
  * Created by Abraham Campbell on 15/01/2020.
  *   Copyright (c) 2020  Abraham Campbell
@@ -45,13 +43,12 @@ SOFTWARE.
 
 
 public class MainWindow {
-	 private static JFrame frame = new JFrame("Quinn's Game");   // Change to the name of your game 
-	 private static Model gameworld = new Model();
-	 private static Viewer canvas = new Viewer(gameworld);
-	 private static Controller controller = new Controller()  ; 
-	 private static int targetFPS = 100;
-	 private static boolean startGame= false; 
-	 private static JLabel backgroundImageForStartMenu ;
+	private static JFrame frame = new JFrame("Quinn's Game");   // Change to the name of your game 
+	private static Model gameworld = new Model();
+	private static Viewer canvas = new Viewer(gameworld);
+	private static Controller controller = new Controller()  ; 
+	private static int targetFPS = 10;
+	private static JLabel backgroundImageForStartMenu ;
 	  
 	public MainWindow() {
 	    frame.setSize(1000, 1000);
@@ -70,7 +67,7 @@ public class MainWindow {
 			canvas.setVisible(true); 
 			canvas.addKeyListener(controller);   
 			canvas.requestFocusInWindow();   
-			startGame=true;
+			beginGame();
 		});  
 		
 		File BackroundToLoad = new File("res/startscreen.png");
@@ -89,22 +86,48 @@ public class MainWindow {
 
 	public static void main(String[] args) {
 		new MainWindow();  
-		while(true) { 
-			int timeBetweenFrames =  1000 / targetFPS;
-			long frameCheck = System.currentTimeMillis() + (long)timeBetweenFrames; 
-			
-		 	while (frameCheck > System.currentTimeMillis()){} 
-
-			if(startGame) {
-				gameloop();
-			}
-		 	UnitTests.checkFrameRate(System.currentTimeMillis(), frameCheck, targetFPS);   
-		}
 	} 
+
+	private static void beginGame() {
+		Thread thread = new Thread() {
+			private boolean running = false;
+			@Override
+			public synchronized void start() {
+				running = true;
+				super.start();
+			}
+			@Override
+			public void run() {
+				int timeBetweenFrames =  1000 / targetFPS;
+				while (running) {
+					try {
+						long startTime = System.currentTimeMillis(); 
+						gameloop();
+						long finishTime = System.currentTimeMillis();
+						long sleepTime = timeBetweenFrames - (finishTime - startTime);
+						if (sleepTime >= 0) {
+							sleep(sleepTime);
+						} else {
+							System.out.println("Frame was late by " + (sleepTime * -1) + " ms");
+						}
+					} catch (InterruptedException e) {
+						kill();
+					}
+				}
+			}
+			public void kill() {
+				running = false;
+			}
+		};
+		thread.start();
+	}
 
 	private static void gameloop() { 
 		gameworld.gamelogic();
-		canvas.updateview(); 
-		frame.setTitle("Score = " + gameworld.getScore()); 
+		canvas.updateview();  
+	}
+
+	public static void printTime(String place) {
+		System.out.println("Current time is" + System.currentTimeMillis() + "@" + place);
 	}
 }

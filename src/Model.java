@@ -1,8 +1,8 @@
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import util.GameObject;
-import util.Point3f;
-import util.Vector3f; 
+import util.*;
+import util.Player.AnimationPhase;
+import util.Player.Direction;
 /*
  * Created by Abraham Campbell on 15/01/2020.
  *   Copyright (c) 2020  Abraham Campbell
@@ -28,111 +28,87 @@ SOFTWARE.
    (MIT LICENSE ) e.g do what you want with this :-) 
  */ 
 public class Model {
-	private GameObject player;
+	private Player player;
 	private Controller controller = Controller.getInstance();
-	private CopyOnWriteArrayList<GameObject> enemiesList = new CopyOnWriteArrayList<GameObject>();
-	private CopyOnWriteArrayList<GameObject> bulletList = new CopyOnWriteArrayList<GameObject>();
-	private int score = 0; 
 
 	public Model() {
 		//World
 
 		//Player 
-		player = new GameObject("res/Lightning.png", 50, 50, new Point3f(500,500,0));
-		//Enemies
-		enemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float)Math.random()*50+400), 0, 0))); 
-		enemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float)Math.random()*50+500), 0, 0)));
-		enemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float)Math.random()*100+500), 0, 0)));
-		enemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float)Math.random()*100+400), 0, 0)));
+		player = new Player(Skin.getSkins()[0], 50, 50, new Point3f(500,500,0), 10);
 	}
 	
-	public void gamelogic() 
-	{
-		// Player Logic first 
+	public void gamelogic() { 
 		playerLogic(); 
-		// Enemy Logic next
-		enemyLogic();
-		// Bullets move next 
-		bulletLogic();
-		// interactions between objects 
-		objectLogic(); 
-	}
-
-	private void objectLogic() { 
-		for (GameObject enemy : enemiesList) {
-			for (GameObject Bullet : bulletList) {
-				if ( Math.abs(enemy.getCentre().getX() - Bullet.getCentre().getX())< enemy.getWidth() && Math.abs(enemy.getCentre().getY() - Bullet.getCentre().getY()) < enemy.getHeight()) {
-					enemiesList.remove(enemy);
-					bulletList.remove(Bullet);
-					score++;
-				}  
-			}
-		}	
-	}
-
-	private void enemyLogic() {
-		for (GameObject temp : enemiesList) {
-			temp.getCentre().applyVector(new Vector3f(0,-1,0));
-
-			if (temp.getCentre().getY() >= 900.0f) {
-				enemiesList.remove(temp);
-				score--;
-			} 
-		}
-
-		if (enemiesList.size()<2) {
-			while (enemiesList.size()<6) {
-				enemiesList.add(new GameObject("res/UFO.png", 50, 50, new Point3f(((float)Math.random()*1000), 0, 0))); 
-			}
-		}
-	}
-
-	private void bulletLogic() {
-		for (GameObject bullet : bulletList) {
-			bullet.getCentre().applyVector(new Vector3f(0,1,0));
-			if (bullet.getCentre().getY() <=0 ) {
-			 	bulletList.remove(bullet);
-			} 
-		} 
 	}
 
 	private void playerLogic() {
-		if(controller.isKeyAPressed()) {
-			player.getCentre().applyVector( new Vector3f(-2,0,0)); 
-		}
-		if(controller.isKeyDPressed()) {
-			player.getCentre().applyVector( new Vector3f(2,0,0));
-		}
-		if(controller.isKeyWPressed()) {
-			player.getCentre().applyVector( new Vector3f(0,2,0));
-		}
-		if(controller.isKeySPressed()){
-			player.getCentre().applyVector( new Vector3f(0,-2,0));
-		}
+		float speed = player.getSpeed();
+		player.incrementProgress();
+		AnimationPhase ap = player.getPhase();
 		if(controller.isKeySpacePressed()) {
-			createBullet();
+			player.setSkin(Skin.getSkins()[(player.getSkin().getIndex()+1)%Skin.getSkins().length]);
 			controller.setKeySpacePressed(false);
-		} 
-		
+		}
+		switch(ap) {
+			case NEUTRAL:
+			case WALKING:
+				if(controller.isKeyQPressed()){
+					player.setPhase(AnimationPhase.ATTACKING);
+					player.setProgress(0);
+					break;
+					//attack
+				}
+				if(controller.isKeyEPressed()){
+					player.setPhase(AnimationPhase.CASTING);
+					player.setProgress(0);
+					break;
+					//cast
+				}
+				boolean wasMovingVertical = player.getVerticalMovement();
+				player.setVerticalMovement(controller.isKeyWPressed() || controller.isKeySPressed());
+				if(ap==AnimationPhase.WALKING && !controller.isKeyAPressed() && !controller.isKeyDPressed() && !player.getVerticalMovement()) {
+					player.setPhase(AnimationPhase.NEUTRAL);
+					player.setProgress(0);
+					break;
+				}
+				if(controller.isKeyAPressed()) {
+					if(!player.setDirection(Direction.LEFT) && !player.getVerticalMovement()) {
+						player.setProgress(0);
+					}
+					player.setPhase(AnimationPhase.WALKING);
+					player.getCentre().applyVector( new Vector3f(-speed,0,0)); 
+				}
+				if(controller.isKeyDPressed()) {
+					if(!player.setDirection(Direction.RIGHT) && !player.getVerticalMovement()) {
+						player.setProgress(0);
+					}
+					player.setPhase(AnimationPhase.WALKING);
+					player.getCentre().applyVector( new Vector3f(speed,0,0));
+				}
+				if(controller.isKeyWPressed()) {
+					if(!player.setDirection(Direction.UP) && !wasMovingVertical) {
+						player.setProgress(0);
+					}
+					player.setPhase(AnimationPhase.WALKING);
+					player.getCentre().applyVector( new Vector3f(0,speed,0));
+				}
+				if(controller.isKeySPressed()){
+					if(!player.setDirection(Direction.DOWN) && !wasMovingVertical) {
+						player.setProgress(0);
+					}
+					player.setPhase(AnimationPhase.WALKING);
+					player.getCentre().applyVector( new Vector3f(0,-speed,0));
+				}
+				break;
+            case ATTACKING: break;
+                //todo check if the player hits an entity on climax of punch
+            case CASTING:	break;
+                //todo cast the spell at the climax
+		}
 	}
 
-	private void createBullet() {
-		bulletList.add(new GameObject("res/Bullet.png", 32, 64, new Point3f(player.getCentre().getX(), player.getCentre().getY(), 0.0f)));
-	}
-
-	public GameObject getPlayer() {
+	public Player getPlayer() {
 		return player;
-	}
-
-	public CopyOnWriteArrayList<GameObject> getEnemies() {
-		return enemiesList;
-	}
-	
-	public CopyOnWriteArrayList<GameObject> getBullets() {
-		return bulletList;
-	}
-
-	public int getScore() { 
-		return score;
 	}
 }

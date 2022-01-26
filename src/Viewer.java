@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 
 import util.GameObject;
+import util.Player;
 
 
 /*
@@ -44,8 +45,9 @@ SOFTWARE.
  * Credits: Kelly Charles (2020)
  */ 
 public class Viewer extends JPanel {
-	private long currentAnimationTime= 0; 
+	//private long currentAnimationTime = 0; 
 	private Model gameWorld; 
+	private int spriteScale = 10;
 	 
 	public Viewer(Model world) {
 		this.gameWorld = world;
@@ -58,41 +60,11 @@ public class Viewer extends JPanel {
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		currentAnimationTime++;
+		//currentAnimationTime++;
 
-		//Draw player Game Object 
-		int x = (int)gameWorld.getPlayer().getCentre().getX();
-		int y = (int)gameWorld.getPlayer().getCentre().getY();
-		int width = (int)gameWorld.getPlayer().getWidth();
-		int height = (int)gameWorld.getPlayer().getHeight();
-		String texture = gameWorld.getPlayer().getTexture();
-		
 		drawBackground(g);
 		
-		drawPlayer(x, y, width, height, texture,g);
-		  
-		gameWorld.getBullets().forEach((bullet) -> { 
-			drawBullet((int)bullet.getCentre().getX(), (int)bullet.getCentre().getY(), (int)bullet.getWidth(), (int)bullet.getHeight(), bullet.getTexture(), g);	 
-		}); 
-		
-		gameWorld.getEnemies().forEach((enemy) -> {
-			drawEnemies((int)enemy.getCentre().getX(), (int)enemy.getCentre().getY(), (int)enemy.getWidth(), (int)enemy.getHeight(), enemy.getTexture(), g);	 
-	    }); 
-	}
-	
-	private void drawEnemies(int x, int y, int width, int height, String texture, Graphics g) {
-		File TextureToLoad = new File(texture);
-
-		try {
-			Image myImage = ImageIO.read(TextureToLoad);
-			//The sprite is 32x32 pixel wide and 4 of them are placed together so we need to grab a different one each time 
-			//remember your training :-) computer science everything starts at 0 so 32 pixels gets us to 31  
-			int currentPositionInAnimation= ((int)(currentAnimationTime % 4) * 32);
-			g.drawImage(myImage, x, y, x+width, y+height, currentPositionInAnimation , 0, currentPositionInAnimation+31, 32, null); 
-		} catch (IOException e) {
-			e.printStackTrace();
-		} 
-		
+		drawPlayer(g);
 	}
 
 	private void drawBackground(Graphics g) {
@@ -106,25 +78,15 @@ public class Viewer extends JPanel {
 		}
 	}
 	
-	private void drawBullet(int x, int y, int width, int height, String texture,Graphics g) {
-		File TextureToLoad = new File(texture);
-
+	private void drawPlayer(Graphics g) { 
+		Player p = gameWorld.getPlayer();
+		File TextureToLoad = new File(p.getCurrentTexture());
 		try {
-			Image myImage = ImageIO.read(TextureToLoad); 
-			//64 by 128 
-			g.drawImage(myImage, x,y, x+width, y+height, 0 , 0, 63, 127, null); 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private void drawPlayer(int x, int y, int width, int height, String texture,Graphics g) { 
-		File TextureToLoad = new File(texture);
-		
-		try {
+			int x = (int)p.getCentre().getX();
+			int y = (int)p.getCentre().getY();
+			int[] source = p.getSource();
 			Image myImage = ImageIO.read(TextureToLoad);
-			int currentPositionInAnimation= ((int)((currentAnimationTime%40)/10))*32; //slows down animation so every 10 frames we get another frame so every 100ms 
-			g.drawImage(myImage, x, y, x+width, y+height, currentPositionInAnimation  , 0, currentPositionInAnimation+31, 32, null); 
+			g.drawImage(myImage, x, y, x+source[0]*spriteScale, y+source[1]*spriteScale, source[2],source[3],source[4],source[5], null); 
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
