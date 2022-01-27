@@ -131,6 +131,11 @@ public class Skin {
         int dx2 = (type == Type.DEFAULT ? 16 : 20);
         int sx1 = (column * 3 * 16) + (animationPhase * dx2);
         int sy1 = (type == Type.DEFAULT ? (row * 4 * 18) : (2 * 4 * 18) + ((row - 2) * 4 * 21)) + (direction * dy2);
+        if(name == "Boy_M" || name == "Girl_F") {
+            if (direction == 1 || direction == 3) {
+                sy1++;dy2--;
+            }
+        }
         int sx2 = sx1 + dx2;
         int sy2 = sy1 + dy2;
         return new int[] {dx2, dy2, sx1, sy1, sx2, sy2};
@@ -141,10 +146,21 @@ public class Skin {
         int column = id / 6;
         int dx2 = (type == Type.ANGEL ? 20 : 18);
         int dy2 = 20;
-        int sx1 = (column * 3 * 16) + (animationPhase * dx2);
+        int sx1 = (column * 4 * 18) + (animationPhase * dx2);
         int sy1 = (row * 4 * 20) + (direction * dy2);
         if(type == Type.DEFAULT) {
-            sx1++;sy1++;dx2--;dy2--;
+            if(name == "Boy_M" || name == "Girl_F" || name == "Template-Child_U") {
+                sy1++;dy2--;
+                //if (name == "Template-Child_U") dy2--;
+            }
+            if(direction == 0 || direction == 2) {
+                sx1++;dx2--;
+            } else {
+                sy1+=2;dy2-=2;
+            }
+            if (direction == 3) {
+                sx1++;dx2--;
+            }
         }
         int sx2 = sx1 + dx2;
         int sy2 = sy1 + dy2;
@@ -156,11 +172,24 @@ public class Skin {
         int column = id / 6;
         int dx2 = (type == Type.ANGEL ? 20 : 18);
         int dy2 = 20;
-        int sx1 = direction == 3 && column < 4  ? (column * 3 * 16) + (4 * dx2) - (animationPhase * dx2)
-                                                : (column * 3 * 16) + (animationPhase * dx2);
+        int sx1 = (direction == 3 && (column < 4 || name == "Paladin_M"))   
+            ? (column * 5 * 18) + (4 * dx2) - (animationPhase * dx2)
+            : (column * 5 * 18) + (animationPhase * dx2);
         int sy1 = (row * 4 * 20) + (direction * dy2);
         if(type == Type.DEFAULT) {
-            sx1++;sy1++;dx2--;dy2--;
+            if(direction == 0 || direction == 2) {
+                sx1++;dx2--;
+            } else {
+                if(animationPhase==0) {
+                    sy1++;dy2--;
+                } else {
+                    sy1+=2;dy2-=2;
+                }
+                
+            }
+            if (direction == 3) {
+                sx1++;dx2--;
+            }
         }
         int sx2 = sx1 + dx2;
         int sy2 = sy1 + dy2;
@@ -171,8 +200,8 @@ public class Skin {
         int row = id % 6;
         int column = id / 6;
         int dx2 = 48, dy2 = 48;
-        int sx1 = (column * 3 * 16);
-        int sy1 = (row * 4 * 20);
+        int sx1 = (column * 48);
+        int sy1 = (row * 48);
         int sx2 = sx1 + dx2;
         int sy2 = sy1 + dy2;
         return new int[] {dx2, dy2, sx1, sy1, sx2, sy2};

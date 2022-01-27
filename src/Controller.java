@@ -28,6 +28,10 @@ SOFTWARE.
 
 //Singeton pattern
 public class Controller implements KeyListener {
+	private static boolean keyAWasPressed = false;
+	private static boolean keySWasPressed = false;
+	private static boolean keyDWasPressed = false;
+	private static boolean keyWWasPressed = false;
 	private static boolean keyAPressed = false;
 	private static boolean keySPressed = false;
 	private static boolean keyDPressed = false;
@@ -126,5 +130,30 @@ public class Controller implements KeyListener {
 
 	public void setKeyQPressed(boolean keyQPressed) {
 		Controller.keyQPressed = keyQPressed;
+	}
+
+	public void setKeyAWasPressed(boolean keyAWasPressed) {
+		Controller.keyAWasPressed = keyAWasPressed;
+	}
+	public void setKeyDWasPressed(boolean keyDWasPressed) {
+		Controller.keyDWasPressed = keyDWasPressed;
+	}
+	public void setKeySWasPressed(boolean keySWasPressed) {
+		Controller.keySWasPressed = keySWasPressed;
+	}
+	public void setKeyWWasPressed(boolean keyWWasPressed) {
+		Controller.keyWWasPressed = keyWWasPressed;
+	}
+	public boolean isKeyAWasPressed() {
+		return keyAWasPressed;
+	}
+	public boolean isKeyDWasPressed() {
+		return keyDWasPressed;
+	}
+	public boolean isKeySWasPressed() {
+		return keySWasPressed;
+	}
+	public boolean isKeyWWasPressed() {
+		return keyWWasPressed;
 	}
 }

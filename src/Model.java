@@ -35,7 +35,7 @@ public class Model {
 		//World
 
 		//Player 
-		player = new Player(Skin.getSkins()[0], 50, 50, new Point3f(500,500,0), 10);
+		player = new Player(Skin.getSkins()[49], 50, 50, new Point3f(500,500,0), 20);
 	}
 	
 	public void gamelogic() { 
@@ -106,6 +106,10 @@ public class Model {
             case CASTING:	break;
                 //todo cast the spell at the climax
 		}
+		controller.setKeyAWasPressed(controller.isKeyAPressed());
+		controller.setKeyDWasPressed(controller.isKeyDPressed());
+		controller.setKeyWWasPressed(controller.isKeyWPressed());
+		controller.setKeySWasPressed(controller.isKeySPressed());
 	}
 
 	public Player getPlayer() {
