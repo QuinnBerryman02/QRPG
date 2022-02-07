@@ -8,14 +8,14 @@ import java.awt.TexturePaint;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
-import util.GameObject;
-import util.Player;
+import util.*;
 
 
 /*
@@ -48,15 +48,26 @@ public class Viewer extends JPanel {
 	//private long currentAnimationTime = 0; 
 	private Model gameWorld; 
 	private int spriteScale = 3;
+	private ArrayList<Chunk> chunks;
+	private int chunkX = 0;
+	private int chunkY = 0;
+	private MapLoader mapLoader;
 	 
 	public Viewer(Model world) {
 		this.gameWorld = world;
+		mapLoader = new MapLoader(new File("res/map.tmx"));
+		chunks = mapLoader.getChunksByCoordinate(chunkX, chunkY);
+		mapLoader.loadTilesets();
 	}
 
 	public void updateview() {
+		if(gameWorld.getChunkX() != chunkX || gameWorld.getChunkY() != chunkY) {
+			chunkX = gameWorld.getChunkX();
+			chunkY = gameWorld.getChunkY();
+			chunks = mapLoader.getChunksByCoordinate(chunkX, chunkY);
+		}
 		repaint();
 	}
-	
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -68,13 +79,34 @@ public class Viewer extends JPanel {
 	}
 
 	private void drawBackground(Graphics g) {
-		File TextureToLoad = new File("res/old/spacebackground.png");
-
+		int x = 100, y = 100;
+		int tileMulti = 2;
+		//chunks.forEach((c) -> System.out.println(c));
 		try {
-			Image myImage = ImageIO.read(TextureToLoad); 
-			g.drawImage(myImage, 0, 0, 1000, 1000, 0 , 0, 1000, 1000, null); 
-		} catch (IOException e) {
+			for (Chunk chunk : chunks) {
+				if (chunk.getLayer().getAttribute("name").equals("collisions")) continue;
+				int xoff = chunk.getXOffset() * 2;
+				int yoff = chunk.getYOffset() * 2;
+				for(int i=0;i<16;i++) {
+					for(int j=0;j<16;j++) {
+						//System.out.println("i=" + i + " j=" + j + " layer" + chunk.getLayer().getAttribute("name"));
+						int id = chunk.getTile(i, j);
+						//System.out.println("tile: " + id);
+						Tileset t = mapLoader.findTilesetByTileID(id);
+						if (t == null) continue;
+						int[] coords = t.getTile(id);
+						//System.out.println((x + xoff)+ " " + (y + yoff)+ " "+ (x + xoff + j*16*2)+ " "+ (y + yoff + i*16*2)+ " "+ coords[0]+ " " + coords[1]+ " " + coords[2]+ " " +coords[3]);
+						int tileSize = t.getTileWidth();
+						int tileUnit = tileSize*tileMulti;
+						int dx1 = x + xoff + j*16*tileMulti;
+						int dy1 = y + yoff + i*16*tileMulti;
+						g.drawImage(t.getImage(), dx1, dy1, dx1 + tileUnit, dy1 + tileUnit, coords[0],coords[1],coords[2],coords[3], null); 
+					}
+				}
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
+			System.exit(0);
 		}
 	}
 	

@@ -23,8 +23,8 @@
  <tileset firstgid="4122" source="tiled-tilesets/grass_cliffs.tsx"/>
  <tileset firstgid="4224" source="tiled-tilesets/waterfall.tsx"/>
  <tileset firstgid="4314" source="tiled-tilesets/indoors.tsx"/>
- <tileset firstgid="4424" source="walking_transparent.tsx"/>
- <tileset firstgid="5072" source="cow_walk.tsx"/>
+ <tileset firstgid="4424" source="tiled-sprites/walking_transparent.tsx"/>
+ <tileset firstgid="5072" source="tiled-sprites/cow_walk.tsx"/>
  <tileset firstgid="5088" source="tiled-sprites/llama_walk.tsx"/>
  <tileset firstgid="5104" source="tiled-sprites/chicken_walk.tsx"/>
  <tileset firstgid="5120" source="tiled-sprites/pig_walk.tsx"/>
@@ -8815,7 +8815,7 @@
 </chunk>
   </data>
  </layer>
- <layer id="8" name="collisions" width="100" height="100" opacity="0.58">
+ <layer id="8" name="collisions" width="100" height="100" visible="0" opacity="0.58">
   <data encoding="csv">
    <chunk x="-32" y="-80" width="16" height="16">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,

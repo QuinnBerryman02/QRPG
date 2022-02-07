@@ -39,6 +39,10 @@ public class Controller implements KeyListener {
 	private static boolean keyQPressed = false;
 	private static boolean keyEPressed = false;
 	private static boolean keySpacePressed = false;
+	private static boolean keyUpPressed = false;
+	private static boolean keyRightPressed = false;
+	private static boolean keyDownPressed = false;
+	private static boolean keyLeftPressed = false;
 	   
 	private static final Controller instance = new Controller();
 	  
@@ -59,6 +63,10 @@ public class Controller implements KeyListener {
 			case 'q': keyQPressed = true; break;
 			case 'e': keyEPressed = true; break;
 			case ' ': keySpacePressed = true; break; 
+			case 'y': keyUpPressed = true; break;
+			case 'j': keyRightPressed = true; break;
+			case 'h': keyDownPressed = true; break;
+			case 'g': keyLeftPressed = true; break;
 		    default: break;
 		}  
 	}
@@ -73,6 +81,10 @@ public class Controller implements KeyListener {
 			case 'q': keyQPressed = false; break;
 			case 'e': keyEPressed = false; break;
 			case ' ': keySpacePressed = false; break; 
+			case 'y': keyUpPressed = false; break;
+			case 'j': keyRightPressed = false; break;
+			case 'h': keyDownPressed = false; break;
+			case 'g': keyLeftPressed = false; break;
 		    default: break;
 		}  
 	}
@@ -130,6 +142,31 @@ public class Controller implements KeyListener {
 
 	public void setKeyQPressed(boolean keyQPressed) {
 		Controller.keyQPressed = keyQPressed;
+	}
+
+	public boolean isKeyDownPressed() {
+		return keyDownPressed;
+	}
+	public boolean isKeyLeftPressed() {
+		return keyLeftPressed;
+	}
+	public boolean isKeyRightPressed() {
+		return keyRightPressed;
+	}
+	public boolean isKeyUpPressed() {
+		return keyUpPressed;
+	}
+	public void setKeyDownPressed(boolean keyDownPressed) {
+		Controller.keyDownPressed = keyDownPressed;
+	}
+	public void setKeyLeftPressed(boolean keyLeftPressed) {
+		Controller.keyLeftPressed = keyLeftPressed;
+	}
+	public void setKeyRightPressed(boolean keyRightPressed) {
+		Controller.keyRightPressed = keyRightPressed;
+	}
+	public void setKeyUpPressed(boolean keyUpPressed) {
+		Controller.keyUpPressed = keyUpPressed;
 	}
 
 	public void setKeyAWasPressed(boolean keyAWasPressed) {

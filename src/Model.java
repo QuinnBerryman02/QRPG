@@ -1,5 +1,3 @@
-import java.util.concurrent.CopyOnWriteArrayList;
-
 import util.*;
 import util.Player.AnimationPhase;
 import util.Player.Direction;
@@ -30,6 +28,8 @@ SOFTWARE.
 public class Model {
 	private Player player;
 	private Controller controller = Controller.getInstance();
+	private int chunkX = 0;
+	private int chunkY = 0;
 
 	public Model() {
 		//World
@@ -49,6 +49,22 @@ public class Model {
 		if(controller.isKeySpacePressed()) {
 			player.setSkin(Skin.getSkins()[(player.getSkin().getIndex()+1)%Skin.getSkins().length]);
 			controller.setKeySpacePressed(false);
+		}
+		if(controller.isKeyUpPressed()) {
+			chunkY -= 16;
+			controller.setKeyUpPressed(false);
+		}
+		if(controller.isKeyDownPressed()) {
+			chunkY += 16;
+			controller.setKeyDownPressed(false);
+		}
+		if(controller.isKeyRightPressed()) {
+			chunkX += 16;
+			controller.setKeyRightPressed(false);
+		}
+		if(controller.isKeyLeftPressed()) {
+			chunkX -= 16;
+			controller.setKeyLeftPressed(false);
 		}
 		switch(ap) {
 			case NEUTRAL:
@@ -114,5 +130,11 @@ public class Model {
 
 	public Player getPlayer() {
 		return player;
+	}
+	public int getChunkX() {
+		return chunkX;
+	}
+	public int getChunkY() {
+		return chunkY;
 	}
 }
