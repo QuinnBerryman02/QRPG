@@ -47,7 +47,7 @@ SOFTWARE.
 public class Viewer extends JPanel {
 	//private long currentAnimationTime = 0; 
 	private Model gameWorld; 
-	private int spriteScale = 10;
+	private int spriteScale = 3;
 	 
 	public Viewer(Model world) {
 		this.gameWorld = world;
@@ -68,7 +68,7 @@ public class Viewer extends JPanel {
 	}
 
 	private void drawBackground(Graphics g) {
-		File TextureToLoad = new File("res/spacebackground.png");
+		File TextureToLoad = new File("res/old/spacebackground.png");
 
 		try {
 			Image myImage = ImageIO.read(TextureToLoad); 

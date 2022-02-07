@@ -1,3 +1,45 @@
 [faces, casting, attack, walking] are from https://opengameart.org/users/charlesgabriel
 by either "Antifarea" or "CharlesGabriel" (The original walking ones are by Antifarea and the subsequent art by CharlesGabriel as far as I know)
-and under CC-BY 3.0
+under CC-BY 3.0 (all)
+
+[village, circle glow, dungeon, outdoor] are from https://opengameart.org/users/buch
+by "Buch"
+under CC-BY 3.0 (outdoor)
+under CC0 (village, dungeon)
+under GPL 2.0, GPL 3.0, CC-BY-SA 3.0 (circle glow)
+
+[desert, overworld, sewer, cave] are from https://opengameart.org/users/beast
+by "Beast"
+under CC-BY 3.0 (all)
+under GPL 2.0 (sewer, cave)
+
+[indian, arabic] are from https://opengameart.org/users/gem
+by "Gem"
+under CC-BY-SA 3.0 (arabic)
+under CC-BY 3.0, GPL 3.0, OGA-BY 3.0 (temple)
+
+[town, roman, forest] are from https://opengameart.org/users/surt
+by "Surt"
+under CC0 (town, roman, forest)
+
+[town_snow, town_castle] are from https://opengameart.org/users/sharm
+by "Sharm"
+under CC-BY 3.0, CC-BY-SA 3.0, GPL 3.0, GPL 2.0 (town_snow)
+under CC-BY 3.0, OGA-BY 3.0 (town_castle)
+
+[./hilau] are from https://opengameart.org/users/hilau
+by "Hilau"
+under CC-BY-SA 3.0, GPL 3.0 (all)
+Special message = 
+//
+Uses the "16x16 RPG Tileset" by hilau at 
+https://opengameart.org/content/16x16-rpg-tileset, 
+which is based off of "16x16 Game Assets" by George Bailey at 
+https://opengameart.org/content/16x16-game-assets. 
+and "LPC Thatched-roof Cottage" by bluecarrot16 at 
+https://opengameart.org/content/lpc-thatched-roof-cottage.
+//
+
+[./animals] are from https://opengameart.org/content/lpc-style-farm-animals
+by "Daniel Eddeland"
+under CC-BY 3.0, GPL 2.0 (all)

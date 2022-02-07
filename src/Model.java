@@ -35,7 +35,7 @@ public class Model {
 		//World
 
 		//Player 
-		player = new Player(Skin.getSkins()[49], 50, 50, new Point3f(500,500,0), 20);
+		player = new Player(Skin.getSkins()[0], 50, 50, new Point3f(500,500,0), 20);
 	}
 	
 	public void gamelogic() { 

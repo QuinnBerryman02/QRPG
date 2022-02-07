@@ -70,7 +70,7 @@ public class MainWindow {
 			beginGame();
 		});  
 		
-		File BackroundToLoad = new File("res/startscreen.png");
+		File BackroundToLoad = new File("res/old/startscreen.png");
 		try {	
 			BufferedImage myPicture = ImageIO.read(BackroundToLoad);
 			backgroundImageForStartMenu = new JLabel(new ImageIcon(myPicture));

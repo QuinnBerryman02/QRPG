@@ -71,13 +71,13 @@ public class Player extends Entity {
     public String getCurrentTexture() {
         switch(phase) {
             case NEUTRAL:
-                return "res/casting_transparent.png";
+                return "res/sprites/casting_transparent.png";
             case WALKING:
-                return "res/walking_transparent.png";
+                return "res/sprites/walking_transparent.png";
             case ATTACKING:
-                return "res/attacking_transparent.png";
+                return "res/sprites/attacking_transparent.png";
             case CASTING:
-                return "res/casting_transparent.png";
+                return "res/sprites/casting_transparent.png";
             default:
                 return null;
         }
