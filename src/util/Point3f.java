@@ -74,8 +74,8 @@ public class Point3f {
 	}
 
 	private float checkBoundary(float f) {
-		if (f < 0) f = 0.0f;
-		if (f > boundary) f = (float)boundary;
+		//if (f < 0) f = 0.0f;
+		//if (f > boundary) f = (float)boundary;
 		return f;
 	}
 

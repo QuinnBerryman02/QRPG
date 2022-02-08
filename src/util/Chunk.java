@@ -49,4 +49,8 @@ public class Chunk {
         " height=" + data.getAttribute("height") +
         " from layer : " + layer.getAttribute("name");
     }
+    public String toStringSimple() {
+        return "x=" + data.getAttribute("x") + 
+        " y=" + data.getAttribute("y");
+    }
 }

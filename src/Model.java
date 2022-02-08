@@ -28,14 +28,12 @@ SOFTWARE.
 public class Model {
 	private Player player;
 	private Controller controller = Controller.getInstance();
-	private int chunkX = 0;
-	private int chunkY = 0;
 
 	public Model() {
 		//World
 
 		//Player 
-		player = new Player(Skin.getSkins()[0], 50, 50, new Point3f(500,500,0), 20);
+		player = new Player(Skin.getSkins()[0], 50, 50, new Point3f(0,0,0), 5);
 	}
 	
 	public void gamelogic() { 
@@ -43,28 +41,12 @@ public class Model {
 	}
 
 	private void playerLogic() {
-		float speed = player.getSpeed();
+		float speed = player.getSpeed() / (float)MainWindow.getTargetFPS();
 		player.incrementProgress();
 		AnimationPhase ap = player.getPhase();
 		if(controller.isKeySpacePressed()) {
 			player.setSkin(Skin.getSkins()[(player.getSkin().getIndex()+1)%Skin.getSkins().length]);
 			controller.setKeySpacePressed(false);
-		}
-		if(controller.isKeyUpPressed()) {
-			chunkY -= 16;
-			controller.setKeyUpPressed(false);
-		}
-		if(controller.isKeyDownPressed()) {
-			chunkY += 16;
-			controller.setKeyDownPressed(false);
-		}
-		if(controller.isKeyRightPressed()) {
-			chunkX += 16;
-			controller.setKeyRightPressed(false);
-		}
-		if(controller.isKeyLeftPressed()) {
-			chunkX -= 16;
-			controller.setKeyLeftPressed(false);
 		}
 		switch(ap) {
 			case NEUTRAL:
@@ -130,11 +112,5 @@ public class Model {
 
 	public Player getPlayer() {
 		return player;
-	}
-	public int getChunkX() {
-		return chunkX;
-	}
-	public int getChunkY() {
-		return chunkY;
 	}
 }

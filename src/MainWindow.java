@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import java.awt.Toolkit;
 
 /*
  * Created by Abraham Campbell on 15/01/2020.
@@ -47,15 +48,19 @@ public class MainWindow {
 	private static Model gameworld = new Model();
 	private static Viewer canvas = new Viewer(gameworld);
 	private static Controller controller = new Controller()  ; 
-	private static int targetFPS = 10;
+	private final static int targetFPS = 15;
 	private static JLabel backgroundImageForStartMenu ;
+	public final static int W = Toolkit.getDefaultToolkit().getScreenSize().width;
+	public final static int H = Toolkit.getDefaultToolkit().getScreenSize().height;
+	private static int averageFPS = targetFPS;
 	  
 	public MainWindow() {
-	    frame.setSize(1000, 1000);
+	    frame.setSize(W, H);
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 	    frame.setLayout(null);
 	    frame.add(canvas);  
-	    canvas.setBounds(0, 0, 1000, 1000); 
+	    canvas.setBounds(0, 0, W, H); 
+		System.out.println("W: " + W + " H: " + H);
 		canvas.setBackground(new Color(255,255,255));
 		canvas.setVisible(false);
 		            
@@ -104,7 +109,14 @@ public class MainWindow {
 						long startTime = System.currentTimeMillis(); 
 						gameloop();
 						long finishTime = System.currentTimeMillis();
-						long sleepTime = timeBetweenFrames - (finishTime - startTime);
+						long timeTaken = finishTime - startTime;
+						long sleepTime = timeBetweenFrames - timeTaken;
+						if(timeTaken==0) {
+						} else {
+							float fractionOfTimeUsed = (float)timeBetweenFrames / (float)(timeTaken);
+							int potentialFPS = (int)(fractionOfTimeUsed * targetFPS);
+							averageFPS = (potentialFPS + averageFPS) / 2;
+						}
 						if (sleepTime >= 0) {
 							sleep(sleepTime);
 						} else {
@@ -129,5 +141,13 @@ public class MainWindow {
 
 	public static void printTime(String place) {
 		System.out.println("Current time is" + System.currentTimeMillis() + "@" + place);
+	}
+
+	public static int getTargetFPS() {
+		return targetFPS;
+	}
+
+	public static int getAverageFPS() {
+		return averageFPS;
 	}
 }
