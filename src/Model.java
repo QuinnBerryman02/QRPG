@@ -1,3 +1,5 @@
+import java.io.File;
+
 import util.*;
 import util.Player.AnimationPhase;
 import util.Player.Direction;
@@ -28,16 +30,25 @@ SOFTWARE.
 public class Model {
 	private Player player;
 	private Controller controller = Controller.getInstance();
+	private Map map;
 
 	public Model() {
 		//World
-
+		map = new Map(new File("res/map.tmx"));
+		map.loadTilesets();
 		//Player 
 		player = new Player(Skin.getSkins()[0], 50, 50, new Point3f(0,0,0), 5);
 	}
 	
 	public void gamelogic() { 
+		int[][] collisions = map.findCollisionTilesNearbyAPoint((int)player.getCentre().getX(), (int)player.getCentre().getY(), 2);
 		playerLogic(); 
+		// for (int[] is : collisions) {
+		// 	for (int js : is) {
+		// 		System.out.print(js + " ");
+		// 	}
+		// 	System.out.println();
+		// }
 	}
 
 	private void playerLogic() {
@@ -112,5 +123,9 @@ public class Model {
 
 	public Player getPlayer() {
 		return player;
+	}
+
+	public Map getMap() {
+		return map;
 	}
 }

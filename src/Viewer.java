@@ -51,19 +51,18 @@ public class Viewer extends JPanel {
 	private Model gameWorld; 
 	private int spriteScale = 3;
 	private ArrayList<Chunk> chunksLoaded = new ArrayList<Chunk>();
-	private MapLoader mapLoader;
+	private Map map;
 	private int chunksOnScreen = 0;
 	private float playerX;
 	private float playerY;
 	 
 	public Viewer(Model world) {
 		this.gameWorld = world;
-		mapLoader = new MapLoader(new File("res/map.tmx"));
-		mapLoader.loadTilesets();
+		this.map = gameWorld.getMap();
 	}
 
 	public void updateview() {
-		chunksLoaded = mapLoader.findClosestChunks((int)gameWorld.getPlayer().getCentre().getX(), (int)gameWorld.getPlayer().getCentre().getY());
+		chunksLoaded = map.findClosestChunks((int)gameWorld.getPlayer().getCentre().getX(), (int)gameWorld.getPlayer().getCentre().getY());
 		// if(gameWorld.getChunkX() != chunkX || gameWorld.getChunkY() != chunkY) {
 		// 	chunkX = gameWorld.getChunkX();
 		// 	chunkY = gameWorld.getChunkY();
@@ -89,9 +88,9 @@ public class Viewer extends JPanel {
 
 	private void drawBackground(Graphics g) {
 		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
-		int indexOfSprites = mapLoader.indexOfLayer("sprites");
+		int indexOfSprites = map.indexOfLayer("sprites");
 		for(Chunk c : chunksLoaded) {
-			if(mapLoader.indexOfLayer(c.getLayer().getAttribute("name")) < indexOfSprites) {
+			if(map.indexOfLayer(c.getLayer().getAttribute("name")) < indexOfSprites) {
 				chunks.add(c);
 			}
 		}
@@ -99,9 +98,9 @@ public class Viewer extends JPanel {
 	}
 	private void drawForeground(Graphics g) {
 		ArrayList<Chunk> chunks = new ArrayList<Chunk>();
-		int indexOfSprites = mapLoader.indexOfLayer("sprites");
+		int indexOfSprites = map.indexOfLayer("sprites");
 		for(Chunk c : chunksLoaded) {
-			if(mapLoader.indexOfLayer(c.getLayer().getAttribute("name")) >= indexOfSprites) {
+			if(map.indexOfLayer(c.getLayer().getAttribute("name")) >= indexOfSprites) {
 				chunks.add(c);
 			}
 		}
@@ -124,7 +123,7 @@ public class Viewer extends JPanel {
 				} else {
 					chunksOnScreen++;
 				}
-				if (chunk.getLayer().getAttribute("name").equals("collisions")) continue;
+				//if (chunk.getLayer().getAttribute("name").equals("collisions")) continue;
 				int xoff = chunk.getXOffset() * tileMulti;
 				int yoff = chunk.getYOffset() * tileMulti;
 				for(int i=0;i<16;i++) {
@@ -132,7 +131,7 @@ public class Viewer extends JPanel {
 						//System.out.println("i=" + i + " j=" + j + " layer" + chunk.getLayer().getAttribute("name"));
 						int id = chunk.getTile(i, j);
 						//System.out.println("tile: " + id);
-						Tileset t = mapLoader.findTilesetByTileID(id);
+						Tileset t = map.findTilesetByTileID(id);
 						if (t == null) continue;
 						int[] coords = t.getTile(id);
 						//System.out.println((x + xoff)+ " " + (y + yoff)+ " "+ (x + xoff + j*16*2)+ " "+ (y + yoff + i*16*2)+ " "+ coords[0]+ " " + coords[1]+ " " + coords[2]+ " " +coords[3]);

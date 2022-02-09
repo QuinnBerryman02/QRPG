@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.function.Predicate;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
@@ -75,8 +76,8 @@ public class Map {
 
     public ArrayList<Chunk> findClosestChunks(int x, int y) {
         ArrayList<Chunk> nearestChunks = new ArrayList<Chunk>();
-        int belowX = x - (x % 16);
-        int belowY = y - (y % 16);
+        int belowX = x - (x % 16 + 16) % 16;
+        int belowY = y - (y % 16 + 16) % 16;
         int aboveX = belowX + 16;
         int aboveY = belowY + 16;
         int closestX, closestY;
@@ -114,6 +115,34 @@ public class Map {
         return nearestChunks;
     }
 
+    public int[][] findCollisionTilesNearbyAPoint(int x, int y, int radius) {
+        int[][] collisions = new int[2 * radius + 1][2 * radius + 1];
+        int positionInChunkX = (x % 16 + 16) % 16;
+        int positionInChunkY = (y % 16 + 16) % 16;
+        //System.out.println((x - positionInChunkX) + " " + (y - positionInChunkY));
+        for(int i=0;i<collisions.length;i++) {
+            for(int j=0;j<collisions[i].length;j++) {
+                int chunkX = x - positionInChunkX;
+                int chunkY = y - positionInChunkY;
+                if(j < radius - positionInChunkX)                                   chunkX -= 16;
+                if(collisions[i].length - j - 1 < positionInChunkX - (15 - radius)) chunkX += 16;
+                if(i < radius - positionInChunkY)                                   chunkY -= 16;
+                if(collisions.length - i - 1 < positionInChunkY - (15 - radius))    chunkY += 16;
+
+                ArrayList<Chunk> allLayers = getChunksByCoordinate(chunkX, chunkY);
+                allLayers.removeIf((c) -> !c.getLayer().getAttribute("name").equals("collisions"));
+                if(allLayers.isEmpty()) {
+                    collisions[i][j] = 0;
+                } else {
+                    Chunk chunk = allLayers.get(0);
+                    //collisions[i][j] = (((positionInChunkY - 2 + i) % 16 + 16) % 16)*100 + (((positionInChunkX - 2 + j) % 16 + 16) % 16);
+                    collisions[i][j] = chunk.getTile(((positionInChunkY - 2 + i) % 16 + 16) % 16, ((positionInChunkX - 2 + j) % 16 + 16) % 16);
+                }
+            }
+        }
+        return collisions;
+    }
+
     public void loadTilesets() {
         NodeList tilesetNodeList = document.getElementsByTagName("tileset");
         for (int i=0;i<tilesetNodeList.getLength();i++) {
@@ -133,7 +162,13 @@ public class Map {
                 return tilesets.get(i);
             }
         }
-        return null;
+        Tileset last = tilesets.get(tilesets.size()-1);
+        if (id >= last.getStart_id() && id < last.getStart_id() + last.getTileCount()) {
+            return last;
+        } else {
+            return null;
+        }
+        
     }
 
     public int indexOfLayer(String layer) {
