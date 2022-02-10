@@ -25,10 +25,10 @@ SOFTWARE.
  */ 
 public class GameObject {
 	protected Point3f centre= new Point3f(0,0,0);			// Centre of object, using 3D as objects may be scaled  
-	protected int width = 10;
-	protected int height = 10;
+	protected float width = 10;
+	protected float height = 10;
 	
-    public GameObject(int width, int height, Point3f centre) { 
+    public GameObject(float width, float height, Point3f centre) { 
     	this.width = width;
 		this.height = height;
 		this.centre = centre;
@@ -42,11 +42,11 @@ public class GameObject {
 		this.centre = centre;
 	}
 
-	public int getWidth() {
+	public float getWidth() {
 		return width;
 	}
 
-	public int getHeight() {
+	public float getHeight() {
 		return height;
 	}
 }

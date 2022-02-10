@@ -69,8 +69,8 @@ public class Point3f {
 	 
 	public void applyVector(Vector3f vector) { 
 		 setX(checkBoundary(x + vector.getX()));
-		 setY(checkBoundary(y - vector.getY()));
-		 setZ(checkBoundary(z - vector.getZ())); 
+		 setY(checkBoundary(y + vector.getY()));
+		 setZ(checkBoundary(z + vector.getZ())); 
 	}
 
 	private float checkBoundary(float f) {

@@ -25,7 +25,7 @@ public class Player extends Entity {
         }
     }
 
-    public Player(Skin s, int width, int height, Point3f centre, float speed) { 
+    public Player(Skin s, float width, float height, Point3f centre, float speed) { 
     	super(width, height, centre);
         this.skin = s;
         this.speed = speed;

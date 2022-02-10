@@ -16,6 +16,7 @@ import java.util.Iterator;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import java.awt.AlphaComposite;
 
 import util.*;
 
@@ -49,12 +50,14 @@ SOFTWARE.
 public class Viewer extends JPanel {
 	//private long currentAnimationTime = 0; 
 	private Model gameWorld; 
-	private int spriteScale = 3;
 	private ArrayList<Chunk> chunksLoaded = new ArrayList<Chunk>();
 	private Map map;
 	private int chunksOnScreen = 0;
-	private float playerX;
-	private float playerY;
+	private Point3f staticPlayer;
+	private final int CHUNK_SIZE = 16;
+	private final int TILE_SIZE_DEF = 16;
+	private final int SCALE = 3;
+	private final int UNIT_DEF = SCALE * TILE_SIZE_DEF;
 	 
 	public Viewer(Model world) {
 		this.gameWorld = world;
@@ -62,7 +65,6 @@ public class Viewer extends JPanel {
 	}
 
 	public void updateview() {
-		chunksLoaded = map.findClosestChunks((int)gameWorld.getPlayer().getCentre().getX(), (int)gameWorld.getPlayer().getCentre().getY());
 		// if(gameWorld.getChunkX() != chunkX || gameWorld.getChunkY() != chunkY) {
 		// 	chunkX = gameWorld.getChunkX();
 		// 	chunkY = gameWorld.getChunkY();
@@ -74,14 +76,18 @@ public class Viewer extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		//currentAnimationTime++;
-		playerX = gameWorld.getPlayer().getCentre().getX();
-		playerY = gameWorld.getPlayer().getCentre().getY();
 		chunksOnScreen = 0;
+		staticPlayer = gameWorld.getPlayer().getCentre().plusVector(new Vector3f());
+		chunksLoaded = map.findClosestChunks(staticPlayer);
 		drawBackground(g);
 		
 		drawPlayer(g);
 
 		drawForeground(g);
+
+		drawCollisionsNearby(g);
+
+		drawChunkLines(g);
 
 		drawText(g);
 	}
@@ -108,24 +114,21 @@ public class Viewer extends JPanel {
 	}
 
 	private void drawChunks(Graphics g, ArrayList<Chunk> chunks) {
-		int chunkSize = 16;
-		int tileSizeDefault = 16;
-		int tileMulti = 2;
-		int defaultUnit = tileMulti * tileSizeDefault;
-		//chunks.forEach((c) -> System.out.println(c));
 		try {
 			for (Chunk chunk : chunks) {
-				int x = (int)(defaultUnit * (Integer.parseInt(chunk.getData().getAttribute("x")) - playerX));
-				int y = (int)(defaultUnit * (Integer.parseInt(chunk.getData().getAttribute("y")) - playerY));
+				Point3f worldPoint = new Point3f(Float.parseFloat(chunk.getData().getAttribute("x")), Float.parseFloat(chunk.getData().getAttribute("y")),0f);
+				Point3f relativePoint = worldSpaceToScreen(worldPoint);
+				int x = (int)relativePoint.getX();
+				int y = (int)relativePoint.getY();
 				//System.out.println("x: " + x+ " y: " + y + " " + chunk);
-				if(x + defaultUnit * chunkSize <= 0 || y + defaultUnit * chunkSize <= 0 || x > MainWindow.W || y > MainWindow.H) {
+				if (chunk.getLayer().getAttribute("name").equals("collisions")) continue;
+				if(x + UNIT_DEF * CHUNK_SIZE <= 0 || y + UNIT_DEF * CHUNK_SIZE <= 0 || x > MainWindow.W || y > MainWindow.H) {
 					continue;
 				} else {
 					chunksOnScreen++;
 				}
-				//if (chunk.getLayer().getAttribute("name").equals("collisions")) continue;
-				int xoff = chunk.getXOffset() * tileMulti;
-				int yoff = chunk.getYOffset() * tileMulti;
+				int xoff = chunk.getXOffset() * SCALE;
+				int yoff = chunk.getYOffset() * SCALE;
 				for(int i=0;i<16;i++) {
 					for(int j=0;j<16;j++) {
 						//System.out.println("i=" + i + " j=" + j + " layer" + chunk.getLayer().getAttribute("name"));
@@ -136,10 +139,11 @@ public class Viewer extends JPanel {
 						int[] coords = t.getTile(id);
 						//System.out.println((x + xoff)+ " " + (y + yoff)+ " "+ (x + xoff + j*16*2)+ " "+ (y + yoff + i*16*2)+ " "+ coords[0]+ " " + coords[1]+ " " + coords[2]+ " " +coords[3]);
 						int tileSize = t.getTileWidth();
-						int tileUnit = tileSize*tileMulti;
-						int dx1 = x + xoff + j * defaultUnit;
-						int dy1 = y + yoff + i * defaultUnit;
-						g.drawImage(t.getImage(), dx1, dy1, dx1 + tileUnit, dy1 + tileUnit, coords[0], coords[1], coords[2], coords[3], null); 
+						int tileUnit = tileSize * SCALE;
+						int dx1 = x + xoff + j * UNIT_DEF;
+						int dy1 = y + yoff + i * UNIT_DEF;
+						Image img = t.getImage();
+						g.drawImage(img, dx1, dy1, dx1 + tileUnit, dy1 + tileUnit, coords[0], coords[1], coords[2], coords[3], null); 
 					}
 				}
 			}
@@ -152,25 +156,86 @@ public class Viewer extends JPanel {
 	private void drawPlayer(Graphics g) { 
 		Player p = gameWorld.getPlayer();
 		File TextureToLoad = new File(p.getCurrentTexture());
+		int x = MainWindow.W/2;
+		int y = MainWindow.H/2 - (8*SCALE);
+		int w = Math.round(p.getWidth()) * UNIT_DEF;
+		int h = Math.round(p.getHeight()) * UNIT_DEF;
 		try {
-			int x = MainWindow.W/2;
-			int y = MainWindow.H/2;
 			int[] source = p.getSource();
 			Image myImage = ImageIO.read(TextureToLoad);
-			g.drawImage(myImage, x, y, x+source[0]*spriteScale, y+source[1]*spriteScale, source[2],source[3],source[4],source[5], null); 
+			g.drawImage(myImage, x - w/2, y - h/2, x - w/2 + source[0]*SCALE, y - h/2 + source[1]*SCALE, source[2],source[3],source[4],source[5], null); 
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
+		Hitbox hb = p.getHitbox();
+		g.setColor(new Color(1f,0f,0f,0.5f));
+		//System.out.print(hb);
+		x = MainWindow.W/2;
+		y = MainWindow.H/2;
+		w = Math.round((hb.getRightX() - hb.getLeftX()) * UNIT_DEF);
+		h = Math.round((hb.getBotY() - hb.getTopY()) * UNIT_DEF);
+		g.fillRect(x - w/2, y - h/2, w, h);
+	}
+
+	public void drawChunkLines(Graphics g) {
+		for (Chunk chunk : chunksLoaded) {
+			Point3f worldPoint = new Point3f(Float.parseFloat(chunk.getData().getAttribute("x")), Float.parseFloat(chunk.getData().getAttribute("y")),0f);
+			Point3f relativePoint = worldSpaceToScreen(worldPoint);
+			int x = (int)relativePoint.getX();
+			int y = (int)relativePoint.getY();
+			g.setColor(new Color(1f,1f,1f,1f));
+			g.drawRect(x, y, CHUNK_SIZE * UNIT_DEF, CHUNK_SIZE * UNIT_DEF);
+			char[] chunkInfo = ("x=" + chunk.getData().getAttribute("x") + " y=" + chunk.getData().getAttribute("y")).toCharArray();
+			g.setFont(new Font("Debug", Font.BOLD, 15));
+			g.drawChars(chunkInfo, 0, chunkInfo.length, x+ 15, y+15);
+		}
 	}
 
 	public void drawText(Graphics g) {
 		char[] chunksInfo = ("Chunks on Screen: " + String.valueOf(chunksOnScreen)).toCharArray();
 		char[] averageFPS = ("Max Frames Per Second: " + String.valueOf(MainWindow.getAverageFPS())).toCharArray();
 		char[]  playerInfo = ("Player Coordinates: (" + String.valueOf(gameWorld.getPlayer().getCentre().getX()) + "," + String.valueOf(gameWorld.getPlayer().getCentre().getY()) + ")").toCharArray();
-		g.setFont(new Font("Debug", Font.BOLD, 30));
-		g.setColor(new Color(1f,1f,1f,1f));
-		g.drawChars(chunksInfo, 0, chunksInfo.length, 10, 30);
-		g.drawChars(averageFPS, 0, averageFPS.length, 10, 60);
-		g.drawChars(playerInfo, 0, playerInfo.length, 10, 90);
+		g.setFont(new Font("Debug", Font.BOLD, 15));
+		g.setColor(new Color(1f,0f,1f,1f));
+		g.drawChars(chunksInfo, 0, chunksInfo.length, 10, 15);
+		g.drawChars(averageFPS, 0, averageFPS.length, 10, 30);
+		g.drawChars(playerInfo, 0, playerInfo.length, 10, 45);
+	}
+
+	public void drawCollisionsNearby(Graphics g) {
+		int[][] collisions = map.findCollisionTilesNearbyAPoint(staticPlayer, 2);
+		int[] tile = map.findTile(staticPlayer);
+        int px = tile[0];
+        int py = tile[1];
+		for (int i=0; i<collisions.length;i++) {
+			for (int j=0; j<collisions[i].length;j++) {
+				Point3f worldPoint = new Point3f(px -2 + j, py -2 + i, 0);
+				Point3f relativePoint = worldSpaceToScreen(worldPoint);
+				//Hitbox hb = new Hitbox(new Point3f(worldPoint.getX() + .5f,worldPoint.getY() + .5f,0),1,1);
+				int x = (int)relativePoint.getX();
+				int y = (int)relativePoint.getY();
+				int w = UNIT_DEF;
+				int h = UNIT_DEF;
+				//System.out.printf("x: %d y: %d w: %d h: %d\n",x,y,w,h);
+				switch (collisions[i][j]) {
+					case 8224:
+						g.setColor(new Color(1f,0f,0f,0.5f));
+						break;
+					case 0:
+						g.setColor(new Color(0f,0f,0f,0.0f));
+						break;
+					default:
+						g.setColor(new Color(0f,0f,1f,0.5f));
+						break;
+				}
+				g.fillRect(x,y,w,h);
+			}
+		}
+	}
+
+	public Point3f worldSpaceToScreen(Point3f p) {
+		float x = (UNIT_DEF * (p.getX() - staticPlayer.getX())) + MainWindow.W/2;
+		float y = (UNIT_DEF * (p.getY() - staticPlayer.getY())) + MainWindow.H/2;
+		return new Point3f(x, y, 0f);
 	}
 }

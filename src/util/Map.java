@@ -74,8 +74,11 @@ public class Map {
         return chunksAtPosition;
     }
 
-    public ArrayList<Chunk> findClosestChunks(int x, int y) {
+    public ArrayList<Chunk> findClosestChunks(Point3f p) {
         ArrayList<Chunk> nearestChunks = new ArrayList<Chunk>();
+        int[] tile = findTile(p);
+        int x = tile[0];
+        int y = tile[1];
         int belowX = x - (x % 16 + 16) % 16;
         int belowY = y - (y % 16 + 16) % 16;
         int aboveX = belowX + 16;
@@ -92,8 +95,8 @@ public class Map {
             closestY = belowY;
         }
         //System.out.println("X: " + x + " y: " + y + " closeX: " + closestX + " closeY: " + closestY);
-        int[] chunkColumms = new int[] {closestX - 32, closestX - 16, closestX, closestX + 16, closestX + 32};
-        int[] chunkRows = new int[] {closestY - 16, closestY, closestY + 16};
+        int[] chunkColumms = new int[] {closestX - 32, closestX - 16, closestX, closestX + 16};
+        int[] chunkRows = new int[] {closestY - 32, closestY - 16, closestY, closestY + 16};
         //System.out.println("Player x=" + x + " y=" + y);
         for (int i : chunkRows) {
             for (int j : chunkColumms) {
@@ -115,11 +118,19 @@ public class Map {
         return nearestChunks;
     }
 
-    public int[][] findCollisionTilesNearbyAPoint(int x, int y, int radius) {
+    public int[] findTile(Point3f p) {
+        return new int[]{(int)Math.floor((double)p.getX()), (int)Math.floor((double)p.getY())};
+    }
+
+    public int[][] findCollisionTilesNearbyAPoint(Point3f p, int radius) {
         int[][] collisions = new int[2 * radius + 1][2 * radius + 1];
+        int[] tile = findTile(p);
+        int x = tile[0];
+        int y = tile[1];
         int positionInChunkX = (x % 16 + 16) % 16;
         int positionInChunkY = (y % 16 + 16) % 16;
         //System.out.println((x - positionInChunkX) + " " + (y - positionInChunkY));
+        //System.out.println("x: " + (positionInChunkX) + " y: " + (positionInChunkY));
         for(int i=0;i<collisions.length;i++) {
             for(int j=0;j<collisions[i].length;j++) {
                 int chunkX = x - positionInChunkX;
@@ -135,8 +146,11 @@ public class Map {
                     collisions[i][j] = 0;
                 } else {
                     Chunk chunk = allLayers.get(0);
-                    //collisions[i][j] = (((positionInChunkY - 2 + i) % 16 + 16) % 16)*100 + (((positionInChunkX - 2 + j) % 16 + 16) % 16);
-                    collisions[i][j] = chunk.getTile(((positionInChunkY - 2 + i) % 16 + 16) % 16, ((positionInChunkX - 2 + j) % 16 + 16) % 16);
+                    //collisions[i][j] = chunkX * 1000 + chunkY;
+                    //collisions[i][j] = positionInChunkY * 100 + positionInChunkX;
+                    //collisions[i][j] = (y - radius + i) * 1000 + (x - radius + j);
+                    //collisions[i][j] = (((positionInChunkY - radius + i) % 16 + 16) % 16)*100 + (((positionInChunkX - radius + j) % 16 + 16) % 16);
+                    collisions[i][j] = chunk.getTile(((positionInChunkY - radius + i) % 16 + 16) % 16, ((positionInChunkX - radius + j) % 16 + 16) % 16);
                 }
             }
         }
