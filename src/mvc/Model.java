@@ -1,8 +1,11 @@
+package mvc;
 import java.io.File;
+import java.util.ArrayList;
 
+import main.MainWindow;
 import util.*;
-import util.Player.AnimationPhase;
-import util.Player.Direction;
+import util.Entity.AnimationPhase;
+import util.Entity.Direction;
 /*
  * Created by Abraham Campbell on 15/01/2020.
  *   Copyright (c) 2020  Abraham Campbell
@@ -29,15 +32,17 @@ SOFTWARE.
  */ 
 public class Model {
 	private Player player;
-	private Controller controller = Controller.getInstance();
 	private Map map;
+	private ArrayList<Entity> entities = new ArrayList<Entity>();
 
 	public Model() {
 		//World
 		map = new Map(new File("res/map.tmx"));
 		map.loadTilesets();
 		//Player 
-		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(0,0,0), 4);
+		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(0,0,0), 4, new PlayerController());
+		NPC npc1 = new NPC(0.5f, 0.5f, new Point3f(-8,4,0), 4, Skin.getSkins()[1], "John", new AIController());
+		entities.add(npc1);
 	}
 	
 	public void gamelogic() { 
@@ -48,6 +53,7 @@ public class Model {
 		float speed = player.getSpeed() / (float)MainWindow.getTargetFPS();
 		player.incrementProgress();
 		AnimationPhase ap = player.getPhase();
+		Controller controller = player.getController();
 		if(controller.isKeySpacePressed()) {
 			player.setSkin(Skin.getSkins()[(player.getSkin().getIndex()+1)%Skin.getSkins().length]);
 			controller.setKeySpacePressed(false);
@@ -122,82 +128,6 @@ public class Model {
 		return map;
 	}
 
-	public void collisionHandler0(Entity object, Vector3f v) {
-		float x = object.getCentre().getX();
-		float y = object.getCentre().getY();
-		float w = object.getWidth()/2f;
-		float h = object.getHeight()/2f;
-		int[][] collisions = map.findCollisionTilesNearbyAPoint(player.getCentre(), 1);
-		for(int[] is : collisions) {
-			for(int j : is) {
-				System.out.print(j + "\t| ");
-			}
-			System.out.println();
-		}
-		System.out.println();
-		Point3f p = new Point3f(x, y, 0);
-		Point3f p2 = p.plusVector(v);
-		p2.applyVector(v);
-		for (int i=(int)y-1; i<(int)y+2;i++) {
-			for (int j=(int)x-1; j<(int)x+2;j++) {
-				switch (collisions[i+1-(int)y][j+1-(int)x]) {
-					case 8224:
-						for(int a=-1;a<=1;a+=2) {
-							for(int b=-1;b<=1;b+=2) {
-								Point3f originalCorner = p.plusVector(new Vector3f(a * w, b * h, 0));
-								Point3f newCorner = p2.plusVector(new Vector3f(a * w, b * h, 0));
-								System.out.println("og : " + originalCorner + " new : " + newCorner);
-								if(newCorner.getX() < j + 1 && newCorner.getX() > j && newCorner.getY() < i + 1 && newCorner.getY() > i) {
-									float diffX = j+1 - newCorner.getX();
-									float diffY = i+1 - newCorner.getY();
-									float totalX = originalCorner.getX() - newCorner.getX();
-									float totalY = originalCorner.getY() - newCorner.getY();
-									float percent;
-									if(totalX == 0) {
-										percent = diffY / totalY;
-									} else {
-										percent = diffX / totalX;
-									}
-									object.move(v.byScalar(1 - percent));
-									return;
-								}
-							}
-						}
-						break;
-					default:
-						break;
-				}
-			}
-		}
-		object.move(v);
-	}
-
-	public void collisionHandler2(Entity object, Vector3f v) {
-		// Hitbox h = object.getHitbox();
-		// Hitbox h2 = h.plusVector(v);
-		// float x = object.getCentre().getX();
-		// float y = object.getCentre().getY();
-		// int[][] collisions = map.findCollisionTilesNearbyAPoint((int)x, (int)y, 1);
-		// for (int i=0; i<collisions.length;i++) {
-		// 	for (int j=0; j<collisions[i].length;j++) {
-		// 		switch (collisions[i][j]) {
-		// 			case 8224:
-		// 				Hitbox c = new Hitbox(new Point3f(x-.5f+j,y-.5f+i,0),1,1);
-		// 				System.out.println("intersection check");
-		// 				if(h2.intersecting(c)) {
-		// 					System.out.println("intersecting");
-		// 					Vector3f v2 = h.findMaxScalarVector(c, v);
-		// 					object.move(v2);
-		// 				}
-		// 				break;
-		// 			default:
-		// 				break;
-		// 		}
-		// 	}
-		// }
-		object.move(v);
-	}
-
 	public void collisionHandler (Entity object, Vector3f v) {
 		int[][] collisions = map.findCollisionTilesNearbyAPoint(object.getCentre(), 2);
 		int[] tile = map.findTile(object.getCentre());
@@ -224,5 +154,9 @@ public class Model {
 			}
 		}
 		object.move(v);
+	}
+
+	public ArrayList<Entity> getEntities() {
+		return entities;
 	}
 }

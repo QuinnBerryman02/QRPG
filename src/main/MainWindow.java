@@ -1,3 +1,4 @@
+package main;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Image;
@@ -14,6 +15,11 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import mvc.Model;
+import mvc.PlayerController;
+import mvc.Viewer;
+
 import java.awt.Toolkit;
 
 /*
@@ -47,11 +53,10 @@ public class MainWindow {
 	private static JFrame frame = new JFrame("Quinn's Game");   // Change to the name of your game 
 	private static Model gameworld = new Model();
 	private static Viewer canvas = new Viewer(gameworld);
-	private static Controller controller = new Controller()  ; 
 	private final static int targetFPS = 15;
 	private static JLabel backgroundImageForStartMenu ;
-	public final static int W = Toolkit.getDefaultToolkit().getScreenSize().width;
-	public final static int H = Toolkit.getDefaultToolkit().getScreenSize().height;
+	private final static int W = Toolkit.getDefaultToolkit().getScreenSize().width;
+	private final static int H = Toolkit.getDefaultToolkit().getScreenSize().height;
 	private static int averageFPS = targetFPS;
 	  
 	public MainWindow() {
@@ -70,7 +75,7 @@ public class MainWindow {
 			startMenuButton.setVisible(false);
 			backgroundImageForStartMenu.setVisible(false); 
 			canvas.setVisible(true); 
-			canvas.addKeyListener(controller);   
+			canvas.addKeyListener((PlayerController)gameworld.getPlayer().getController());   
 			canvas.requestFocusInWindow();   
 			beginGame();
 		});  
@@ -149,5 +154,13 @@ public class MainWindow {
 
 	public static int getAverageFPS() {
 		return averageFPS;
+	}
+
+	public static int getH() {
+		return H;
+	}
+
+	public static int getW() {
+		return W;
 	}
 }

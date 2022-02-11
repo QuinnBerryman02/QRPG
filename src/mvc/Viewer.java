@@ -1,22 +1,16 @@
+package mvc;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.LayoutManager;
-import java.awt.Rectangle;
-import java.awt.TexturePaint;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
-import javax.swing.Timer;
-import java.awt.AlphaComposite;
+
+import main.MainWindow;
 
 import util.*;
 
@@ -83,6 +77,8 @@ public class Viewer extends JPanel {
 		
 		drawPlayer(g);
 
+		drawEntities(g);
+
 		drawForeground(g);
 
 		drawCollisionsNearby(g);
@@ -122,7 +118,7 @@ public class Viewer extends JPanel {
 				int y = (int)relativePoint.getY();
 				//System.out.println("x: " + x+ " y: " + y + " " + chunk);
 				if (chunk.getLayer().getAttribute("name").equals("collisions")) continue;
-				if(x + UNIT_DEF * CHUNK_SIZE <= 0 || y + UNIT_DEF * CHUNK_SIZE <= 0 || x > MainWindow.W || y > MainWindow.H) {
+				if(x + UNIT_DEF * CHUNK_SIZE <= 0 || y + UNIT_DEF * CHUNK_SIZE <= 0 || x > MainWindow.getW() || y > MainWindow.getH()) {
 					continue;
 				} else {
 					chunksOnScreen++;
@@ -156,8 +152,8 @@ public class Viewer extends JPanel {
 	private void drawPlayer(Graphics g) { 
 		Player p = gameWorld.getPlayer();
 		File TextureToLoad = new File(p.getCurrentTexture());
-		int x = MainWindow.W/2;
-		int y = MainWindow.H/2 - (8*SCALE);
+		int x = MainWindow.getW()/2;
+		int y = MainWindow.getH()/2 - (8*SCALE);
 		int w = Math.round(p.getWidth()) * UNIT_DEF;
 		int h = Math.round(p.getHeight()) * UNIT_DEF;
 		try {
@@ -170,11 +166,36 @@ public class Viewer extends JPanel {
 		Hitbox hb = p.getHitbox();
 		g.setColor(new Color(1f,0f,0f,0.5f));
 		//System.out.print(hb);
-		x = MainWindow.W/2;
-		y = MainWindow.H/2;
+		x = MainWindow.getW()/2;
+		y = MainWindow.getH()/2;
 		w = Math.round((hb.getRightX() - hb.getLeftX()) * UNIT_DEF);
 		h = Math.round((hb.getBotY() - hb.getTopY()) * UNIT_DEF);
 		g.fillRect(x - w/2, y - h/2, w, h);
+	}
+
+	public void drawEntities(Graphics g) {
+		for (Entity e : gameWorld.getEntities()) {
+			File TextureToLoad = new File(e.getCurrentTexture());
+			Point3f worldPoint = e.getCentre();
+			Point3f relativePoint = worldSpaceToScreen(worldPoint);
+			Hitbox hb = e.getHitbox();
+			int x = (int)relativePoint.getX();
+			int y = (int)relativePoint.getY() - (8*SCALE);
+			int w = Math.round(e.getWidth()) * UNIT_DEF;
+			int h = Math.round(e.getHeight()) * UNIT_DEF;
+			try {
+				int[] source = e.getSource();
+				Image myImage = ImageIO.read(TextureToLoad);
+				g.drawImage(myImage, x - w/2, y - h/2, x - w/2 + source[0]*SCALE, y - h/2 + source[1]*SCALE, source[2],source[3],source[4],source[5], null); 
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			x = (int)relativePoint.getX();
+			y = (int)relativePoint.getY();
+			w = Math.round((hb.getRightX() - hb.getLeftX()) * UNIT_DEF);
+			h = Math.round((hb.getBotY() - hb.getTopY()) * UNIT_DEF);
+			g.fillRect(x - w/2, y - h/2, w, h);
+		}
 	}
 
 	public void drawChunkLines(Graphics g) {
@@ -234,8 +255,8 @@ public class Viewer extends JPanel {
 	}
 
 	public Point3f worldSpaceToScreen(Point3f p) {
-		float x = (UNIT_DEF * (p.getX() - staticPlayer.getX())) + MainWindow.W/2;
-		float y = (UNIT_DEF * (p.getY() - staticPlayer.getY())) + MainWindow.H/2;
+		float x = (UNIT_DEF * (p.getX() - staticPlayer.getX())) + MainWindow.getW()/2;
+		float y = (UNIT_DEF * (p.getY() - staticPlayer.getY())) + MainWindow.getH()/2;
 		return new Point3f(x, y, 0f);
 	}
 }

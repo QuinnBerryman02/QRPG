@@ -26,15 +26,15 @@ public class Hitbox {
         for(Point3f c1 : getCorners()) {
             Point3f c2 = c1.plusVector(v);
             if(c2.getX() < h.getRightX() && c2.getX() > h.getLeftX() && c2.getY() < h.getBotY() && c2.getY() > h.getTopY()) {
-                System.out.printf("c1:%s\nv:%s\nc2:%s\n",c1.toString(),v.toString(),c2.toString());
-                System.out.printf("hrx:%f c2x:%f hlx:%f\n",h.getRightX(),c2.getX(),h.getLeftX());
-                System.out.printf("hby:%f c2y:%f hty:%f\n",h.getBotY(),c2.getY(),h.getTopY());
+                // System.out.printf("c1:%s\nv:%s\nc2:%s\n",c1.toString(),v.toString(),c2.toString());
+                // System.out.printf("hrx:%f c2x:%f hlx:%f\n",h.getRightX(),c2.getX(),h.getLeftX());
+                // System.out.printf("hby:%f c2y:%f hty:%f\n",h.getBotY(),c2.getY(),h.getTopY());
                 float intersectionX = (v.getX() < 0) ? (h.getRightX() - c2.getX()) : (c2.getX() - h.getLeftX());
                 float intersectionY = (v.getY() < 0) ? (h.getBotY() - c2.getY()) : (c2.getY() - h.getTopY());
                 float totalDiffX = Math.abs(v.getX());
                 float totalDiffY = Math.abs(v.getY());
                 float percent;
-                System.out.printf("ix:%f iy:%f tdx:%f tdy:%f\n",intersectionX,intersectionY,totalDiffX,totalDiffY);
+                //System.out.printf("ix:%f iy:%f tdx:%f tdy:%f\n",intersectionX,intersectionY,totalDiffX,totalDiffY);
                 if(totalDiffX >= intersectionX) {
                     float newDiffX = totalDiffX - intersectionX;
                     percent = newDiffX / totalDiffX;
