@@ -33,7 +33,7 @@ SOFTWARE.
 public class Model {
 	private Player player;
 	private Map map;
-	private ArrayList<Entity> entities = new ArrayList<Entity>();
+	private ArrayList<NPC> entities = new ArrayList<NPC>();
 
 	public Model() {
 		//World
@@ -41,8 +41,8 @@ public class Model {
 		map.loadTilesets();
 		//Player 
 		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(0,0,0), 4, new PlayerController());
-		NPC npc1 = new NPC(0.5f, 0.5f, new Point3f(-8,4,0), 4, Skin.getSkins()[1], "John", new AIController());
-		entities.add(npc1);
+		NPCLoader npcLoader = new NPCLoader(new File("res/npc.xml"));
+		entities = npcLoader.createAllNpcs();
 	}
 	
 	public void gamelogic() { 
@@ -128,24 +128,46 @@ public class Model {
 		return map;
 	}
 
-	public void collisionHandler (Entity object, Vector3f v) {
-		int[][] collisions = map.findCollisionTilesNearbyAPoint(object.getCentre(), 2);
-		int[] tile = map.findTile(object.getCentre());
+	public void collisionHandler (Entity entity, Vector3f v) {
+		v = wallCollisionHandler(entity, v);
+		for (Entity other : entities) {
+			if(other == entity) {
+				continue;
+			} else {
+				Vector3f v2 = entityCollisionHandler(entity, other, v);
+				if(other instanceof NPC) {
+					NPC npc = ((NPC)other);
+					if (v2 != null) {
+						npc.setInteractable(true);
+						if(entity instanceof Player) {
+							if(entity.getController().isKeyIPressed()) {
+								MainWindow.initiateConversation(entity, other);
+								System.out.println("Starting a coversation between player and " + npc.getName());
+							}
+						}
+					} else {
+						npc.setInteractable(false);
+					}
+				}
+				v = (v2 != null) ? v2 : v;
+			}
+		}
+		entity.move(v);
+	}
+
+	public Vector3f wallCollisionHandler(Entity entity, Vector3f v) {
+		int[][] collisions = map.findCollisionTilesNearbyAPoint(entity.getCentre(), 2);
+		int[] tile = map.findTile(entity.getCentre());
         int px = tile[0];
         int py = tile[1];
-		Hitbox hb = object.getHitbox();
+		Hitbox hb = entity.getHitbox();
 		for (int i=0; i<collisions.length;i++) {
 			for (int j=0; j<collisions[i].length;j++) {
 				switch (collisions[i][j]) {
 					case 8224:
 						Hitbox c = new Hitbox(new Point3f(px - 2 + .5f + j,py - 2 + .5f + i,0),1,1);
 						Vector3f v2 = hb.intersection(c, v);
-						if(v2 != null) {
-							System.out.println("Intersecting: [" + j + "," + i + "]");
-							System.out.println("My hitbox: \n" + hb.plusVector(v) + "\nIntersecting block hitbox: \n" + c);
-							object.move(v2);
-							return;
-						}
+						if(v2 != null) return v2;
 						break;
 					default:
 						break;
@@ -153,10 +175,17 @@ public class Model {
 				
 			}
 		}
-		object.move(v);
+		return v;
 	}
 
-	public ArrayList<Entity> getEntities() {
+	public Vector3f entityCollisionHandler(Entity e1, Entity e2, Vector3f v) {
+		Hitbox hb = e1.getHitbox();
+		Hitbox hb2 = e2.getHitbox();
+		Vector3f v2 = hb.intersection(hb2, v);
+		return (v2 != null) ? (v2) : (v);
+	}
+
+	public ArrayList<NPC> getEntities() {
 		return entities;
 	}
 }

@@ -107,7 +107,7 @@ public class Skin {
 
     public static Skin getSkinByName(String name) {
         for (Skin skin : skins) {
-            if (skin.getName() == name) {
+            if (skin.getName().equals(name)) {
                 return skin;
             }
         }

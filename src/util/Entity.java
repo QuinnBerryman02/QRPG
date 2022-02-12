@@ -1,8 +1,10 @@
 package util;
 
+import java.util.ArrayList;
+
 import mvc.Controller;
 
-public class Entity extends GameObject {
+public abstract class Entity extends GameObject {
     private Hitbox hitbox;
     private float speed;
     private Skin skin;
@@ -27,6 +29,14 @@ public class Entity extends GameObject {
 
     public Hitbox getHitbox() {
         return hitbox;
+    }
+
+    public abstract ArrayList<Topic> getKnownTopics();
+
+    public ArrayList<Topic> findCommonTopics(Entity other) {
+        ArrayList<Topic> common = new ArrayList<Topic>(getKnownTopics());
+        common.retainAll(other.getKnownTopics());
+        return common;
     }
 
     public enum AnimationPhase {

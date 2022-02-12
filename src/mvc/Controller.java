@@ -36,6 +36,7 @@ public class Controller {
 	protected boolean keyWPressed = false;
 	protected boolean keyQPressed = false;
 	protected boolean keyEPressed = false;
+	protected boolean keyIPressed = false;
 	protected boolean keySpacePressed = false;
 	protected boolean keyUpPressed = false;
 	protected boolean keyRightPressed = false;
@@ -147,5 +148,13 @@ public class Controller {
 	}
 	public boolean isKeyWWasPressed() {
 		return keyWWasPressed;
+	}
+
+	public void setKeyIPressed(boolean value) {
+		this.keyIPressed = value;
+	}
+
+	public boolean isKeyIPressed() {
+		return keyIPressed;
 	}
 }

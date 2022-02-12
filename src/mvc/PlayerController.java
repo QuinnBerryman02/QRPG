@@ -15,6 +15,7 @@ public class PlayerController extends Controller implements KeyListener {
 			case 'w': keyWPressed = true; break;
 			case 'd': keyDPressed = true; break;
 			case 'q': keyQPressed = true; break;
+            case 'i': keyIPressed = true; break;
 			case 'e': keyEPressed = true; break;
 			case ' ': keySpacePressed = true; break; 
 			case 'y': keyUpPressed = true; break;
@@ -33,6 +34,7 @@ public class PlayerController extends Controller implements KeyListener {
 			case 'w': keyWPressed = false; break;
 			case 'd': keyDPressed = false; break;
 			case 'q': keyQPressed = false; break;
+            case 'i': keyIPressed = false; break;
 			case 'e': keyEPressed = false; break;
 			case ' ': keySpacePressed = false; break; 
 			case 'y': keyUpPressed = false; break;

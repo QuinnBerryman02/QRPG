@@ -30,7 +30,6 @@ public class Point3f {
 	private float x;
 	private float y;
 	private float z;
-	private int boundary=900;
 
 	public Point3f() { 
 		this.x = 0.0f;
@@ -41,9 +40,6 @@ public class Point3f {
 		this.x = x;
 		this.y = y;
 		this.z = z;
-	}
-	private void setBoundary(int boundary) {
-		this.boundary = boundary;
 	}
 
 	public float getPostion(int postion) {
@@ -68,15 +64,9 @@ public class Point3f {
 	}
 	 
 	public void applyVector(Vector3f vector) { 
-		 setX(checkBoundary(x + vector.getX()));
-		 setY(checkBoundary(y + vector.getY()));
-		 setZ(checkBoundary(z + vector.getZ())); 
-	}
-
-	private float checkBoundary(float f) {
-		//if (f < 0) f = 0.0f;
-		//if (f > boundary) f = (float)boundary;
-		return f;
+		 setX(x + vector.getX());
+		 setY(y + vector.getY());
+		 setZ(z + vector.getZ()); 
 	}
 
 	public float getX() {
