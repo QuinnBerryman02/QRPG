@@ -3,6 +3,7 @@ package main;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
+import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
 
@@ -15,7 +16,7 @@ import javax.swing.JLabel;
 import mvc.Model;
 import mvc.PlayerController;
 import mvc.Viewer;
-import util.Entity;
+import util.*;
 
 import java.awt.Toolkit;
 
@@ -161,7 +162,10 @@ public class MainWindow {
 		return W;
 	}
 
-	public static void initiateConversation(Entity e1, Entity e2) {
-
+	public static void initiateConversation(Player p, NPC npc) {
+		Dialogue d = new Dialogue(p, npc);
+		frame.add(d);
+		d.requestFocusInWindow(); 
+		canvas.setMenu(d);
 	}
 }

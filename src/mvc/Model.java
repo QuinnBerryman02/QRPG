@@ -141,8 +141,10 @@ public class Model {
 						npc.setInteractable(true);
 						if(entity instanceof Player) {
 							if(entity.getController().isKeyIPressed()) {
-								MainWindow.initiateConversation(entity, other);
+								MainWindow.initiateConversation((Player)entity, npc);
 								System.out.println("Starting a coversation between player and " + npc.getName());
+								entity.getController().setKeyIPressed(false);
+								npc.setInteractable(false);
 							}
 						}
 					} else {

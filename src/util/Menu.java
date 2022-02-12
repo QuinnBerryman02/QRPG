@@ -1,36 +1,49 @@
 package util;
 
 import java.awt.Graphics;
-import java.util.ArrayList;
+import java.awt.Component;
+import java.io.File;
+import java.io.IOException;
+import java.awt.Image;
+import javax.imageio.ImageIO;
 
-public abstract class Menu {
-    public abstract void display(Graphics g);
+import javax.swing.border.AbstractBorder;
+
+public interface Menu {
+    void render(Graphics g);
 }
 
-class Dialogue extends Menu {
-    private Player player;
-    private NPC npc; 
-    private ArrayList<Topic> topics = new ArrayList<Topic>();
-    private ArrayList<Topic> availableTopics;
+class CustomBorder extends AbstractBorder {
+    private Image img;
 
-    public Dialogue(Player player, NPC npc) {
-        this.player = player;
-        this.npc = npc;
-        topics.add(Topic.getTopic("Introduction"));
-        availableTopics = player.findCommonTopics(npc);
-    }
-
-    public void display(Graphics g) {
-
-    }
-    
-    @Override
-    public String toString() {
-        String s = "";
-        for (Topic topic : topics) {
-            s += "Player asked about: " + topic.getName() + "\n"; 
-            s += npc.getName() + " responded with: " + npc.getResponse(topic) + "\n";
+    public CustomBorder() {
+        File source = new File("res/gui/RPG_GUI_v1.png");
+        try {
+            img = ImageIO.read(source);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return s;
+    }
+
+    @Override
+    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
+        super.paintBorder(c, g, x, y, width, height);
+        g.drawImage(img, x, y, x+15, y+15, 586, 130, 586+15, 130+15, null);
+        g.drawImage(img, x+15, y, x+width-15, y+10, 612, 130, 612+48, 130+10, null);
+        g.drawImage(img, x+width-15, y, x+width, y+15, 669, 130, 669+15, 130+15, null);
+
+        g.drawImage(img, x+width-10, y+16, x+width, y+height-16, 674, 156, 674+10, 156+36, null);
+
+        g.drawImage(img, x+width-15, y+height-15, x+width, y+height, 669, 201, 669+15, 201+15, null);
+        g.drawImage(img, x+15, y+height-9, x+width-15, y+height, 612, 207, 612+48, 207+9, null);
+        g.drawImage(img, x, y+height-15, x+15, y+height, 586, 201, 586+15, 201+15, null);
+
+        g.drawImage(img, x, y+16, x+10, y+height-16, 586, 156, 586+10, 156+36, null);
+    }
+
+    @Override
+    public boolean isBorderOpaque()
+    {
+        return true;
     }
 }
