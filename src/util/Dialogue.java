@@ -8,6 +8,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
@@ -18,6 +19,9 @@ import javax.swing.border.EmptyBorder;
 import java.awt.Image;
 import java.awt.Dimension;
 import java.awt.Component;
+import java.awt.Adjustable;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.AdjustmentEvent;
 
 import main.MainWindow;
 
@@ -36,8 +40,10 @@ public class Dialogue extends Menu {
     private DetailPanel details;
     private TopicResponsePanel text;
     private TopicPanel overview;
+    private TopicLoader topicLoader;
 
     public Dialogue(Player player, NPC npc) {
+        topicLoader = new TopicLoader(new File("res/topic.xml"));
         this.player = player;
         this.npc = npc;
         Topic t = Topic.getTopic("Introduction");
@@ -106,6 +112,7 @@ public class Dialogue extends Menu {
     }
 
     class DetailPanel extends JPanel {
+        private static final int SCALE = 2;
         public DetailPanel(int w, int h, CustomBorder cb) {
             setPreferredSize(new Dimension(w,h));
             setBackground(new Color(1f,1f,1f,0f));
@@ -114,6 +121,23 @@ public class Dialogue extends Menu {
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
+            int[] coords = npc.getSkin().getFaceCoords();
+            int x = getX() + 10;
+            int y = getY() + 10;
+            try {
+                File f = new File("res/sprites/faces_transparent.png");
+                Image myImage = ImageIO.read(f);
+                g.drawImage(myImage, x, y, x+coords[0]*4,y+coords[1]*4,coords[2],coords[3],coords[4],coords[5], null); 
+            
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            g.setColor(new Color(0f,0f,0f,1f));
+            g.setFont(new Font("Details",Font.BOLD,20));
+            char[] c = ("Name: " + npc.getName()).toCharArray();
+            g.drawChars(c, 0, c.length, x, y+48*4+20);
+            c = ("Class: " + npc.getSkin().getName()).toCharArray();
+            g.drawChars(c, 0, c.length, x, y+48*4+40);
             //System.out.printf("Class:%s,x:%d y:%d w:%d h:%d\n",getClass().getName(),getX(), getY(), getWidth(), getHeight());
         }
     }
@@ -122,10 +146,11 @@ public class Dialogue extends Menu {
         private JPanel labelPanel;
         private ArrayList<JLabel> labels = new ArrayList<JLabel>();
         private int w;
+        private JScrollPane sp;
         public TopicResponsePanel(int w, int h, CustomBorder cb) {
             this.w = w;
             labelPanel = new JPanel();
-            JScrollPane sp = new JScrollPane(labelPanel);
+            sp = new JScrollPane(labelPanel);
             sp.setPreferredSize(new Dimension(w,h));
             setBackground(new Color(1f,1f,1f,0f));
             setBorder(cb);
@@ -136,6 +161,7 @@ public class Dialogue extends Menu {
             labelPanel.setBackground(new Color(1f,1f,1f,0f));
             sp.setBackground(new Color(1f,1f,1f,0f));
             sp.getViewport().setBackground(new Color(1f,1f,1f,0f));
+            sp.setBorder(new EmptyBorder(10, 0, 20, 0));
             add(sp);
         }
         public void paintComponent(Graphics g) {
@@ -144,13 +170,23 @@ public class Dialogue extends Menu {
         }
 
         public void addTopicResponse(TopicResponse tr) {
-            String s = tr.getTopic().getName() + "<br/>" + tr.getResponse().getText();
+            String s = tr.getTopic().getName() + "<br/>" + tr.getResponse().getText(npc.getKnownTopics());
             JLabel label = new JLabel("<html>" + s + "</html>");
             labelPanel.add(label);
             labels.add(label);
-            label.setPreferredSize(new Dimension(w - 10, 0));
             label.setAlignmentX(Component.LEFT_ALIGNMENT);
             label.setBorder(new EmptyBorder(0, 10, 0, 0));
+        }
+
+        public void bottomScroll() {
+            JScrollBar vsb = sp.getVerticalScrollBar();
+            vsb.addAdjustmentListener(new AdjustmentListener() {
+                @Override
+                public void adjustmentValueChanged(AdjustmentEvent e) {
+                    e.getAdjustable().setValue(e.getAdjustable().getMaximum());
+                    vsb.removeAdjustmentListener(this);
+                }
+            });
         }
     }
     
@@ -201,12 +237,15 @@ public class Dialogue extends Menu {
                 topics.add(tr);
                 newTopics.forEach(t -> {
                     if(!availableTopics.contains(t)) {
-                        availableTopics.add(t);
                         player.getKnownTopics().add(t);
-                        getOverview().addTopic(t);
+                        if(npc.getKnownTopics().contains(t)) {
+                            availableTopics.add(t);
+                            getOverview().addTopic(t);
+                        }
                     }
                 });
                 getTextPanel().addTopicResponse(tr);
+                getTextPanel().bottomScroll();
                 pack();
                 repaint();
             }));

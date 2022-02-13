@@ -28,6 +28,9 @@ public class Topic {
 
 class Response {
     private String answer;
+    private final String HAS_TOPIC = "<font color=blue><b>";
+    private final String DOESNT_HAVE_TOPIC = "<font color=green><b>";
+    private final String CLOSE_TAGS = "<b/><font color=black>"; 
     public Response(String answer) {
         this.answer = answer;
     }
@@ -46,14 +49,18 @@ class Response {
         return topics;
     }
 
-    public String getText() {
+    public String getText(ArrayList<Topic> topics) {
         String text = "";
         String[] first = answer.split("\\(");
+        text += "<font color=black>";
         text += first[0];
         for (int i=1;i<first.length;i++) {
             String[] second = first[i].split("\\)");
             String[] third = second[0].split("=");
+            Topic t = Topic.getTopic(third[1]);
+            text += topics.contains(t) ? HAS_TOPIC : DOESNT_HAVE_TOPIC;
             text += third[0];
+            text += CLOSE_TAGS;
             text += second[1];
         }
         return text;

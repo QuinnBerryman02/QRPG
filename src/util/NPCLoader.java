@@ -16,8 +16,10 @@ public class NPCLoader {
     private DocumentBuilderFactory factory;
     private DocumentBuilder builder;
     private Document document;
+    private TopicLoader topicLoader;
 
     public NPCLoader(File file) {
+        topicLoader = new TopicLoader(new File("res/topic.xml"));
         try {
             factory = DocumentBuilderFactory.newInstance();
             builder = factory.newDocumentBuilder();
@@ -52,7 +54,12 @@ public class NPCLoader {
         for (int j=0;j<topics.getLength();j++) {
             Element e = (Element)topics.item(j);
             Topic t = Topic.getTopic(e.getAttribute("name"));
-            Response r = new Response(e.getTextContent());
+            Response r;
+            if(e.getAttribute("default").equals("true")) {
+                r = topicLoader.getDefaultResponse(t);
+            } else {
+                r = new Response(e.getTextContent());
+            }
             trs.add(new TopicResponse(t, r));
         }
         npc.setTopicResponses(trs);
