@@ -52,7 +52,6 @@ public class Viewer extends JPanel {
 	private final int TILE_SIZE_DEF = 16;
 	private final int SCALE = 3;
 	private final int UNIT_DEF = SCALE * TILE_SIZE_DEF;
-	private Menu menu;
 	 
 	public Viewer(Model world) {
 		this.gameWorld = world;
@@ -87,10 +86,6 @@ public class Viewer extends JPanel {
 		drawChunkLines(g);
 
 		drawText(g);
-
-		if(menu != null) {
-			menu.render(g);
-		}
 	}
 
 	private void drawBackground(Graphics g) {
@@ -263,9 +258,5 @@ public class Viewer extends JPanel {
 		float x = (UNIT_DEF * (p.getX() - staticPlayer.getX())) + MainWindow.getW()/2;
 		float y = (UNIT_DEF * (p.getY() - staticPlayer.getY())) + MainWindow.getH()/2;
 		return new Point3f(x, y, 0f);
-	}
-
-	public void setMenu(Menu menu) {
-		this.menu = menu;
 	}
 }

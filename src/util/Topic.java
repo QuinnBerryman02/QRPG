@@ -31,8 +31,32 @@ class Response {
     public Response(String answer) {
         this.answer = answer;
     }
-    public String getAnswer() {
+    public String getRaw() {
         return answer;
+    }
+    public ArrayList<Topic> findReferencedTopics() {
+        ArrayList<Topic> topics = new ArrayList<Topic>();
+        String[] first = answer.split("\\(");
+        for (int i=1;i<first.length;i++) {
+            String[] second = first[i].split("\\)");
+            String[] third = second[0].split("=");
+            Topic t = Topic.getTopic(third[1]);
+            topics.add(t);
+        }
+        return topics;
+    }
+
+    public String getText() {
+        String text = "";
+        String[] first = answer.split("\\(");
+        text += first[0];
+        for (int i=1;i<first.length;i++) {
+            String[] second = first[i].split("\\)");
+            String[] third = second[0].split("=");
+            text += third[0];
+            text += second[1];
+        }
+        return text;
     }
 }
 

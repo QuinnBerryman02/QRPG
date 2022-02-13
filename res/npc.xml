@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <npc name="John" x="-8" y="4" skin="Magician_M" face="null">
-    <topic name="Introduction"> Hello my name is John, nice to meet you </topic>
-    <topic name="Wizardry"> Wizardry is the study and use of magic </topic>
-    <topic name="Magic"> Magic is a science used by mages.\n It involves manipulating the elements </topic>
+    <topic name="Introduction"> Hello my name is John, nice to meet you. </topic>
+    <topic name="Wizardry"> Wizardry is the study and use of (magic=Magic). </topic>
+    <topic name="Magic"> Magic is a science used by (mages=Mage). It involves manipulating the (elements=Elements). </topic>
     <topic name="Mage"> Mage? Why I am a mage! Would you like to be one? </topic>
-    <topic name="Elements"> Earth, Fire, Wind, Lightning, Water are the elements </topic>
+    <topic name="Elements"> Earth, Fire, Wind, Lightning, Water are the elements. </topic>
 </npc>
 

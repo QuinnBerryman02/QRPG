@@ -51,6 +51,7 @@ public class MainWindow {
 	private static JFrame frame = new JFrame("Quinn's Game");   // Change to the name of your game 
 	private static Model gameworld = new Model();
 	private static Viewer canvas = new Viewer(gameworld);
+	private static Menu menu;
 	private final static int targetFPS = 15;
 	private static JLabel backgroundImageForStartMenu ;
 	private final static int W = Toolkit.getDefaultToolkit().getScreenSize().width;
@@ -140,6 +141,9 @@ public class MainWindow {
 	private static void gameloop() { 
 		gameworld.gamelogic();
 		canvas.updateview();  
+		if(menu != null) {
+			menu.update();
+		}
 	}
 
 	public static void printTime(String place) {
@@ -163,9 +167,6 @@ public class MainWindow {
 	}
 
 	public static void initiateConversation(Player p, NPC npc) {
-		Dialogue d = new Dialogue(p, npc);
-		frame.add(d);
-		d.requestFocusInWindow(); 
-		canvas.setMenu(d);
+		menu = new Dialogue(p, npc);
 	}
 }

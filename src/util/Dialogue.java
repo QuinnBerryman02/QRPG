@@ -4,109 +4,233 @@ import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
+import javax.swing.ScrollPaneLayout;
+import javax.swing.border.EmptyBorder;
 
 import java.awt.Image;
 import java.awt.Dimension;
+import java.awt.Component;
 
 import main.MainWindow;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 
-public class Dialogue extends JPanel implements Menu {
+public class Dialogue extends Menu {
+    private MainPanel panel;
     private Player player;
     private NPC npc; 
-    private ArrayList<Topic> topics = new ArrayList<Topic>();
+    private ArrayList<TopicResponse> topics = new ArrayList<TopicResponse>();
     private ArrayList<Topic> availableTopics;
-    private Scroller text;
-    private Scroller overview;
     private DetailPanel details;
+    private TopicResponsePanel text;
+    private TopicPanel overview;
 
     public Dialogue(Player player, NPC npc) {
-        super();
         this.player = player;
         this.npc = npc;
-        topics.add(Topic.getTopic("Introduction"));
+        Topic t = Topic.getTopic("Introduction");
+        topics.add(new TopicResponse(t, npc.getResponse(t)));
         availableTopics = player.findCommonTopics(npc);
-        setSize(MainWindow.getW() - 200, MainWindow.getH() - 200);
-        setLocation(100, 100);
-        setBackground(new Color(1f,1f,1f,0f));
+
         CustomBorder customBorder = new CustomBorder();
-        setBorder(customBorder);
+        
+        setSize(new Dimension(MainWindow.getW() - 200, MainWindow.getH() - 200));
+        setLocation(100, 100);
 
-        details = new DetailPanel();
-        text = new Scroller(new JLabel(), customBorder);
-        overview = new Scroller(new JLabel(), customBorder);
-        details.setBorder(customBorder);
-        details.setBounds(getX()+10,getY()+10, getWidth()*1/5-10,getHeight()-20);
-        text.setBounds(getX()+getWidth()*1/5,getY()+10, getWidth()*3/5-10,getHeight()-20);
-        overview.setBounds(getX() + getWidth()*4/5,getY()+10,getWidth()*1/5-10,getHeight()-20);
-        add(details);
-        add(text);
-        add(overview);
+        panel = new MainPanel();
+        panel.setBorder(customBorder);
+        panel.setPreferredSize(getSize());
+
+        details = new DetailPanel(getWidth()/5,getHeight(), customBorder);
+        text = new TopicResponsePanel(getWidth()*3/5,getHeight(), customBorder);
+        overview = new TopicPanel(getWidth()/5,getHeight(), customBorder);
+
+        panel.add(details);
+        panel.add(text);
+        panel.add(overview);
+        add(panel);
+        pack();
         setVisible(true);
+        repaint();
     }
 
-    public void render(Graphics g) {
-        super.paintComponent(g);
-        try {
-            File f = new File("res/gui/paperBackground.png");
-            Image myImage = ImageIO.read(f);
-		    g.drawImage(myImage, getX(), getY(), getWidth(), getHeight(), null); 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        getBorder().paintBorder(this, g, getX() + 5, getY() + 5, getWidth() - 10, getHeight() - 10);
-        details.render(g);
-        text.render(g);
-        overview.render(g);
-        System.out.println("Player");
-        System.out.println(player.getKnownTopics());
-        System.out.println("NPC");
-        System.out.println(npc.getKnownTopics());
-        System.out.println("Available");
-        System.out.println(availableTopics);
+    public void update() {
+        //System.out.printf("Class:%s,x:%d y:%d w:%d h:%d\n",getClass().getName(),getX(), getY(), getWidth(), getHeight());
+        repaint();
     }
-    
+
     @Override
     public String toString() {
         String s = "";
-        for (Topic topic : topics) {
-            s += "Player asked about: " + topic.getName() + "\n"; 
-            s += npc.getName() + " responded with: " + npc.getResponse(topic) + "\n";
+        for (TopicResponse tr : topics) {
+            s += "Player asked about: " + tr.getTopic().getName() + "\n"; 
+            s += npc.getName() + " responded with: " + tr.getResponse().getRaw() + "\n";
         }
         return s;
     }
+
+    class MainPanel extends JPanel {
+        public MainPanel() {
+            setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
+            setBackground(new Color(1f,1f,1f,0f));
+        }
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            try {
+                File f = new File("res/gui/paperBackground.png");
+                Image myImage = ImageIO.read(f);
+                g.drawImage(myImage, getX(), getY(), getWidth(), getHeight(), null); 
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            //System.out.printf("Class:%s,x:%d y:%d w:%d h:%d\n",getClass().getName(),getX(), getY(), getWidth(), getHeight());
+            // System.out.println("Player");
+            // System.out.println(player.getKnownTopics());
+            // System.out.println("NPC");
+            // System.out.println(npc.getKnownTopics());
+            // System.out.println("Available");
+            // System.out.println(availableTopics);
+        }
+    }
+
+    class DetailPanel extends JPanel {
+        public DetailPanel(int w, int h, CustomBorder cb) {
+            setPreferredSize(new Dimension(w,h));
+            setBackground(new Color(1f,1f,1f,0f));
+            setBorder(cb);
+        }
+        @Override
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            //System.out.printf("Class:%s,x:%d y:%d w:%d h:%d\n",getClass().getName(),getX(), getY(), getWidth(), getHeight());
+        }
+    }
+    
+    class TopicResponsePanel extends JPanel {
+        private JPanel labelPanel;
+        private ArrayList<JLabel> labels = new ArrayList<JLabel>();
+        private int w;
+        public TopicResponsePanel(int w, int h, CustomBorder cb) {
+            this.w = w;
+            labelPanel = new JPanel();
+            JScrollPane sp = new JScrollPane(labelPanel);
+            sp.setPreferredSize(new Dimension(w,h));
+            setBackground(new Color(1f,1f,1f,0f));
+            setBorder(cb);
+            labelPanel.setLayout(new BoxLayout(labelPanel,BoxLayout.Y_AXIS));
+            for (TopicResponse tr : topics) {
+                addTopicResponse(tr);
+            }
+            labelPanel.setBackground(new Color(1f,1f,1f,0f));
+            sp.setBackground(new Color(1f,1f,1f,0f));
+            sp.getViewport().setBackground(new Color(1f,1f,1f,0f));
+            add(sp);
+        }
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            //System.out.printf("Class:%s,x:%d y:%d w:%d h:%d\n",getClass().getName(),getX(), getY(), getWidth(), getHeight());
+        }
+
+        public void addTopicResponse(TopicResponse tr) {
+            String s = tr.getTopic().getName() + "<br/>" + tr.getResponse().getText();
+            JLabel label = new JLabel("<html>" + s + "</html>");
+            labelPanel.add(label);
+            labels.add(label);
+            label.setPreferredSize(new Dimension(w - 10, 0));
+            label.setAlignmentX(Component.LEFT_ALIGNMENT);
+            label.setBorder(new EmptyBorder(0, 10, 0, 0));
+        }
+    }
+    
+    class TopicPanel extends JPanel {
+        private JPanel buttonPanel;
+        private ArrayList<TopicButton> buttons = new ArrayList<TopicButton>();
+        private int w;
+        public TopicPanel(int w, int h, CustomBorder cb) {
+            this.w = w;
+            buttonPanel = new JPanel();
+            JScrollPane sp = new JScrollPane(buttonPanel);
+            sp.setPreferredSize(new Dimension(w,h));
+            setBackground(new Color(1f,1f,1f,0f));
+            setBorder(cb);
+            buttonPanel.setLayout(new BoxLayout(buttonPanel,BoxLayout.Y_AXIS));
+            availableTopics.forEach(t -> addTopic(t));
+            buttonPanel.setBackground(new Color(1f,1f,1f,0f));
+            sp.setBackground(new Color(1f,1f,1f,0f));
+            sp.getViewport().setBackground(new Color(1f,1f,1f,0f));
+            add(sp);
+        }
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            //System.out.printf("Class:%s,x:%d y:%d w:%d h:%d\n",getClass().getName(),getX(), getY(), getWidth(), getHeight());
+        }
+
+        public void addTopic(Topic topic) {
+            TopicButton tb = new TopicButton(topic);
+            buttonPanel.add(tb);
+            buttons.add(tb);
+            tb.setPreferredSize(new Dimension(w - 20,20));
+            tb.setAlignmentX(Component.CENTER_ALIGNMENT);
+            tb.setBackground(new Color(1f,1f,1f,0f));
+            tb.setBorder(new EmptyBorder(0,0,0,0));
+        }
+    }
+
+    class TopicButton extends JButton {
+        private Topic topic;
+        public TopicButton(Topic topic) {
+            this.topic = topic;
+            setText(topic.getName());
+            addActionListener((event -> {
+                System.out.println("clicked on: " + getText());
+                Response response = npc.getResponse(topic);
+                ArrayList<Topic> newTopics = response.findReferencedTopics();
+                TopicResponse tr = new TopicResponse(topic, response);
+                topics.add(tr);
+                newTopics.forEach(t -> {
+                    if(!availableTopics.contains(t)) {
+                        availableTopics.add(t);
+                        player.getKnownTopics().add(t);
+                        getOverview().addTopic(t);
+                    }
+                });
+                getTextPanel().addTopicResponse(tr);
+                pack();
+                repaint();
+            }));
+        }
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            //System.out.printf("Topic:%s,x:%d y:%d w:%d h:%d\n",topic.toString(),getX(), getY(), getWidth(), getHeight());
+        }
+    }
+
+    public TopicResponsePanel getTextPanel() {
+        return text;
+    }
+
+    public TopicPanel getOverview() {
+        return overview;
+    }
+
+    public DetailPanel getDetails() {
+        return details;
+    }
 }
 
-class Scroller extends JScrollPane implements Menu{
-    public Scroller(JLabel tp, CustomBorder cb) {
-        super(tp);
-        setBackground(new Color(1f,1f,1f,0f));
-        setBorder(cb);
-    }
-    public void render(Graphics g) {
-        super.paintComponent(g);
-        //System.out.printf("x:%d y:%d w:%d h:%d\n",getX(), getY(), getWidth(), getHeight());
-        // g.setColor(getForeground());
-        // g.fillRect(getX(), getY(), getWidth(), getHeight());
-        getBorder().paintBorder(this, g, getX() + 5, getY() + 5, getWidth() - 10, getHeight() - 10);
-    }
-}
 
-class DetailPanel extends JPanel implements Menu {
-    @Override
-    public void render(Graphics g) {
-        super.paintComponent(g);
-        setBackground(new Color(1f,1f,1f,0f));
-        getBorder().paintBorder(this, g, getX() + 5, getY() + 5, getWidth() - 10, getHeight() - 10);
-    }
-}
+
+
+
