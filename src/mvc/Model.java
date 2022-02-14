@@ -171,6 +171,28 @@ public class Model {
 						Vector3f v2 = hb.intersection(c, v);
 						if(v2 != null) return v2;
 						break;
+					case 300:
+						c = new Hitbox(new Point3f(px - 2 + .5f + j,py - 2 + .5f + i,0),1,1);
+						Vector3f wasIntersecting = hb.intersection(c, new Vector3f());
+						v2 = hb.intersection(c, v);
+						if(v2 != null) {
+							if(wasIntersecting != null) {
+								break;
+							}
+							if(entity instanceof Player) {
+								if(entity.getController().isKeyUpPressed()) {
+									Point3f portalPoint = new Point3f(px - 2 + j, py - 2 + i, 0f);
+									String teleport = map.findTeleportTypeByPoint(portalPoint);
+									Point3f destinationPoint = map.findTeleportPointByOther(teleport, portalPoint); 
+									System.out.println("Teleporting from " + portalPoint + " to " + destinationPoint + " via " + teleport);
+									entity.getController().setKeyUpPressed(false);
+									entity.move(new Point3f(destinationPoint.getX()+0.5f,destinationPoint.getY()+0.5f,0f).minusPoint(entity.getCentre()));
+									return new Vector3f();
+								}
+							}
+							return v2;
+						}
+						break;
 					default:
 						break;
 				}

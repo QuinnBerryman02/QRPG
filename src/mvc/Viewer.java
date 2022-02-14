@@ -242,6 +242,9 @@ public class Viewer extends JPanel {
 					case 8224:
 						g.setColor(new Color(1f,0f,0f,0.5f));
 						break;
+					case 300:
+						g.setColor(new Color(0f,1f,0f,0.5f));
+						break;
 					case 0:
 						g.setColor(new Color(0f,0f,0f,0.0f));
 						break;

@@ -187,6 +187,44 @@ public class Map {
     public int indexOfLayer(String layer) {
         return Arrays.asList(layerOrder).indexOf(layer);
     }
+
+    public String findTeleportTypeByPoint(Point3f p) {
+        p = worldPointToObject(p);
+        NodeList objects = document.getElementsByTagName("object");
+        for (int i=0;i<objects.getLength();i++) {
+            Element e = (Element)objects.item(i);
+            //System.out.printf("ox:%s px:%s oy:%s py:%s\n",Integer.parseInt(e.getAttribute("x")),(int)p.getX()*16,Integer.parseInt(e.getAttribute("y")),(int)(p.getY()+1)*16);
+            if(Integer.parseInt(e.getAttribute("x")) == (int)p.getX() && Integer.parseInt(e.getAttribute("y")) == (int)p.getY()) {
+                return ((Element)(e.getElementsByTagName("property").item(0))).getAttribute("value");
+            }
+        }
+        return null;
+    }
+
+    public Point3f findTeleportPointByOther(String type, Point3f p) {
+        p = worldPointToObject(p);
+        NodeList objectsProperties = document.getElementsByTagName("property");
+        for (int i=0;i<objectsProperties.getLength();i++) {
+            Element e = (Element)objectsProperties.item(i);
+            if(e.getAttribute("value").equals(type)) {
+                Element parent = (Element)e.getParentNode().getParentNode();
+                System.out.printf("ox:%d px:%d oy:%d py:%d\n",Integer.parseInt(parent.getAttribute("x")),(int)p.getX(),Integer.parseInt(parent.getAttribute("y")),(int)p.getY());
+                if(Integer.parseInt(parent.getAttribute("x")) != (int)p.getX() || Integer.parseInt(parent.getAttribute("y")) != (int)p.getY()) {
+                    System.out.println("test?");
+                    return objectPointToWorld(new Point3f(Float.parseFloat(parent.getAttribute("x")),Float.parseFloat(parent.getAttribute("y")),0f));
+                }
+            }
+        }
+        return null;
+    }
+
+    public Point3f objectPointToWorld(Point3f p) {
+        return new Point3f(p.getX()/16, p.getY()/16 - 1,0f);
+    }
+
+    public Point3f worldPointToObject(Point3f p) {
+        return new Point3f(p.getX()*16, (p.getY()+1)*16,0f);
+    }
 }
 
 
