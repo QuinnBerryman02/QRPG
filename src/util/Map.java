@@ -18,6 +18,7 @@ public class Map {
     private ArrayList<Tileset> tilesets = new ArrayList<Tileset>();
     private String[] layerOrder = {"land", "river", "land_2", "walls", "crops", "windows", "sprites", "roofwalls", "roofs","roofcrops", "collisions"};
     private NodeList chunks;
+    private DoorLoader doorLoader;
 
     public Map(File file) {
         try {
@@ -26,6 +27,7 @@ public class Map {
             document = builder.parse(file);
             document.getDocumentElement().normalize();
             chunks = document.getElementsByTagName("chunk");
+            doorLoader = new DoorLoader(new File("res/door.xml"));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -187,14 +189,40 @@ public class Map {
         return Arrays.asList(layerOrder).indexOf(layer);
     }
 
+    public Point3f findTeleportPointByOther(String type, Point3f p) {
+        return doorLoader.findTeleportPointByOther(type,p);
+    }
+    
+    public String findTeleportTypeByPoint(Point3f p) {
+        return doorLoader.findTeleportTypeByPoint(p);
+    }
+}
+
+class DoorLoader {
+    private DocumentBuilderFactory factory;
+    private DocumentBuilder builder;
+    private Document document;
+
+    public DoorLoader(File file) {
+        try {
+            factory = DocumentBuilderFactory.newInstance();
+            builder = factory.newDocumentBuilder();
+            document = builder.parse(file);
+            document.getDocumentElement().normalize();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        
+    }
+
     public String findTeleportTypeByPoint(Point3f p) {
         p = worldPointToObject(p);
-        NodeList objects = document.getElementsByTagName("object");
-        for (int i=0;i<objects.getLength();i++) {
-            Element e = (Element)objects.item(i);
+        NodeList doors = document.getElementsByTagName("door");
+        for (int i=0;i<doors.getLength();i++) {
+            Element e = (Element)doors.item(i);
             //System.out.printf("ox:%s px:%s oy:%s py:%s\n",Integer.parseInt(e.getAttribute("x")),(int)p.getX()*16,Integer.parseInt(e.getAttribute("y")),(int)(p.getY()+1)*16);
             if(Integer.parseInt(e.getAttribute("x")) == (int)p.getX() && Integer.parseInt(e.getAttribute("y")) == (int)p.getY()) {
-                return ((Element)(e.getElementsByTagName("property").item(0))).getAttribute("value");
+                return e.getTextContent();
             }
         }
         return null;
@@ -202,15 +230,13 @@ public class Map {
 
     public Point3f findTeleportPointByOther(String type, Point3f p) {
         p = worldPointToObject(p);
-        NodeList objectsProperties = document.getElementsByTagName("property");
-        for (int i=0;i<objectsProperties.getLength();i++) {
-            Element e = (Element)objectsProperties.item(i);
-            if(e.getAttribute("value").equals(type)) {
-                Element parent = (Element)e.getParentNode().getParentNode();
-                System.out.printf("ox:%d px:%d oy:%d py:%d\n",Integer.parseInt(parent.getAttribute("x")),(int)p.getX(),Integer.parseInt(parent.getAttribute("y")),(int)p.getY());
-                if(Integer.parseInt(parent.getAttribute("x")) != (int)p.getX() || Integer.parseInt(parent.getAttribute("y")) != (int)p.getY()) {
-                    System.out.println("test?");
-                    return objectPointToWorld(new Point3f(Float.parseFloat(parent.getAttribute("x")),Float.parseFloat(parent.getAttribute("y")),0f));
+        NodeList doors = document.getElementsByTagName("door");
+        for (int i=0;i<doors.getLength();i++) {
+            Element e = (Element)doors.item(i);
+            if(e.getTextContent().equals(type)) {
+                //System.out.printf("ox:%d px:%d oy:%d py:%d\n",Integer.parseInt(e.getAttribute("x")),(int)p.getX(),Integer.parseInt(e.getAttribute("y")),(int)p.getY());
+                if(Integer.parseInt(e.getAttribute("x")) != (int)p.getX() || Integer.parseInt(e.getAttribute("y")) != (int)p.getY()) {
+                    return objectPointToWorld(new Point3f(Float.parseFloat(e.getAttribute("x")),Float.parseFloat(e.getAttribute("y")),0f));
                 }
             }
         }
@@ -225,6 +251,5 @@ public class Map {
         return new Point3f(p.getX()*16, (p.getY()+1)*16,0f);
     }
 }
-
 
 
