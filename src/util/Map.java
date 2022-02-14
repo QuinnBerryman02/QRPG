@@ -16,7 +16,8 @@ public class Map {
     private DocumentBuilder builder;
     private Document document;
     private ArrayList<Tileset> tilesets = new ArrayList<Tileset>();
-    private String[] layerOrder = {"land", "river", "land_2", "walls", "crops", "windows", "sprites", "roofs","collisions"};
+    private String[] layerOrder = {"land", "river", "land_2", "walls", "crops", "windows", "sprites", "roofwalls", "roofs","roofcrops", "collisions"};
+    private NodeList chunks;
 
     public Map(File file) {
         try {
@@ -24,6 +25,7 @@ public class Map {
             builder = factory.newDocumentBuilder();
             document = builder.parse(file);
             document.getDocumentElement().normalize();
+            chunks = document.getElementsByTagName("chunk");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -49,7 +51,6 @@ public class Map {
 
 
     public void printChunksByCoordinate(int x, int y) {
-        NodeList chunks = document.getElementsByTagName("chunk");
         for (int i=0;i<chunks.getLength();i++) {
             Element chunk = (Element)chunks.item(i);
             Element layer = (Element)chunk.getParentNode().getParentNode();   
@@ -61,7 +62,6 @@ public class Map {
     }
 
     public ArrayList<Chunk> getChunksByCoordinate(int x, int y) {
-        NodeList chunks = document.getElementsByTagName("chunk");
         ArrayList<Chunk> chunksAtPosition = new ArrayList<Chunk>();
         for (int i=0;i<chunks.getLength();i++) {
             Element chunk = (Element)chunks.item(i);
@@ -138,7 +138,6 @@ public class Map {
                 if(collisions[i].length - j - 1 < positionInChunkX - (15 - radius)) chunkX += 16;
                 if(i < radius - positionInChunkY)                                   chunkY -= 16;
                 if(collisions.length - i - 1 < positionInChunkY - (15 - radius))    chunkY += 16;
-
                 ArrayList<Chunk> allLayers = getChunksByCoordinate(chunkX, chunkY);
                 allLayers.removeIf((c) -> !c.getLayer().getAttribute("name").equals("collisions"));
                 if(allLayers.isEmpty()) {

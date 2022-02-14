@@ -73,6 +73,9 @@ public class Viewer extends JPanel {
 		chunksOnScreen = 0;
 		staticPlayer = gameWorld.getPlayer().getCentre().plusVector(new Vector3f());
 		chunksLoaded = map.findClosestChunks(staticPlayer);
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, MainWindow.getW(), MainWindow.getH());
+
 		drawBackground(g);
 		
 		drawPlayer(g);
