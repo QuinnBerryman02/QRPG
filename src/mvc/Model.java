@@ -40,7 +40,7 @@ public class Model {
 		map = new Map(new File("res/map.tmx"));
 		map.loadTilesets();
 		//Player 
-		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(0,0,0), 4, new PlayerController());
+		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(-86,84,0), 4, new PlayerController());
 		NPCLoader npcLoader = new NPCLoader(new File("res/npc.xml"));
 		entities = npcLoader.createAllNpcs();
 	}

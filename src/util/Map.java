@@ -218,8 +218,13 @@ class DoorLoader {
     public String findTeleportTypeByPoint(Point3f p) {
         p = worldPointToObject(p);
         NodeList doors = document.getElementsByTagName("door");
+        boolean pastFarms = false;
         for (int i=0;i<doors.getLength();i++) {
             Element e = (Element)doors.item(i);
+            if(i >= 96 && !pastFarms) {
+                p = objectPointToWorld(p);
+                pastFarms = true;
+            }
             //System.out.printf("ox:%s px:%s oy:%s py:%s\n",Integer.parseInt(e.getAttribute("x")),(int)p.getX()*16,Integer.parseInt(e.getAttribute("y")),(int)(p.getY()+1)*16);
             if(Integer.parseInt(e.getAttribute("x")) == (int)p.getX() && Integer.parseInt(e.getAttribute("y")) == (int)p.getY()) {
                 return e.getTextContent();
@@ -231,12 +236,18 @@ class DoorLoader {
     public Point3f findTeleportPointByOther(String type, Point3f p) {
         p = worldPointToObject(p);
         NodeList doors = document.getElementsByTagName("door");
+        boolean pastFarms = false;
         for (int i=0;i<doors.getLength();i++) {
             Element e = (Element)doors.item(i);
             if(e.getTextContent().equals(type)) {
+                if(i >= 96 && !pastFarms) {
+                    p = objectPointToWorld(p);
+                    pastFarms = true;
+                }
                 //System.out.printf("ox:%d px:%d oy:%d py:%d\n",Integer.parseInt(e.getAttribute("x")),(int)p.getX(),Integer.parseInt(e.getAttribute("y")),(int)p.getY());
                 if(Integer.parseInt(e.getAttribute("x")) != (int)p.getX() || Integer.parseInt(e.getAttribute("y")) != (int)p.getY()) {
-                    return objectPointToWorld(new Point3f(Float.parseFloat(e.getAttribute("x")),Float.parseFloat(e.getAttribute("y")),0f));
+                    Point3f destination = new Point3f(Float.parseFloat(e.getAttribute("x")),Float.parseFloat(e.getAttribute("y")),0f);
+                    return i >=96 ? destination : objectPointToWorld(destination);
                 }
             }
         }
