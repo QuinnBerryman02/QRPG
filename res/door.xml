@@ -50,7 +50,6 @@
    <door x="1856" y="-1472">tree_house_2</door>
    <door x="1856" y="-1584">tree_house_second</door>
    <door x="1856" y="-1136">tree_house_second</door>
-   <door x="1856" y="-1136">tree_house_second</door>
    <door x="1840" y="-1104">tree_house_second_1</door>
    <door x="1856" y="-1104">tree_house_second_2</door>
    <door x="-1072" y="-288">tree_house_1</door>
@@ -69,4 +68,145 @@
    <door x="1904" y="-768">tree_house_barn_4</door>
    <door x="1920" y="-768">tree_house_barn_5</door>
    <door x="1936" y="-768">tree_house_barn_6</door>
+   <door x="-1120" y="80">llama_house</door>
+   <door x="1872" y="-240">llama_house</door>
+   <door x="1872" y="-304">llama_house_2</door>
+   <door x="1872" y="96">llama_house_2</door>
+   <door x="-1488" y="0">llama_barn_1</door>
+   <door x="1872" y="672">llama_barn_1</door>
+   <door x="-1472" y="0">llama_barn_2</door>
+   <door x="1888" y="672">llama_barn_2</door>
+   <door x="-1248" y="656">chicken_house</door>
+   <door x="1888" y="1120">chicken_house</door>
+   <door x="-1440" y="832">chicken_barn_1</door>
+   <door x="1792" y="1504">chicken_barn_1</door>
+   <door x="-1424" y="832">chicken_barn_2</door>
+   <door x="1808" y="1504">chicken_barn_2</door>
+   <door x="-1056" y="1088">town_hall</door>
+   <door x="1296" y="1840">town_hall</door>
+   <door x="1168" y="1760">town_hall_jail</door>
+   <door x="1680" y="1728">town_hall_jail</door>
+   <door x="1280" y="1728">town_hall_second_1</door>
+   <door x="1296" y="1728">town_hall_second_2</door>
+   <door x="1312" y="1728">town_hall_second_3</door>
+   <door x="1280" y="2208">town_hall_second_1</door>
+   <door x="1296" y="2208">town_hall_second_2</door>
+   <door x="1312" y="2208">town_hall_second_3</door>
+   <door x="-1376" y="1360">guild_hall_1</door>
+   <door x="-1360" y="1360">guild_hall_2</door>
+   <door x="1824" y="2368">guild_hall_1</door>
+   <door x="1840" y="2368">guild_hall_2</door>
+   
+   <door x="-87" y="96">town_house_1</door>
+   <door x="-110" y="-99">town_house_1</door>
+   <door x="-111" y="-105">town_house_1_second</door>
+   <door x="-55" y="-126">town_house_1_second</door>
+   <door x="-109" y="-103">town_house_1_basement</door>
+   <door x="12" y="-127">town_house_1_basement</door>
+   
+   <door x="-82" y="96">town_house_2</door>
+   <door x="-105" y="-99">town_house_2</door>
+   <door x="-106" y="-105">town_house_2_second</door>
+   <door x="-50" y="-126">town_house_2_second</door>
+   <door x="-104" y="-103">town_house_2_basement</door>
+   <door x="17" y="-127">town_house_2_basement</door>
+   
+   <door x="-77" y="96">town_house_3</door>
+   <door x="-100" y="-99">town_house_3</door>
+   <door x="-101" y="-105">town_house_3_second</door>
+   <door x="-45" y="-126">town_house_3_second</door>
+   <door x="-99" y="-103">town_house_3_basement</door>
+   <door x="22" y="-127">town_house_3_basement</door>
+   
+   <door x="-87" y="107">town_house_4</door>
+   <door x="-110" y="-88">town_house_4</door>
+   <door x="-111" y="-94">town_house_4_second</door>
+   <door x="-55" y="-115">town_house_4_second</door>
+   <door x="-109" y="-92">town_house_4_basement</door>
+   <door x="12" y="-116">town_house_4_basement</door>
+   
+   <door x="-82" y="107">town_house_5</door>
+   <door x="-105" y="-88">town_house_5</door>
+   <door x="-106" y="-94">town_house_5_second</door>
+   <door x="-50" y="-115">town_house_5_second</door>
+   <door x="-104" y="-92">town_house_5_basement</door>
+   <door x="17" y="-116">town_house_5_basement</door>
+   
+   <door x="-77" y="107">town_house_6</door>
+   <door x="-100" y="-88">town_house_6</door>
+   <door x="-101" y="-94">town_house_6_second</door>
+   <door x="-45" y="-115">town_house_6_second</door>
+   <door x="-99" y="-92">town_house_6_basement</door>
+   <door x="22" y="-116">town_house_6_basement</door>
+   
+   <door x="-70" y="95">town_house_7</door>
+   <door x="-93" y="-100">town_house_7</door>
+   <door x="-94" y="-106">town_house_7_second</door>
+   <door x="-38" y="-127">town_house_7_second</door>
+   <door x="-92" y="-104">town_house_7_basement</door>
+   <door x="29" y="-128">town_house_7_basement</door>
+   
+   <door x="-65" y="95">town_house_8</door>
+   <door x="-88" y="-100">town_house_8</door>
+   <door x="-89" y="-106">town_house_8_second</door>
+   <door x="-33" y="-127">town_house_8_second</door>
+   <door x="-87" y="-104">town_house_8_basement</door>
+   <door x="34" y="-128">town_house_8_basement</door>
+   
+   <door x="-60" y="95">town_house_9</door>
+   <door x="-83" y="-100">town_house_9</door>
+   <door x="-84" y="-106">town_house_9_second</door>
+   <door x="-28" y="-127">town_house_9_second</door>
+   <door x="-82" y="-104">town_house_9_basement</door>
+   <door x="39" y="-128">town_house_9_basement</door>
+   
+   <door x="-70" y="106">town_house_10</door>
+   <door x="-93" y="-89">town_house_10</door>
+   <door x="-94" y="-95">town_house_10_second</door>
+   <door x="-38" y="-116">town_house_10_second</door>
+   <door x="-92" y="-93">town_house_10_basement</door>
+   <door x="29" y="-117">town_house_10_basement</door>
+   
+   <door x="-65" y="106">town_house_11</door>
+   <door x="-88" y="-89">town_house_11</door>
+   <door x="-89" y="-95">town_house_11_second</door>
+   <door x="-33" y="-116">town_house_11_second</door>
+   <door x="-87" y="-93">town_house_11_basement</door>
+   <door x="34" y="-117">town_house_11_basement</door>
+   
+   <door x="-60" y="106">town_house_12</door>
+   <door x="-83" y="-89">town_house_12</door>
+   <door x="-84" y="-95">town_house_12_second</door>
+   <door x="-28" y="-116">town_house_12_second</door>
+   <door x="-82" y="-93">town_house_12_basement</door>
+   <door x="39" y="-117">town_house_12_basement</door>
+   
+   <door x="-49" y="93">town_house_13</door>
+   <door x="-72" y="-102">town_house_13</door>
+   <door x="-73" y="-108">town_house_13_second</door>
+   <door x="-17" y="-129">town_house_13_second</door>
+   <door x="-71" y="-106">town_house_13_basement</door>
+   <door x="50" y="-130">town_house_13_basement</door>
+   
+   <door x="-44" y="93">town_house_14</door>
+   <door x="-67" y="-102">town_house_14</door>
+   <door x="-68" y="-108">town_house_14_second</door>
+   <door x="-12" y="-129">town_house_14_second</door>
+   <door x="-66" y="-106">town_house_14_basement</door>
+   <door x="55" y="-130">town_house_14_basement</door>
+   
+   <door x="-49" y="104">town_house_15</door>
+   <door x="-72" y="-91">town_house_15</door>
+   <door x="-73" y="-97">town_house_15_second</door>
+   <door x="-17" y="-118">town_house_15_second</door>
+   <door x="-71" y="-95">town_house_15_basement</door>
+   <door x="50" y="-119">town_house_15_basement</door>
+   
+   <door x="-44" y="104">town_house_16</door>
+   <door x="-67" y="-91">town_house_16</door>
+   <door x="-68" y="-97">town_house_16_second</door>
+   <door x="-12" y="-118">town_house_16_second</door>
+   <door x="-66" y="-95">town_house_16_basement</door>
+   <door x="55" y="-119">town_house_16_basement</door>
 </doors>
+
