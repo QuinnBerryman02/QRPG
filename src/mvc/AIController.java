@@ -30,7 +30,7 @@ public class AIController extends Controller{
             } else {
                 r.nextInt(4);
                 setKeyQPressed(false);
-                Vector3f v = m.calculateDirectionToPlayer(entity);
+                Vector3f v = entity.getCentre().calculateDirectionToPoint(m.getPlayer().getCentre());
                 switch(r.nextInt(4)) {
                     case 0:
                         v.rotate((r.nextInt(2)*2-1) * (Math.PI/4.0));     //rotates the direction vector by 45 deg either cw or ccw 

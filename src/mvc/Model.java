@@ -40,84 +40,102 @@ public class Model {
 		map = new Map(new File("res/map.tmx"));
 		map.loadTilesets();
 		//Player 
-		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(-86,84,0), 4, new PlayerController());
+		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(0,0,0), 4, new PlayerController());
 		NPCLoader npcLoader = new NPCLoader(new File("res/npc.xml"));
 		entities = npcLoader.createAllNpcs();
 	}
 	
 	public void gamelogic() { 
+		for (NPC npc : entities) {
+			entityLogic(npc); 
+		}
 		playerLogic(); 
 	}
 
 	private void playerLogic() {
-		float speed = player.getSpeed() / (float)MainWindow.getTargetFPS();
-		player.incrementProgress();
-		AnimationPhase ap = player.getPhase();
 		Controller controller = player.getController();
 		if(controller.isKeySpacePressed()) {
 			player.setSkin(Skin.getSkins()[(player.getSkin().getIndex()+1)%Skin.getSkins().length]);
 			controller.setKeySpacePressed(false);
 		}
-		switch(ap) {
-			case NEUTRAL:
-			case WALKING:
-				if(controller.isKeyQPressed()){
-					player.setPhase(AnimationPhase.ATTACKING);
-					player.setProgress(0);
-					break;
-					//attack
-				}
-				if(controller.isKeyEPressed()){
-					player.setPhase(AnimationPhase.CASTING);
-					player.setProgress(0);
-					break;
-					//cast
-				}
-				boolean wasMovingVertical = player.getVerticalMovement();
-				player.setVerticalMovement(controller.isKeyWPressed() || controller.isKeySPressed());
-				if(ap==AnimationPhase.WALKING && !controller.isKeyAPressed() && !controller.isKeyDPressed() && !player.getVerticalMovement()) {
-					player.setPhase(AnimationPhase.NEUTRAL);
-					player.setProgress(0);
-					break;
-				}
-				if(controller.isKeyAPressed()) {
-					if(!player.setDirection(Direction.LEFT) && !player.getVerticalMovement()) {
-						player.setProgress(0);
-					}
-					player.setPhase(AnimationPhase.WALKING);
-					collisionHandler(player,new Vector3f(-speed,0,0)); 
-				}
-				if(controller.isKeyDPressed()) {
-					if(!player.setDirection(Direction.RIGHT) && !player.getVerticalMovement()) {
-						player.setProgress(0);
-					}
-					player.setPhase(AnimationPhase.WALKING);
-					collisionHandler(player,new Vector3f(speed,0,0));
-				}
-				if(controller.isKeyWPressed()) {
-					if(!player.setDirection(Direction.UP) && !wasMovingVertical) {
-						player.setProgress(0);
-					}
-					player.setPhase(AnimationPhase.WALKING);
-					collisionHandler(player,new Vector3f(0,-speed,0));
-				}
-				if(controller.isKeySPressed()){
-					if(!player.setDirection(Direction.DOWN) && !wasMovingVertical) {
-						player.setProgress(0);
-					}
-					player.setPhase(AnimationPhase.WALKING);
-					collisionHandler(player,new Vector3f(0,speed,0));
-				}
-				break;
-            case ATTACKING: break;
-                //todo check if the player hits an entity on climax of punch
-            case CASTING:	break;
-                //todo cast the spell at the climax
-		}
+		animationLogic(player);
 		controller.setKeyAWasPressed(controller.isKeyAPressed());
 		controller.setKeyDWasPressed(controller.isKeyDPressed());
 		controller.setKeyWWasPressed(controller.isKeyWPressed());
 		controller.setKeySWasPressed(controller.isKeySPressed());
+	}
+
+	private void entityLogic(Entity e) {
+		AIController controller = (AIController)e.getController();
+		controller.run(this);
+		animationLogic(e);
+		controller.setKeyAWasPressed(controller.isKeyAPressed());
+		controller.setKeyDWasPressed(controller.isKeyDPressed());
+		controller.setKeyWWasPressed(controller.isKeyWPressed());
+		controller.setKeySWasPressed(controller.isKeySPressed());
+	}
+
+	public void animationLogic(Entity e) {
+		float speed = e.getSpeed() / (float)MainWindow.getTargetFPS();
+		AnimationPhase ap = e.getPhase();
+		Controller controller = e.getController(); 
+		e.incrementProgress();
+		switch(ap) {
+			case NEUTRAL:
+			case WALKING:
+				if(controller.isKeyQPressed()){
+					e.setPhase(AnimationPhase.ATTACKING);
+					e.setProgress(0);
+					break;
+					//attack
+				}
+				if(controller.isKeyEPressed()){
+					e.setPhase(AnimationPhase.CASTING);
+					e.setProgress(0);
+					break;
+					//cast
+				}
+				boolean wasMovingVertical = e.getVerticalMovement();
+				e.setVerticalMovement(controller.isKeyWPressed() || controller.isKeySPressed());
+				if(ap==AnimationPhase.WALKING && !controller.isKeyAPressed() && !controller.isKeyDPressed() && !e.getVerticalMovement()) {
+					e.setPhase(AnimationPhase.NEUTRAL);
+					e.setProgress(0);
+					break;
+				}
+				if(controller.isKeyAPressed()) {
+					if(!e.setDirection(Direction.LEFT) && !e.getVerticalMovement()) {
+						e.setProgress(0);
+					}
+					e.setPhase(AnimationPhase.WALKING);
+					collisionHandler(e,new Vector3f(-speed,0,0)); 
+				}
+				if(controller.isKeyDPressed()) {
+					if(!e.setDirection(Direction.RIGHT) && !e.getVerticalMovement()) {
+						e.setProgress(0);
+					}
+					e.setPhase(AnimationPhase.WALKING);
+					collisionHandler(e,new Vector3f(speed,0,0));
+				}
+				if(controller.isKeyWPressed()) {
+					if(!e.setDirection(Direction.UP) && !wasMovingVertical) {
+						e.setProgress(0);
+					}
+					e.setPhase(AnimationPhase.WALKING);
+					collisionHandler(e,new Vector3f(0,-speed,0));
+				}
+				if(controller.isKeySPressed()){
+					if(!e.setDirection(Direction.DOWN) && !wasMovingVertical) {
+						e.setProgress(0);
+					}
+					e.setPhase(AnimationPhase.WALKING);
+					collisionHandler(e,new Vector3f(0,speed,0));
+				}
+				break;
+            case ATTACKING: break;
+                //TODO check if the player hits an entity on climax of punch
+            case CASTING:	break;
+                //TODO cast the spell at the climax
+		}
 	}
 
 	public Player getPlayer() {
@@ -135,20 +153,15 @@ public class Model {
 				continue;
 			} else {
 				Vector3f v2 = entityCollisionHandler(entity, other, v);
-				if(other instanceof NPC) {
-					NPC npc = ((NPC)other);
+				if(other instanceof NPC && entity instanceof Player) {
+					NPC npc = (NPC)other;
+					Player player = (Player)entity;
 					if (v2 != null) {
-						npc.setInteractable(true);
-						if(entity instanceof Player) {
-							if(entity.getController().isKeyIPressed()) {
-								MainWindow.initiateConversation((Player)entity, npc);
-								System.out.println("Starting a coversation between player and " + npc.getName());
-								entity.getController().setKeyIPressed(false);
-								npc.setInteractable(false);
-							}
+						if(entity.getController().isKeyIPressed()) {
+							MainWindow.initiateConversation((Player)entity, npc);
+							System.out.println("Starting a coversation between player and " + npc.getName());
+							entity.getController().setKeyIPressed(false);
 						}
-					} else {
-						npc.setInteractable(false);
 					}
 				}
 				v = (v2 != null) ? v2 : v;
@@ -214,14 +227,10 @@ public class Model {
 	}
 
 	public boolean inRangeOfPlayer(Entity entity) {
-		//TODO 
 		//returns true if the entity is in attack range
-		return false;
-	}
-
-	public Vector3f calculateDirectionToPlayer(Entity entity) {
-		// TODO
-		//returns a vector with 1s and 0s to represent the direction
-		return null;
+		float range = 0.1f;
+		float dx = entity.getCentre().getX() - player.getCentre().getX();
+		float dy = entity.getCentre().getY() - player.getCentre().getY();
+		return (range*range >= dx*dx + dy*dy);
 	}
 }

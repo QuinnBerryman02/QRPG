@@ -13,7 +13,7 @@ public abstract class Entity extends GameObject {
     private Direction direction = Direction.UP;
     private boolean verticalMovement = false;
     private Controller controller;
-    private boolean hostile = false;
+    private boolean hostile = true;
 
     public Entity(Skin s, float width, float height, Point3f centre, float speed, Controller controller) { 
     	super(width, height, centre);

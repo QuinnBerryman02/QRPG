@@ -97,4 +97,51 @@ public class Point3f {
 	public String toString() {
 		return ("Point3F (" + x + "," + y + "," + z + ")");
     }
+
+	public Vector3f calculateDirectionToPoint(Point3f p) {
+		//returns a vector with 1s and 0s to represent the direction
+		float dx = p.getX() - x;
+		float dy = p.getY() - y;
+		if(dx==0 && dy==0) return new Vector3f();
+		double rad = Math.atan2(-dy, dx);
+		int eighth = radToEighth(rad);
+		int vx;
+		int vy;
+		switch(eighth % 8) {
+			case 7:case 0:case 1:	vx=-1; break;
+			case 3:case 4:case 5: 	vx=1;  break;
+			default: 				vx=0;  break;
+		}
+		switch(eighth % 8) {
+			case 1:case 2:case 3:	vy=1;  break;
+			case 5:case 6:case 7: 	vy=-1; break;
+			default: 				vy=0;  break;
+		}
+		return new Vector3f(vx,vy,0f);
+	}
+
+	public static int radToEighth(double rad) {
+		int eighth = (int)Math.round((1 / Math.PI) * 4 * rad + 4);
+		return eighth;
+	}
+	
+	public static void main(String[] args) {
+		System.out.printf("rad:%.2fpi eighth:%d\n",(0.0),radToEighth(0));
+		System.out.printf("rad:%.2fpi eighth:%d\n",(0.25),radToEighth(0.25 * Math.PI));
+		System.out.printf("rad:%.2fpi eighth:%d\n",(0.5),radToEighth(0.5	* Math.PI));
+		System.out.printf("rad:%.2fpi eighth:%d\n",(0.75),radToEighth(0.75	* Math.PI));
+		System.out.printf("rad:%.2fpi eighth:%d\n",(1.0),radToEighth(1	* Math.PI));
+		System.out.printf("rad:%.2fpi eighth:%d\n",(-0.25),radToEighth(-0.25	* Math.PI));
+		System.out.printf("rad:%.2fpi eighth:%d\n",(-0.5),radToEighth(-0.5	* Math.PI));
+		System.out.printf("rad:%.2fpi eighth:%d\n",(-0.75),radToEighth(-0.75	* Math.PI));
+		System.out.printf("rad:%.2fpi eighth:%d\n",(-1.0),radToEighth(-1	* Math.PI));
+		Point3f p = new Point3f(0f,0f,0f);
+		for(int i=-10;i<=10;i+=10) {
+			for(int j=-10;j<=10;j+=10) {
+				Point3f e = new Point3f(j,i,0f);
+				Vector3f v = e.calculateDirectionToPoint(p);
+				System.out.printf("[%d,%d] -> [%d,%d] via [%d,%d]\n",j,i,0,0,(int)v.getX(),(int)v.getY());
+			} 
+		}
+	}
 }
