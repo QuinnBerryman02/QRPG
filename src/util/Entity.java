@@ -13,6 +13,7 @@ public abstract class Entity extends GameObject {
     private Direction direction = Direction.UP;
     private boolean verticalMovement = false;
     private Controller controller;
+    private boolean hostile = false;
 
     public Entity(Skin s, float width, float height, Point3f centre, float speed, Controller controller) { 
     	super(width, height, centre);
@@ -169,5 +170,13 @@ public abstract class Entity extends GameObject {
 
     public Controller getController() {
         return controller;
+    }
+
+    public boolean isHostile() {
+        return hostile;
+    }
+
+    public void setHostile(boolean hostile) {
+        this.hostile = hostile;
     }
 }

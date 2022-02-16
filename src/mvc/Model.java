@@ -212,4 +212,16 @@ public class Model {
 	public ArrayList<NPC> getEntities() {
 		return entities;
 	}
+
+	public boolean inRangeOfPlayer(Entity entity) {
+		//TODO 
+		//returns true if the entity is in attack range
+		return false;
+	}
+
+	public Vector3f calculateDirectionToPlayer(Entity entity) {
+		// TODO
+		//returns a vector with 1s and 0s to represent the direction
+		return null;
+	}
 }

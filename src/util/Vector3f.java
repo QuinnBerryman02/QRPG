@@ -110,4 +110,24 @@ public class Vector3f {
 	public String toString() {
 		return ("Vector3F (" + x + "," + y + "," + z + ")");
     }
+
+	public String toStringInt() {
+		return ("Vector3F (" + (int)x + "," + (int)y + "," + (int)z + ")");
+    }
+
+	public void rotate(double rad) {
+		float nx = (float)(x * Math.cos(rad) - y * Math.sin(rad));
+    	float ny = (float)(x * Math.sin(rad) + y * Math.cos(rad));
+		this.x = nx;
+		this.y = ny;
+	}
+
+	public static void main(String[] args) {
+		Vector3f v = new Vector3f(1f, 1f, 0f);
+		System.out.println(v.toStringInt());
+		for(int i=0;i<9;i++) {
+			v.rotate(Math.PI/4);
+			System.out.println(v.toStringInt());
+		}
+	}
 }

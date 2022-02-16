@@ -49,6 +49,7 @@ public class NPCLoader {
         Skin skin = Skin.getSkinByName(skinName);
         Point3f	c = new Point3f(x,y,0);
         NPC npc = new NPC(0.5f, 0.5f, c, 4f, skin, name, new AIController());
+        ((AIController)npc.getController()).setEntity(npc);
         NodeList topics = npcElement.getElementsByTagName("topic");
         ArrayList<TopicResponse> trs = new ArrayList<TopicResponse>();
         for (int j=0;j<topics.getLength();j++) {
