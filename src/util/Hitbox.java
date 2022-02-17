@@ -24,7 +24,6 @@ public class Hitbox {
     }
 
     public Vector3f intersection(Hitbox h, Vector3f v) {
-        //TODO fix the intersection clip when the hitboxes are aligned
         for(Point3f c1 : getCorners()) {
             Point3f c2 = c1.plusVector(v);
             if(isColliding(c2, h)) {
@@ -54,7 +53,7 @@ public class Hitbox {
 
     public boolean isColliding(Hitbox h) {
         for (Point3f p : getCorners()) {
-            if(p.getX() < h.getRightX() && p.getX() > h.getLeftX() && p.getY() < h.getBotY() && p.getY() > h.getTopY()) {
+            if(p.getX() <= h.getRightX() && p.getX() >= h.getLeftX() && p.getY() <= h.getBotY() && p.getY() >= h.getTopY()) {
                 return true;
             }
         }
