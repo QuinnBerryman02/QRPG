@@ -5,22 +5,31 @@ import java.util.ArrayList;
 import mvc.Controller;
 
 public abstract class Entity extends GameObject {
-    private Hitbox hitbox;
-    private float speed;
-    private Skin skin;
     private AnimationPhase phase = AnimationPhase.NEUTRAL;
-    private int progress = 0;
     private Direction direction = Direction.UP;
     private boolean verticalMovement = false;
+    private boolean hostile = false;
+    private float hostileSpeed = 4;
+    private int progress = 0;
+    
+    private int damage;
+    private Hitbox hitbox;
+    private int maxHealth;
+    private int health;
+    private float speed;
+    private Skin skin;
     private Controller controller;
-    private boolean hostile = true;
+    
 
-    public Entity(Skin s, float width, float height, Point3f centre, float speed, Controller controller) { 
+    public Entity(Skin s, float width, float height, Point3f centre, Controller controller, int maxHealth, int damage) { 
     	super(width, height, centre);
         hitbox = new Hitbox(centre, width, height);
         this.skin = s;
-        this.speed = speed;
         this.controller = controller;
+        this.speed = hostileSpeed*0.25f;
+        this.maxHealth = maxHealth;
+        this.health = maxHealth;
+        this.damage = damage;
 	}
 
     public void move(Vector3f v) {
@@ -177,6 +186,48 @@ public abstract class Entity extends GameObject {
     }
 
     public void setHostile(boolean hostile) {
+        speed = hostile ? hostileSpeed : 0.25f*hostileSpeed;
         this.hostile = hostile;
+    }
+
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public void setMaxHealth(int maxHealth) {
+        this.maxHealth = maxHealth;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    public int getDamage() {
+        return damage;
+    }
+
+    public void dealDamage(int damage) {
+        health -= damage;
+        if(health <= 0) {
+            die();
+        }
+    }
+
+    public void die() {
+        if(this instanceof NPC) {
+            System.out.println(((NPC)this).getName() + " died");
+        } else if(this instanceof Player) {
+            System.out.println("Player died");
+        } else {
+            System.out.println(getClass() + " died");
+        }
     }
 }

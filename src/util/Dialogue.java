@@ -43,6 +43,7 @@ public class Dialogue extends Menu {
     private TopicLoader topicLoader;
 
     public Dialogue(Player player, NPC npc) {
+        //TODO make the player controller empty
         topicLoader = new TopicLoader(new File("res/topic.xml"));
         this.player = player;
         this.npc = npc;

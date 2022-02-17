@@ -56,14 +56,10 @@ public class Viewer extends JPanel {
 	public Viewer(Model world) {
 		this.gameWorld = world;
 		this.map = gameWorld.getMap();
+		//TODO create a arraylist of entities on screen and calculate it
 	}
 
 	public void updateview() {
-		// if(gameWorld.getChunkX() != chunkX || gameWorld.getChunkY() != chunkY) {
-		// 	chunkX = gameWorld.getChunkX();
-		// 	chunkY = gameWorld.getChunkY();
-		// 	chunks = mapLoader.getChunksByCoordinate(chunkX, chunkY);
-		// }
 		repaint();
 	}
 	
@@ -77,12 +73,13 @@ public class Viewer extends JPanel {
 		g.fillRect(0, 0, MainWindow.getW(), MainWindow.getH());
 
 		drawBackground(g);
-		
-		drawPlayer(g);
-
+		//TODO create static versions of the entities on screen, or attempt to synchronise the model and viewer
+		//TODO render the entities sorted by y value
 		drawEntities(g);
 
 		drawForeground(g);
+		//TODO make health bars only appear if in red or in combat
+		drawHealthBars(g);
 
 		drawCollisionsNearby(g);
 
@@ -178,6 +175,10 @@ public class Viewer extends JPanel {
 
 	public void drawEntities(Graphics g) {
 		for (Entity e : gameWorld.getEntities()) {
+			if (e instanceof Player) {
+				drawPlayer(g);
+				return;
+			}
 			File TextureToLoad = new File(e.getCurrentTexture());
 			Point3f worldPoint = e.getCentre();
 			Point3f relativePoint = worldSpaceToScreen(worldPoint);
@@ -197,6 +198,7 @@ public class Viewer extends JPanel {
 			y = (int)relativePoint.getY();
 			w = Math.round((hb.getRightX() - hb.getLeftX()) * UNIT_DEF);
 			h = Math.round((hb.getBotY() - hb.getTopY()) * UNIT_DEF);
+			g.setColor(new Color(1f,0f,0f,0.5f));
 			g.fillRect(x - w/2, y - h/2, w, h);
 		}
 	}
@@ -257,6 +259,22 @@ public class Viewer extends JPanel {
 				}
 				g.fillRect(x,y,w,h);
 			}
+		}
+	}
+
+	public void drawHealthBars(Graphics g) {
+		for (Entity e : gameWorld.getEntities()) {
+			if(e.getHealth() > e.getMaxHealth() * 0.66f) {
+				g.setColor(Color.GREEN);
+			} else if(e.getHealth() > e.getMaxHealth() * 0.33f) {
+				g.setColor(Color.YELLOW);
+			} else {
+				g.setColor(Color.RED);
+			}
+			Point3f relativePoint = worldSpaceToScreen(e.getCentre());
+			int x = (int)relativePoint.getX();
+			int y = (int)relativePoint.getY();
+			g.fillRect(x - UNIT_DEF / 2, y-UNIT_DEF, e.getHealth() * UNIT_DEF / e.getMaxHealth(), 5);
 		}
 	}
 

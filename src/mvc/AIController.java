@@ -9,7 +9,7 @@ import util.Vector3f;
 public class AIController extends Controller{
     private Entity entity;
     private Random r = new Random();
-    private Vector3f lastMovement = new Vector3f();
+    private Vector3f lastMovement = new Vector3f(1f,1f,0f);
 
     public AIController() {
 
@@ -27,6 +27,7 @@ public class AIController extends Controller{
         if(entity.isHostile()) {
             if(m.inRangeOfPlayer(entity)) {
                 setKeyQPressed(true);
+                pressMoveButtons(new Vector3f());
             } else {
                 r.nextInt(4);
                 setKeyQPressed(false);
@@ -48,10 +49,9 @@ public class AIController extends Controller{
                     v.rotate((r.nextInt(2)*2-1) * (Math.PI/4.0));     //rotates the direction vector by 45 deg either cw or ccw 
                     break;
                 case 3:
-                    v = new Vector3f();
-                    break;
-                default:
                     return;
+                default:
+                    break;
             }
             pressMoveButtons(v);
             lastMovement = v;

@@ -1,6 +1,7 @@
 package util;
 
 public class Hitbox {
+    private static final float INSIDE_CHECK = 0.01f;
     private Point3f topLeft;
     private Point3f topRight;
     private Point3f botLeft;
@@ -23,9 +24,10 @@ public class Hitbox {
     }
 
     public Vector3f intersection(Hitbox h, Vector3f v) {
+        //TODO fix the intersection clip when the hitboxes are aligned
         for(Point3f c1 : getCorners()) {
             Point3f c2 = c1.plusVector(v);
-            if(c2.getX() < h.getRightX() && c2.getX() > h.getLeftX() && c2.getY() < h.getBotY() && c2.getY() > h.getTopY()) {
+            if(isColliding(c2, h)) {
                 // System.out.printf("c1:%s\nv:%s\nc2:%s\n",c1.toString(),v.toString(),c2.toString());
                 // System.out.printf("hrx:%f c2x:%f hlx:%f\n",h.getRightX(),c2.getX(),h.getLeftX());
                 // System.out.printf("hby:%f c2y:%f hty:%f\n",h.getBotY(),c2.getY(),h.getTopY());
@@ -48,6 +50,19 @@ public class Hitbox {
             }
         }
         return null;
+    }
+
+    public boolean isColliding(Hitbox h) {
+        for (Point3f p : getCorners()) {
+            if(p.getX() < h.getRightX() && p.getX() > h.getLeftX() && p.getY() < h.getBotY() && p.getY() > h.getTopY()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isColliding(Point3f p, Hitbox h) {
+        return (p.getX() < h.getRightX() && p.getX() > h.getLeftX() && p.getY() < h.getBotY() && p.getY() > h.getTopY());
     }
 
     public Point3f[] getCorners() {

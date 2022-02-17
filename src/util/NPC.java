@@ -2,29 +2,20 @@ package util;
 
 import java.util.ArrayList;
 
-import mvc.Controller;
+import mvc.AIController;
 
 public class NPC extends Entity {
     private String name;
-    private boolean interactable = false;
     private ArrayList<TopicResponse> topicResponses = new ArrayList<TopicResponse>(); 
     //private Face face;
 
-    public NPC(float w, float h, Point3f c, float speed, Skin skin, String name, Controller controller) {
-        super(skin, w, h, c, speed, controller);
+    public NPC(float w, float h, Point3f c, Skin skin, String name, int maxHealth, int damage) {
+        super(skin, w, h, c, new AIController(),maxHealth,damage);
         this.name = name;
     }
 
     public String getName() {
         return name;
-    }
-
-    public void setInteractable(boolean interactable) {
-        this.interactable = interactable;
-    }
-
-    public boolean isInteractable() {
-        return interactable;
     }
 
     public ArrayList<Topic> getKnownTopics() {

@@ -1,6 +1,7 @@
 package mvc;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 
 import main.MainWindow;
 import util.*;
@@ -33,23 +34,27 @@ SOFTWARE.
 public class Model {
 	private Player player;
 	private Map map;
-	private ArrayList<NPC> entities = new ArrayList<NPC>();
+	private ArrayList<Entity> entities = new ArrayList<Entity>();
 
 	public Model() {
 		//World
 		map = new Map(new File("res/map.tmx"));
 		map.loadTilesets();
 		//Player 
-		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(0,0,0), 4, new PlayerController());
+		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(0,0,0),100,10);
 		NPCLoader npcLoader = new NPCLoader(new File("res/npc.xml"));
-		entities = npcLoader.createAllNpcs();
+		npcLoader.createAllNpcs().forEach(npc -> entities.add(npc));
+		entities.add(player);
 	}
 	
 	public void gamelogic() { 
-		for (NPC npc : entities) {
-			entityLogic(npc); 
+		for (Entity e : entities) {
+			if(e instanceof Player) {
+				playerLogic(); 
+			} else {
+				entityLogic(e); 
+			}
 		}
-		playerLogic(); 
 	}
 
 	private void playerLogic() {
@@ -87,7 +92,6 @@ public class Model {
 					e.setPhase(AnimationPhase.ATTACKING);
 					e.setProgress(0);
 					break;
-					//attack
 				}
 				if(controller.isKeyEPressed()){
 					e.setPhase(AnimationPhase.CASTING);
@@ -131,10 +135,23 @@ public class Model {
 					collisionHandler(e,new Vector3f(0,speed,0));
 				}
 				break;
-            case ATTACKING: break;
-                //TODO check if the player hits an entity on climax of punch
-            case CASTING:	break;
-                //TODO cast the spell at the climax
+            case ATTACKING:
+				if(e.getProgress()==3) {
+					Hitbox punch = getPunchHitbox(e);
+					for (Entity other : entities) {
+						if(other == e) {
+							continue;
+						} else if (punchCollisionHandler(punch, other.getHitbox())){
+							System.out.println(e.getClass().getName() + " punched " + other.getClass().getName());
+							if(!other.isHostile()) other.setHostile(true);
+							other.dealDamage((new Random()).nextInt(e.getDamage()));
+						}
+					}
+				}
+				break;
+            case CASTING:
+                // TODO cast the spell at the climax
+				break;
 		}
 	}
 
@@ -157,10 +174,10 @@ public class Model {
 					NPC npc = (NPC)other;
 					Player player = (Player)entity;
 					if (v2 != null) {
-						if(entity.getController().isKeyIPressed()) {
-							MainWindow.initiateConversation((Player)entity, npc);
+						if(player.getController().isKeyIPressed()) {
+							MainWindow.initiateConversation(player, npc);
 							System.out.println("Starting a coversation between player and " + npc.getName());
-							entity.getController().setKeyIPressed(false);
+							player.getController().setKeyIPressed(false);
 						}
 					}
 				}
@@ -222,13 +239,29 @@ public class Model {
 		return (v2 != null) ? (v2) : (v);
 	}
 
-	public ArrayList<NPC> getEntities() {
+	public boolean punchCollisionHandler(Hitbox punch, Hitbox victim) {
+		return punch.isColliding(victim);
+	}
+
+	public Hitbox getPunchHitbox(Entity assaliant) {
+		Vector3f v;
+		switch(assaliant.getDirection()) {
+			case LEFT: v = new Vector3f(-0.5f,0f,0f);break;
+			case RIGHT: v = new Vector3f(0.5f,0f,0f);break;
+			case UP: v = new Vector3f(0f,-0.5f,0f);break;
+			case DOWN: v = new Vector3f(0f,0.5f,0f);break;
+			default: throw new IllegalArgumentException("Unknown Direction");
+		}
+		return new Hitbox(assaliant.getCentre().plusVector(v),0.25f,0.25f);
+	}
+
+	public ArrayList<Entity> getEntities() {
 		return entities;
 	}
 
 	public boolean inRangeOfPlayer(Entity entity) {
 		//returns true if the entity is in attack range
-		float range = 0.1f;
+		float range = 0.66f;
 		float dx = entity.getCentre().getX() - player.getCentre().getX();
 		float dy = entity.getCentre().getY() - player.getCentre().getY();
 		return (range*range >= dx*dx + dy*dy);

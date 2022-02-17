@@ -32,6 +32,7 @@ public class NPCLoader {
     }
 
     public ArrayList<NPC> createAllNpcs() {
+        //TODO create the rest of the NPCs
         NodeList npcNodes = document.getElementsByTagName("npc");
         ArrayList<NPC> npcs = new ArrayList<NPC>();
         for (int i=0;i<npcNodes.getLength();i++) {
@@ -48,7 +49,7 @@ public class NPCLoader {
         String name = npcElement.getAttribute("name");
         Skin skin = Skin.getSkinByName(skinName);
         Point3f	c = new Point3f(x,y,0);
-        NPC npc = new NPC(0.5f, 0.5f, c, 4f, skin, name, new AIController());
+        NPC npc = new NPC(0.5f, 0.5f, c, skin, name, 100, 10);
         ((AIController)npc.getController()).setEntity(npc);
         NodeList topics = npcElement.getElementsByTagName("topic");
         ArrayList<TopicResponse> trs = new ArrayList<TopicResponse>();
