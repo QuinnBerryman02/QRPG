@@ -24,14 +24,16 @@ SOFTWARE.
    (MIT LICENSE ) e.g do what you want with this :-) 
  */ 
 public class GameObject {
+	private Hitbox hitbox;
 	protected Point3f centre= new Point3f(0,0,0);			// Centre of object, using 3D as objects may be scaled  
 	protected float width = 10;
 	protected float height = 10;
 	
     public GameObject(float width, float height, Point3f centre) { 
+		hitbox = new Hitbox(centre.plusVector(new Vector3f()), width, height);
     	this.width = width;
 		this.height = height;
-		this.centre = centre;
+		this.centre = centre.plusVector(new Vector3f());
 	}
 
 	public Point3f getCentre() {
@@ -50,9 +52,19 @@ public class GameObject {
 		return height;
 	}
 
+	public void move(Vector3f v) {
+        getCentre().applyVector(v); 
+        hitbox.applyVector(v);
+    }
+
+    public Hitbox getHitbox() {
+        return hitbox;
+    }
+
 	@Override
 	public String toString() {
 		return 	"[centre= " + centre + "]," +
+				"[hitbox= " + hitbox + "]," +
 				"[width= " + width + "]," +
 				"[height= " + height + "]";
 	}

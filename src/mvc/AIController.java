@@ -24,6 +24,7 @@ public class AIController extends Controller{
     }
 
     public void run(Model m) {
+        //TODO fix npc staggering while chasing
         if(entity.isHostile()) {
             if(m.inRangeOfPlayer(entity)) {
                 setKeyQPressed(true);

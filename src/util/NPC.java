@@ -9,8 +9,8 @@ public class NPC extends Entity {
     private ArrayList<TopicResponse> topicResponses = new ArrayList<TopicResponse>(); 
     //private Face face;
 
-    public NPC(float w, float h, Point3f c, Skin skin, String name, int maxHealth, int damage) {
-        super(skin, w, h, c, new AIController(),maxHealth,damage);
+    public NPC(float w, float h, Point3f c, Skin skin, String name, int maxHealth, int damage, int maxMana) {
+        super(skin, w, h, c, new AIController(),maxHealth,damage,maxMana);
         this.name = name;
     }
 

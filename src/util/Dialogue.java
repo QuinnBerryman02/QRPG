@@ -43,6 +43,7 @@ public class Dialogue extends Menu {
     private TopicPanel overview;
 
     public Dialogue(Player player, NPC npc) {
+        //TODO make frame look nicer / use more rpg gui elements like the scroller
         this.player = player;
         player.getController().clear();
         this.npc = npc;

@@ -8,38 +8,33 @@ public abstract class Entity extends GameObject {
     private AnimationPhase phase = AnimationPhase.NEUTRAL;
     private Direction direction = Direction.UP;
     private boolean verticalMovement = false;
-    private boolean hostile = false;
+    private boolean inCombat = false;
+    private boolean dead = false;
     private float hostileSpeed = 4;
     private int progress = 0;
-    
+
+    private boolean hostile;
     private int damage;
-    private Hitbox hitbox;
     private int maxHealth;
     private int health;
+    private int maxMana;
+    private int mana;
     private float speed;
     private Skin skin;
     private Controller controller;
     
 
-    public Entity(Skin s, float width, float height, Point3f centre, Controller controller, int maxHealth, int damage) { 
+    public Entity(Skin s, float width, float height, Point3f centre, Controller controller, int maxHealth, int damage, int maxMana) { 
     	super(width, height, centre);
-        hitbox = new Hitbox(centre, width, height);
         this.skin = s;
         this.controller = controller;
-        this.speed = hostileSpeed*0.25f;
         this.maxHealth = maxHealth;
         this.health = maxHealth;
+        this.maxMana = maxMana;
+        this.mana = maxMana;
         this.damage = damage;
+        setHostile(false);
 	}
-
-    public void move(Vector3f v) {
-        getCentre().applyVector(v); 
-        hitbox.applyVector(v);
-    }
-
-    public Hitbox getHitbox() {
-        return hitbox;
-    }
 
     public abstract ArrayList<Topic> getKnownTopics();
 
@@ -214,14 +209,50 @@ public abstract class Entity extends GameObject {
         return damage;
     }
 
+    public int getMana() {
+        return mana;
+    }
+
+    public int getMaxMana() {
+        return maxMana;
+    }
+
+    public void setMana(int mana) {
+        this.mana = mana;
+    }
+
+    public void setMaxMana(int maxMana) {
+        this.maxMana = maxMana;
+    }
+
     public void dealDamage(int damage) {
+        if(dead) return;
+        if(!isHostile()) setHostile(true);
         health -= damage;
         if(health <= 0) {
             die();
         }
+        if(!inCombat) {
+            (new Thread() {
+                @Override
+                public void run() {
+                    inCombat = true;
+                    try {
+                        sleep(5000);
+                    } catch (Exception e) {}
+                    inCombat = false;
+                }
+            }).start();
+        }
+    }
+
+    public boolean healthBarVisible() {
+        return (health <= 0.33 * maxHealth) || inCombat;
     }
 
     public void die() {
+        dead = true;
+        hostile = false;
         if(this instanceof NPC) {
             System.out.println(((NPC)this).getName() + " died");
         } else if(this instanceof Player) {
@@ -242,7 +273,6 @@ public abstract class Entity extends GameObject {
             "[hostileSpeed= " + hostileSpeed + "]," +
             "[progress= " + progress + "]," +
             "[damage= " + damage + "]," +
-            "[hitbox= " + hitbox + "]," +
             "[maxHealth= " + maxHealth + "]," +
             "[health= " + health + "]," +
             "[speed= " + speed + "]," +
@@ -251,3 +281,4 @@ public abstract class Entity extends GameObject {
         );
     }
 }
+

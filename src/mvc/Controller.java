@@ -30,6 +30,7 @@ public class Controller {
 	protected boolean keySWasPressed = false;
 	protected boolean keyDWasPressed = false;
 	protected boolean keyWWasPressed = false;
+
 	protected boolean keyAPressed = false;
 	protected boolean keySPressed = false;
 	protected boolean keyDPressed = false;
@@ -43,8 +44,9 @@ public class Controller {
 	protected boolean keyDownPressed = false;
 	protected boolean keyLeftPressed = false;
 
-	
- 
+	protected int mouseX;
+	protected int mouseY;
+
 	public boolean isKeyAPressed() {
 		return keyAPressed;
 	}
@@ -171,5 +173,21 @@ public class Controller {
 		keyRightPressed = false; 
 		keyDownPressed = false; 
 		keyLeftPressed = false; 
+	}
+
+	public int getMouseX() {
+		return mouseX;
+	}
+
+	public int getMouseY() {
+		return mouseY;
+	}
+
+	public void setMouseX(int mouseX) {
+		this.mouseX = mouseX;
+	}
+
+	public void setMouseY(int mouseY) {
+		this.mouseY = mouseY;
 	}
 }

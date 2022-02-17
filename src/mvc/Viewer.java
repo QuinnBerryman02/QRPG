@@ -47,10 +47,10 @@ public class Viewer extends JPanel {
 	private ArrayList<Entity> entitiesLoaded = new ArrayList<Entity>();
 	private Map map;
 	private int chunksOnScreen = 0;
-	private final int CHUNK_SIZE = 16;
-	private final int TILE_SIZE_DEF = 16;
-	private final int SCALE = 3;
-	private final int UNIT_DEF = SCALE * TILE_SIZE_DEF;
+	private static final int CHUNK_SIZE = 16;
+	private static final int TILE_SIZE_DEF = 16;
+	private static final int SCALE = 3;
+	private static final int UNIT_DEF = SCALE * TILE_SIZE_DEF;
 	 
 	public Viewer(Model world) {
 		this.gameWorld = world;
@@ -66,8 +66,12 @@ public class Viewer extends JPanel {
 		synchronized(gameWorld) {
 			chunksOnScreen = 0;
 			chunksLoaded = map.findClosestChunks(gameWorld.getPlayer().getCentre());
-			//TODO calculate which are on screen
-			entitiesLoaded = gameWorld.getEntities();
+			entitiesLoaded.clear();
+			gameWorld.getEntities().forEach(e -> {
+				if(isEntityOnscreen(e)) {
+					entitiesLoaded.add(e);
+				}
+			});
 			gameWorld.sortEntities(entitiesLoaded);
 			g.setColor(Color.BLACK);
 			g.fillRect(0, 0, MainWindow.getW(), MainWindow.getH());
@@ -77,7 +81,9 @@ public class Viewer extends JPanel {
 			drawEntities(g);
 
 			drawForeground(g);
-			//TODO make health bars only appear if in red or in combat
+
+			drawProjectiles(g);
+
 			drawHealthBars(g);
 
 			drawCollisionsNearby(g);
@@ -203,6 +209,28 @@ public class Viewer extends JPanel {
 		}
 	}
 
+	public void drawProjectiles(Graphics g) {
+		for (Projectile p : gameWorld.getProjectiles()) {
+			Point3f worldPoint = p.getCentre();
+			Point3f relativePoint = worldSpaceToScreen(worldPoint);
+			Hitbox hb = p.getHitbox();
+			int x = (int)relativePoint.getX();
+			int y = (int)relativePoint.getY();
+			int w = Math.round(p.getWidth()) * UNIT_DEF;
+			int h = Math.round(p.getHeight()) * UNIT_DEF;
+			try {
+				g.setColor(Color.BLUE);
+				g.fillOval(x - w/2, y - h/2, w, h);
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
+			w = Math.round((hb.getRightX() - hb.getLeftX()) * UNIT_DEF);
+			h = Math.round((hb.getBotY() - hb.getTopY()) * UNIT_DEF);
+			g.setColor(new Color(1f,0f,0f,0.5f));
+			g.fillRect(x - w/2, y - h/2, w, h);
+		}
+	}
+
 	public void drawChunkLines(Graphics g) {
 		for (Chunk chunk : chunksLoaded) {
 			Point3f worldPoint = new Point3f(Float.parseFloat(chunk.getData().getAttribute("x")), Float.parseFloat(chunk.getData().getAttribute("y")),0f);
@@ -264,6 +292,7 @@ public class Viewer extends JPanel {
 
 	public void drawHealthBars(Graphics g) {
 		for (Entity e : entitiesLoaded) {
+			if(!e.healthBarVisible()) continue; 
 			if(e.getHealth() > e.getMaxHealth() * 0.66f) {
 				g.setColor(Color.GREEN);
 			} else if(e.getHealth() > e.getMaxHealth() * 0.33f) {
@@ -278,9 +307,30 @@ public class Viewer extends JPanel {
 		}
 	}
 
+	public boolean isEntityOnscreen(Entity e) {
+		Point3f relativePoint = worldSpaceToScreen(e.getCentre());
+		int x = (int)relativePoint.getX();
+		int y = (int)relativePoint.getY();
+		return !(x + UNIT_DEF <= 0 || y + UNIT_DEF <= 0 || x > MainWindow.getW() || y > MainWindow.getH());
+	}
+
 	public Point3f worldSpaceToScreen(Point3f p) {
-		float x = (UNIT_DEF * (p.getX() - gameWorld.getPlayer().getCentre().getX())) + MainWindow.getW()/2;
-		float y = (UNIT_DEF * (p.getY() - gameWorld.getPlayer().getCentre().getY())) + MainWindow.getH()/2;
+		return worldSpaceToScreen(p, gameWorld.getPlayer().getCentre());
+	}
+
+	
+	public Point3f screenToWorldSpace(Point3f p) {
+		return screenToWorldSpace(p, gameWorld.getPlayer().getCentre());
+	}
+
+	public static Point3f worldSpaceToScreen(Point3f p, Point3f playerCentre) {
+		float x = (UNIT_DEF * (p.getX() - playerCentre.getX())) + MainWindow.getW()/2;
+		float y = (UNIT_DEF * (p.getY() - playerCentre.getY())) + MainWindow.getH()/2;
+		return new Point3f(x, y, 0f);
+	}
+	public static Point3f screenToWorldSpace(Point3f p, Point3f playerCentre) {
+		float x = (p.getX() - MainWindow.getW()/2) / UNIT_DEF + playerCentre.getX();
+		float y = (p.getY() - MainWindow.getH()/2) / UNIT_DEF + playerCentre.getY();
 		return new Point3f(x, y, 0f);
 	}
 }
