@@ -230,4 +230,24 @@ public abstract class Entity extends GameObject {
             System.out.println(getClass() + " died");
         }
     }
+
+    @Override
+    public String toString() {
+        return (
+            super.toString() + "," +
+            "[phase= " + phase + "]," +
+            "[direction= " + direction + "]," +
+            "[verticalMovement= " + verticalMovement + "]," +
+            "[hostile= " + hostile + "]," +
+            "[hostileSpeed= " + hostileSpeed + "]," +
+            "[progress= " + progress + "]," +
+            "[damage= " + damage + "]," +
+            "[hitbox= " + hitbox + "]," +
+            "[maxHealth= " + maxHealth + "]," +
+            "[health= " + health + "]," +
+            "[speed= " + speed + "]," +
+            "[skin= " + skin + "]," +
+            "[controller= " + controller + "]"
+        );
+    }
 }

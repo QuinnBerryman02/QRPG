@@ -24,6 +24,7 @@ import java.awt.event.AdjustmentListener;
 import java.awt.event.AdjustmentEvent;
 
 import main.MainWindow;
+import mvc.PlayerController;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -40,12 +41,10 @@ public class Dialogue extends Menu {
     private DetailPanel details;
     private TopicResponsePanel text;
     private TopicPanel overview;
-    private TopicLoader topicLoader;
 
     public Dialogue(Player player, NPC npc) {
-        //TODO make the player controller empty
-        topicLoader = new TopicLoader(new File("res/topic.xml"));
         this.player = player;
+        player.getController().clear();
         this.npc = npc;
         Topic t = Topic.getTopic("Introduction");
         topics.add(new TopicResponse(t, npc.getResponse(t)));

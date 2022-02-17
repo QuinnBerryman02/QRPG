@@ -42,12 +42,11 @@ SOFTWARE.
  * Credits: Kelly Charles (2020)
  */ 
 public class Viewer extends JPanel {
-	//private long currentAnimationTime = 0; 
 	private Model gameWorld; 
 	private ArrayList<Chunk> chunksLoaded = new ArrayList<Chunk>();
+	private ArrayList<Entity> entitiesLoaded = new ArrayList<Entity>();
 	private Map map;
 	private int chunksOnScreen = 0;
-	private Point3f staticPlayer;
 	private final int CHUNK_SIZE = 16;
 	private final int TILE_SIZE_DEF = 16;
 	private final int SCALE = 3;
@@ -56,7 +55,6 @@ public class Viewer extends JPanel {
 	public Viewer(Model world) {
 		this.gameWorld = world;
 		this.map = gameWorld.getMap();
-		//TODO create a arraylist of entities on screen and calculate it
 	}
 
 	public void updateview() {
@@ -65,27 +63,29 @@ public class Viewer extends JPanel {
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		//currentAnimationTime++;
-		chunksOnScreen = 0;
-		staticPlayer = gameWorld.getPlayer().getCentre().plusVector(new Vector3f());
-		chunksLoaded = map.findClosestChunks(staticPlayer);
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, MainWindow.getW(), MainWindow.getH());
+		synchronized(gameWorld) {
+			chunksOnScreen = 0;
+			chunksLoaded = map.findClosestChunks(gameWorld.getPlayer().getCentre());
+			//TODO calculate which are on screen
+			entitiesLoaded = gameWorld.getEntities();
+			gameWorld.sortEntities(entitiesLoaded);
+			g.setColor(Color.BLACK);
+			g.fillRect(0, 0, MainWindow.getW(), MainWindow.getH());
 
-		drawBackground(g);
-		//TODO create static versions of the entities on screen, or attempt to synchronise the model and viewer
-		//TODO render the entities sorted by y value
-		drawEntities(g);
+			drawBackground(g);
+			
+			drawEntities(g);
 
-		drawForeground(g);
-		//TODO make health bars only appear if in red or in combat
-		drawHealthBars(g);
+			drawForeground(g);
+			//TODO make health bars only appear if in red or in combat
+			drawHealthBars(g);
 
-		drawCollisionsNearby(g);
+			drawCollisionsNearby(g);
 
-		drawChunkLines(g);
+			drawChunkLines(g);
 
-		drawText(g);
+			drawText(g);
+		}
 	}
 
 	private void drawBackground(Graphics g) {
@@ -174,10 +174,10 @@ public class Viewer extends JPanel {
 	}
 
 	public void drawEntities(Graphics g) {
-		for (Entity e : gameWorld.getEntities()) {
+		for (Entity e : entitiesLoaded) {
 			if (e instanceof Player) {
 				drawPlayer(g);
-				return;
+				continue;
 			}
 			File TextureToLoad = new File(e.getCurrentTexture());
 			Point3f worldPoint = e.getCentre();
@@ -229,8 +229,8 @@ public class Viewer extends JPanel {
 	}
 
 	public void drawCollisionsNearby(Graphics g) {
-		int[][] collisions = map.findCollisionTilesNearbyAPoint(staticPlayer, 2);
-		int[] tile = map.findTile(staticPlayer);
+		int[][] collisions = map.findCollisionTilesNearbyAPoint(gameWorld.getPlayer().getCentre(), 2);
+		int[] tile = map.findTile(gameWorld.getPlayer().getCentre());
         int px = tile[0];
         int py = tile[1];
 		for (int i=0; i<collisions.length;i++) {
@@ -263,7 +263,7 @@ public class Viewer extends JPanel {
 	}
 
 	public void drawHealthBars(Graphics g) {
-		for (Entity e : gameWorld.getEntities()) {
+		for (Entity e : entitiesLoaded) {
 			if(e.getHealth() > e.getMaxHealth() * 0.66f) {
 				g.setColor(Color.GREEN);
 			} else if(e.getHealth() > e.getMaxHealth() * 0.33f) {
@@ -279,8 +279,8 @@ public class Viewer extends JPanel {
 	}
 
 	public Point3f worldSpaceToScreen(Point3f p) {
-		float x = (UNIT_DEF * (p.getX() - staticPlayer.getX())) + MainWindow.getW()/2;
-		float y = (UNIT_DEF * (p.getY() - staticPlayer.getY())) + MainWindow.getH()/2;
+		float x = (UNIT_DEF * (p.getX() - gameWorld.getPlayer().getCentre().getX())) + MainWindow.getW()/2;
+		float y = (UNIT_DEF * (p.getY() - gameWorld.getPlayer().getCentre().getY())) + MainWindow.getH()/2;
 		return new Point3f(x, y, 0f);
 	}
 }

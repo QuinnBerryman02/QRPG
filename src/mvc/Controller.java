@@ -157,4 +157,19 @@ public class Controller {
 	public boolean isKeyIPressed() {
 		return keyIPressed;
 	}
+
+	public void clear() {
+		keyAPressed = false; 
+		keySPressed = false; 
+		keyWPressed = false; 
+		keyDPressed = false; 
+		keyQPressed = false; 
+		keyIPressed = false; 
+		keyEPressed = false; 
+		keySpacePressed = false; 
+		keyUpPressed = false; 
+		keyRightPressed = false; 
+		keyDownPressed = false; 
+		keyLeftPressed = false; 
+	}
 }

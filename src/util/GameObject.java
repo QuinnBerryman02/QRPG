@@ -49,4 +49,11 @@ public class GameObject {
 	public float getHeight() {
 		return height;
 	}
+
+	@Override
+	public String toString() {
+		return 	"[centre= " + centre + "]," +
+				"[width= " + width + "]," +
+				"[height= " + height + "]";
+	}
 }

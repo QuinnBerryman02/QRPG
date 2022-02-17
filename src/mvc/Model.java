@@ -1,6 +1,7 @@
 package mvc;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 import main.MainWindow;
@@ -48,11 +49,13 @@ public class Model {
 	}
 	
 	public void gamelogic() { 
-		for (Entity e : entities) {
-			if(e instanceof Player) {
-				playerLogic(); 
-			} else {
-				entityLogic(e); 
+		synchronized(this) {
+			for (Entity e : entities) {
+				if(e instanceof Player) {
+					playerLogic(); 
+				} else {
+					entityLogic(e); 
+				}
 			}
 		}
 	}
@@ -265,5 +268,15 @@ public class Model {
 		float dx = entity.getCentre().getX() - player.getCentre().getX();
 		float dy = entity.getCentre().getY() - player.getCentre().getY();
 		return (range*range >= dx*dx + dy*dy);
+	}
+
+	public void sortEntities(ArrayList<Entity> entities) {
+		Collections.sort(entities, (e, o) -> {
+			Point3f e1c = e.getCentre();
+			Point3f e2c = o.getCentre();
+			if(e1c.getY() > e2c.getY()) return 1; 
+			else if (e1c.getY() < e2c.getY()) return -1; 
+			else return 0; 
+		});
 	}
 }
