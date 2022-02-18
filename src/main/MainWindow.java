@@ -174,6 +174,9 @@ public class MainWindow {
 	public static void initiateConversation(Player p, NPC npc) {
 		menu = new Dialogue(p, npc);
 	}
+	public static void openSpellMenu(Player p) {
+		menu = new SpellMenu(p);
+	}
 
 	public static Model getModel() {
 		return gameworld;

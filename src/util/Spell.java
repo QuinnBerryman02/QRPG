@@ -3,6 +3,8 @@ package util;
 import main.MainWindow;
 import mvc.Viewer;
 
+import java.awt.Color;
+
 public class Spell {
     private final static float MAX_VELOCITY = 4f;
     private int manaCost;
@@ -12,6 +14,7 @@ public class Spell {
     private int damage;
     private float radius;
     private Projectile.Type type;
+    private String name;
 
     public enum Aim {
         AIM_BY_MOUSE,
@@ -21,13 +24,16 @@ public class Spell {
     }
 
     public Spell() {
-        //TODO make spell maker ui menu
         aim = Aim.AIM_BY_MOUSE;
         damage = 5;
         radius = 0.5f;
         type = Projectile.Type.FIRE;
         castDelay = 100;
         calculateCost();
+    }
+
+    public Color getColor() {
+        return Projectile.getColor(type);
     }
 
     public void cast(Entity e) {
@@ -137,6 +143,7 @@ public class Spell {
     @Override
     public String toString() {
         return
+        "[name: " + name + "]," +
         "[manaCost: " + manaCost + "]," +
         "[castDelay: " + castDelay + "]," +
         "[aim: " + aim.toString() + "]," +
@@ -187,5 +194,13 @@ public class Spell {
 
     public void setType(Projectile.Type type) {
         this.type = type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

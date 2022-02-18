@@ -93,6 +93,10 @@ public class Model {
 			player.setSkin(Skin.getSkins()[(player.getSkin().getIndex()+1)%Skin.getSkins().length]);
 			controller.setKeySpacePressed(false);
 		}
+		if(controller.isKeyLeftPressed()) {
+			MainWindow.openSpellMenu(player);
+			controller.setKeyLeftPressed(false);
+		}
 		Integer moved = (int)controller.getMouseWheelMoved();
 		if(moved != 0) {
 			int index = player.getSpells().indexOf(player.getCurrentSpell());
