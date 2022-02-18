@@ -219,7 +219,7 @@ public class Viewer extends JPanel {
 			int w = Math.round(p.getWidth()) * UNIT_DEF;
 			int h = Math.round(p.getHeight()) * UNIT_DEF;
 			try {
-				g.setColor(Color.BLUE);
+				g.setColor(p.getColor());
 				g.fillOval(x - w/2, y - h/2, w, h);
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -257,13 +257,14 @@ public class Viewer extends JPanel {
 	}
 
 	public void drawCollisionsNearby(Graphics g) {
-		int[][] collisions = map.findCollisionTilesNearbyAPoint(gameWorld.getPlayer().getCentre(), 2);
+		int SCAN_RANGE = Model.getScanRange();
+		int[][] collisions = map.findCollisionTilesNearbyAPoint(gameWorld.getPlayer().getCentre(), SCAN_RANGE);
 		int[] tile = map.findTile(gameWorld.getPlayer().getCentre());
         int px = tile[0];
         int py = tile[1];
 		for (int i=0; i<collisions.length;i++) {
 			for (int j=0; j<collisions[i].length;j++) {
-				Point3f worldPoint = new Point3f(px -2 + j, py -2 + i, 0);
+				Point3f worldPoint = new Point3f(px - SCAN_RANGE + j, py - SCAN_RANGE + i, 0);
 				Point3f relativePoint = worldSpaceToScreen(worldPoint);
 				//Hitbox hb = new Hitbox(new Point3f(worldPoint.getX() + .5f,worldPoint.getY() + .5f,0),1,1);
 				int x = (int)relativePoint.getX();
@@ -292,7 +293,7 @@ public class Viewer extends JPanel {
 
 	public void drawHealthBars(Graphics g) {
 		for (Entity e : entitiesLoaded) {
-			if(!e.healthBarVisible()) continue; 
+			if(!e.healthBarVisible() && !(e instanceof Player)) continue; 
 			if(e.getHealth() > e.getMaxHealth() * 0.66f) {
 				g.setColor(Color.GREEN);
 			} else if(e.getHealth() > e.getMaxHealth() * 0.33f) {
@@ -303,7 +304,11 @@ public class Viewer extends JPanel {
 			Point3f relativePoint = worldSpaceToScreen(e.getCentre());
 			int x = (int)relativePoint.getX();
 			int y = (int)relativePoint.getY();
-			g.fillRect(x - UNIT_DEF / 2, y-UNIT_DEF, e.getHealth() * UNIT_DEF / e.getMaxHealth(), 5);
+			g.fillRect(x - UNIT_DEF / 2, y-UNIT_DEF, (int)(e.getHealth() * UNIT_DEF / e.getMaxHealth()), 5);
+			if(e instanceof Player) {
+				g.setColor(Color.BLUE);
+				g.fillRect(x - UNIT_DEF / 2, y-UNIT_DEF-6, (int)(e.getMana() * UNIT_DEF / e.getMaxMana()), 5);
+			}
 		}
 	}
 

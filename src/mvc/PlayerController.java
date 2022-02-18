@@ -53,7 +53,9 @@ public class PlayerController extends Controller implements KeyListener, MouseLi
 	@Override
 	public void mouseEntered(MouseEvent e) {}
 	@Override
-	public void mouseExited(MouseEvent e) {}		//TODO clear the controller when mouse exits
+	public void mouseExited(MouseEvent e) {
+		clear();
+	}
 	@Override
 	public void mousePressed(MouseEvent e) {}
 	@Override

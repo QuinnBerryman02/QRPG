@@ -38,6 +38,7 @@ public class Model {
 	private Map map;
 	private ArrayList<Entity> entities = new ArrayList<Entity>();
 	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
+	private final static int SCAN_RANGE = 1;
 
 	public Model() {
 		//World
@@ -70,6 +71,7 @@ public class Model {
 	}
 
 	private void playerLogic() {
+		player.regenMana();
 		Controller controller = player.getController();
 		if(controller.isKeySpacePressed()) {
 			player.setSkin(Skin.getSkins()[(player.getSkin().getIndex()+1)%Skin.getSkins().length]);
@@ -83,6 +85,7 @@ public class Model {
 	}
 
 	private void entityLogic(Entity e) {
+		e.regenMana();
 		AIController controller = (AIController)e.getController();
 		controller.run(this);
 		animationLogic(e);
@@ -159,34 +162,15 @@ public class Model {
 							continue;
 						} else if (punchCollisionHandler(punch, other.getHitbox())){
 							System.out.println(e.getClass().getName() + " punched " + other.getClass().getName());
-							other.dealDamage((new Random()).nextInt(e.getDamage()));
+							other.dealDamage((new Random()).nextInt((int)e.getDamage()));
 						}
 					}
 				}
 				break;
             case CASTING:
 				if(e.getProgress()==4) {
-					Spell s = new Spell(1, 100, new Function<Segment,Void>() {
-						public Void apply(Segment s) {
-							Point3f src = s.getP1();
-							Point3f dst = s.getP2();
-							Vector3f v = dst.minusPoint(src);
-							float vx = v.getX();
-							float vy = v.getY();
-							vx = vx > 4 ? 4 : vx;
-							vx = vx < -4 ? -4 : vx;
-							vy = vy > 4 ? 4 : vy;
-							vy = vy < -4 ? -4 : vy;
-							v = new Vector3f(vx,vy,0f);
-							Projectile p = new Projectile(.5f, .5f, src, v, 20, e);
-							projectiles.add(p);
-							return null;
-						};
-					});
-					Point3f relativePoint = new Point3f(controller.mouseX,controller.mouseY,0f);
-					System.out.println(relativePoint);
-					s.cast(e, Viewer.screenToWorldSpace(relativePoint, player.getCentre()));
-					System.out.println(Viewer.screenToWorldSpace(relativePoint, player.getCentre()));
+					Spell s = new Spell();
+					s.cast(e);
 				}
 				break;
 		}
@@ -225,7 +209,7 @@ public class Model {
 					} else if(go instanceof Projectile) {
 						Projectile p = (Projectile)go;
 						System.out.println("Projectile hit " + other.getClass().getName());
-						other.dealDamage((new Random()).nextInt(p.getDamage()));
+						other.dealDamage((new Random()).nextInt((int)p.getDamage()));
 						return true;
 					}
 				}
@@ -237,7 +221,7 @@ public class Model {
 	}
 
 	public Vector3f wallCollisionHandler(GameObject go, Vector3f v) {
-		int[][] collisions = map.findCollisionTilesNearbyAPoint(go.getCentre(), 2);
+		int[][] collisions = map.findCollisionTilesNearbyAPoint(go.getCentre(), SCAN_RANGE);
 		int[] tile = map.findTile(go.getCentre());
         int px = tile[0];
         int py = tile[1];
@@ -246,12 +230,12 @@ public class Model {
 			for (int j=0; j<collisions[i].length;j++) {
 				switch (collisions[i][j]) {
 					case 8224:
-						Hitbox c = new Hitbox(new Point3f(px - 2 + .5f + j,py - 2 + .5f + i,0),1,1);
+						Hitbox c = new Hitbox(new Point3f(px - SCAN_RANGE + .5f + j,py - SCAN_RANGE + .5f + i,0),1,1);
 						Vector3f v2 = hb.intersection(c, v);
 						if(v2 != null) return v2;
 						break;
 					case 300:
-						c = new Hitbox(new Point3f(px - 2 + .5f + j,py - 2 + .5f + i,0),1,1);
+						c = new Hitbox(new Point3f(px - SCAN_RANGE + .5f + j,py - SCAN_RANGE + .5f + i,0),1,1);
 						Vector3f wasIntersecting = hb.intersection(c, new Vector3f());
 						v2 = hb.intersection(c, v);
 						if(v2 != null) {
@@ -261,7 +245,7 @@ public class Model {
 							if(go instanceof Player) {
 								Player p = (Player)go;
 								if(p.getController().isKeyUpPressed()) {
-									Point3f portalPoint = new Point3f(px - 2 + j, py - 2 + i, 0f);
+									Point3f portalPoint = new Point3f(px - SCAN_RANGE + j, py - SCAN_RANGE + i, 0f);
 									String teleport = map.findTeleportTypeByPoint(portalPoint);
 									Point3f destinationPoint = map.findTeleportPointByOther(teleport, portalPoint); 
 									System.out.println("Teleporting from " + portalPoint + " to " + destinationPoint + " via " + teleport);
@@ -325,5 +309,9 @@ public class Model {
 			else if (e1c.getY() < e2c.getY()) return -1; 
 			else return 0; 
 		});
+	}
+
+	public static int getScanRange() {
+		return SCAN_RANGE;
 	}
 }

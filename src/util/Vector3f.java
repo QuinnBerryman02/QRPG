@@ -122,6 +122,12 @@ public class Vector3f {
 		this.y = ny;
 	}
 
+	public Vector3f rotateCreate(double rad) {
+		float nx = (float)(x * Math.cos(rad) - y * Math.sin(rad));
+    	float ny = (float)(x * Math.sin(rad) + y * Math.cos(rad));
+		return new Vector3f(nx,ny,0f);
+	}
+
 	public static void main(String[] args) {
 		Vector3f v = new Vector3f(1f, 1f, 0f);
 		System.out.println(v.toStringInt());

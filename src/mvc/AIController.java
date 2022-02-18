@@ -3,7 +3,6 @@ package mvc;
 import java.util.Random;
 
 import util.Entity;
-import util.NPC;
 import util.Vector3f;
 
 public class AIController extends Controller{
@@ -24,7 +23,6 @@ public class AIController extends Controller{
     }
 
     public void run(Model m) {
-        //TODO fix npc staggering while chasing
         if(entity.isHostile()) {
             if(m.inRangeOfPlayer(entity)) {
                 setKeyQPressed(true);
@@ -44,6 +42,7 @@ public class AIController extends Controller{
                 lastMovement = v;
             }
         } else {
+            setKeyQPressed(false);
             Vector3f v = lastMovement;
             switch(r.nextInt(4)) {
                 case 0:
@@ -60,8 +59,8 @@ public class AIController extends Controller{
     }
 
     private void pressMoveButtons(Vector3f v) {
-        int x = (int)v.getX();
-        int y = (int)v.getY();
+        int x = Math.round(v.getX());
+        int y = Math.round(v.getY());
         setKeyDPressed(x==1 ? true : false);
         setKeyAPressed(x==-1 ? true : false);
         setKeyWPressed(y==-1 ? true : false);

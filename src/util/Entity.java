@@ -2,6 +2,7 @@ package util;
 
 import java.util.ArrayList;
 
+import main.MainWindow;
 import mvc.Controller;
 
 public abstract class Entity extends GameObject {
@@ -14,17 +15,17 @@ public abstract class Entity extends GameObject {
     private int progress = 0;
 
     private boolean hostile;
-    private int damage;
-    private int maxHealth;
-    private int health;
-    private int maxMana;
-    private int mana;
+    private float damage;
+    private float maxHealth;
+    private float health;
+    private float maxMana;
+    private float mana;
     private float speed;
     private Skin skin;
     private Controller controller;
     
 
-    public Entity(Skin s, float width, float height, Point3f centre, Controller controller, int maxHealth, int damage, int maxMana) { 
+    public Entity(Skin s, float width, float height, Point3f centre, Controller controller, float maxHealth, float damage, float maxMana) { 
     	super(width, height, centre);
         this.skin = s;
         this.controller = controller;
@@ -185,47 +186,56 @@ public abstract class Entity extends GameObject {
         this.hostile = hostile;
     }
 
-    public int getMaxHealth() {
+    public float getMaxHealth() {
         return maxHealth;
     }
 
-    public int getHealth() {
+    public float getHealth() {
         return health;
     }
 
-    public void setHealth(int health) {
+    public void setHealth(float health) {
         this.health = health;
     }
 
-    public void setMaxHealth(int maxHealth) {
+    public void setMaxHealth(float maxHealth) {
         this.maxHealth = maxHealth;
     }
 
-    public void setDamage(int damage) {
+    public void setDamage(float damage) {
         this.damage = damage;
     }
 
-    public int getDamage() {
+    public float getDamage() {
         return damage;
     }
 
-    public int getMana() {
+    public float getMana() {
         return mana;
     }
 
-    public int getMaxMana() {
+    public float getMaxMana() {
         return maxMana;
     }
 
-    public void setMana(int mana) {
+    public void setMana(float mana) {
         this.mana = mana;
     }
 
-    public void setMaxMana(int maxMana) {
+    public void setMaxMana(float maxMana) {
         this.maxMana = maxMana;
     }
 
-    public void dealDamage(int damage) {
+    public void regenMana() {
+        float amount = maxMana / 20f / MainWindow.getTargetFPS();
+        if(mana + amount >= maxMana) {
+            mana = maxMana;
+        } else {
+            mana += amount;
+        }
+    }
+
+    public void dealDamage(float damage) {
         if(dead) return;
         if(!isHostile()) setHostile(true);
         health -= damage;
@@ -247,12 +257,12 @@ public abstract class Entity extends GameObject {
     }
 
     public boolean healthBarVisible() {
-        return (health <= 0.33 * maxHealth) || inCombat;
+        return (health <= 0.33f * maxHealth) || inCombat;
     }
 
     public void die() {
         dead = true;
-        hostile = false;
+        setHostile(false);
         if(this instanceof NPC) {
             System.out.println(((NPC)this).getName() + " died");
         } else if(this instanceof Player) {
