@@ -26,6 +26,7 @@ SOFTWARE.
    (MIT LICENSE ) e.g do what you want with this :-) 
  */ 
 public class Controller {
+	//TODO add support for different types of controller / allow player to change buttons for actions
 	protected boolean keyAWasPressed = false;
 	protected boolean keySWasPressed = false;
 	protected boolean keyDWasPressed = false;
@@ -46,6 +47,7 @@ public class Controller {
 
 	protected int mouseX;
 	protected int mouseY;
+	protected double mouseWheelMoved;
 
 	public boolean isKeyAPressed() {
 		return keyAPressed;
@@ -189,5 +191,13 @@ public class Controller {
 
 	public void setMouseY(int mouseY) {
 		this.mouseY = mouseY;
+	}
+
+	public double getMouseWheelMoved() {
+		return mouseWheelMoved;
+	}
+
+	public void setMouseWheelMoved(double mouseWheelMoved) {
+		this.mouseWheelMoved = mouseWheelMoved;
 	}
 }

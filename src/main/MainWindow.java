@@ -78,6 +78,7 @@ public class MainWindow {
 			canvas.addKeyListener(pc); 
 			canvas.addMouseListener(pc);  
 			canvas.addMouseMotionListener(pc);
+			canvas.addMouseWheelListener(pc);
 			canvas.requestFocusInWindow();   
 			beginGame();
 		});  

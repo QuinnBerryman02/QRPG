@@ -50,7 +50,11 @@ public class Projectile extends GameObject{
     }
 
     public Color getColor() {
-        switch (type) {
+        return getColor(type);
+    }
+
+    public static Color getColor(Type t) {
+        switch (t) {
             case FIRE: return Color.ORANGE;
             case LAVA: return Color.RED;
             case WATER: return Color.BLUE;

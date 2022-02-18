@@ -5,8 +5,10 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
-public class PlayerController extends Controller implements KeyListener, MouseListener, MouseMotionListener{
+public class PlayerController extends Controller implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener{
     @Override
 	public void keyTyped(KeyEvent e) {}
 
@@ -66,5 +68,9 @@ public class PlayerController extends Controller implements KeyListener, MouseLi
 	public void mouseMoved(MouseEvent e) {
 		mouseX = e.getX();
 		mouseY = e.getY();	
+	}
+	@Override
+	public void mouseWheelMoved(MouseWheelEvent e) {
+		mouseWheelMoved = e.getPreciseWheelRotation();
 	}
 }

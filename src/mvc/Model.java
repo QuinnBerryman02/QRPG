@@ -9,6 +9,7 @@ import main.MainWindow;
 import util.*;
 import util.Entity.AnimationPhase;
 import util.Entity.Direction;
+import util.Spell.Aim;
 /*
  * Created by Abraham Campbell on 15/01/2020.
  *   Copyright (c) 2020  Abraham Campbell
@@ -49,6 +50,21 @@ public class Model {
 		NPCLoader npcLoader = new NPCLoader(new File("res/npc.xml"));
 		npcLoader.createAllNpcs().forEach(npc -> entities.add(npc));
 		entities.add(player);
+		Spell s1 = new Spell();
+		s1.setType(Projectile.Type.LIGHTNING);
+		s1.setCastDelay(300);
+		s1.setDamage(4);
+		s1.setRadius(0.5f);
+		s1.setAim(Spell.Aim.FRONT_AND_BACK);
+		Spell s2 = new Spell();
+		s2.setType(Projectile.Type.FIRE);
+		s2.setCastDelay(100);
+		s2.setDamage(5);
+		s2.setRadius(0.5f);
+		s2.setAim(Spell.Aim.OCTOPUS);
+		player.getSpells().add(s1);
+		player.getSpells().add(s2);
+		player.setCurrentSpell(s1);
 	}
 	
 	public void gamelogic() { 
@@ -76,6 +92,15 @@ public class Model {
 		if(controller.isKeySpacePressed()) {
 			player.setSkin(Skin.getSkins()[(player.getSkin().getIndex()+1)%Skin.getSkins().length]);
 			controller.setKeySpacePressed(false);
+		}
+		Integer moved = (int)controller.getMouseWheelMoved();
+		if(moved != 0) {
+			int index = player.getSpells().indexOf(player.getCurrentSpell());
+			int newIndex = index + moved;
+			if(newIndex > player.getSpells().size()-1) newIndex = 0;
+			if(newIndex < 0) newIndex = player.getSpells().size()-1;
+			player.setCurrentSpell(player.getSpells().get(newIndex));
+			controller.setMouseWheelMoved(0.0);
 		}
 		animationLogic(player);
 		controller.setKeyAWasPressed(controller.isKeyAPressed());
@@ -169,8 +194,10 @@ public class Model {
 				break;
             case CASTING:
 				if(e.getProgress()==4) {
-					Spell s = new Spell();
-					s.cast(e);
+					Spell s = e.getCurrentSpell();
+					if(s != null) {
+						s.cast(e);
+					}
 				}
 				break;
 		}

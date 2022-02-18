@@ -13,7 +13,7 @@ public class Spell {
     private float radius;
     private Projectile.Type type;
 
-    private enum Aim {
+    public enum Aim {
         AIM_BY_MOUSE,
         FRONT_AND_BACK,
         SIDES,
@@ -28,10 +28,11 @@ public class Spell {
         type = Projectile.Type.FIRE;
         castDelay = 100;
         calculateCost();
-        System.out.println(toString());
     }
 
     public void cast(Entity e) {
+        calculateCost();
+        System.out.println(toString());
         if(e.getMana() >= manaCost) {
             e.setMana(e.getMana()-manaCost);
             (new Thread() {
@@ -142,5 +143,49 @@ public class Spell {
         "[damage: " + damage + "]," +
         "[radius: " + radius + "]," +
         "[type: " + type + "]";
+    }
+
+    public Aim getAim() {
+        return aim;
+    }
+
+    public int getCastDelay() {
+        return castDelay;
+    }
+
+    public static float getMaxVelocity() {
+        return MAX_VELOCITY;
+    }
+
+    public float getRadius() {
+        return radius;
+    }
+
+    public Projectile.Type getType() {
+        return type;
+    }
+
+    public void setAim(Aim aim) {
+        this.aim = aim;
+    }
+
+    public void setCastDelay(int castDelay) {
+        this.castDelay = castDelay;
+    }
+
+    public void setDamage(int damage) {
+        this.damage = damage;
+    }
+
+    public void setManaCost(int manaCost) {
+        this.manaCost = manaCost;
+    }
+
+    public void setRadius(float radius) {
+        this.radius = radius;
+    }
+
+    public void setType(Projectile.Type type) {
+        this.type = type;
     }
 }

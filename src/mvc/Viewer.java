@@ -86,6 +86,8 @@ public class Viewer extends JPanel {
 
 			drawHealthBars(g);
 
+			drawSpells(g);
+
 			drawCollisionsNearby(g);
 
 			drawChunkLines(g);
@@ -309,6 +311,23 @@ public class Viewer extends JPanel {
 				g.setColor(Color.BLUE);
 				g.fillRect(x - UNIT_DEF / 2, y-UNIT_DEF-6, (int)(e.getMana() * UNIT_DEF / e.getMaxMana()), 5);
 			}
+		}
+	}
+
+	public void drawSpells(Graphics g) {
+		Player p = gameWorld.getPlayer();
+		int x = (MainWindow.getW() / 2) - (int)(p.getSpells().size() / 2f * UNIT_DEF);
+		int y = MainWindow.getH() - UNIT_DEF*2;
+		for (Spell s : p.getSpells()) {
+			
+			if(s.equals(p.getCurrentSpell())) {
+				g.setColor(Color.white);
+				g.fillRect(x, y, UNIT_DEF, UNIT_DEF);
+			}
+			g.setColor(Projectile.getColor(s.getType()));
+			g.fillOval(x, y, UNIT_DEF, UNIT_DEF);
+			//draw
+			x += UNIT_DEF;
 		}
 	}
 

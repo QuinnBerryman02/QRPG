@@ -13,6 +13,8 @@ public abstract class Entity extends GameObject {
     private boolean dead = false;
     private float hostileSpeed = 4;
     private int progress = 0;
+    private ArrayList<Spell> spells = new ArrayList<Spell>();
+    private Spell currentSpell;
 
     private boolean hostile;
     private float damage;
@@ -256,6 +258,18 @@ public abstract class Entity extends GameObject {
         }
     }
 
+    public ArrayList<Spell> getSpells() {
+        return spells;
+    }
+
+    public Spell getCurrentSpell() {
+        return currentSpell;
+    }
+
+    public void setCurrentSpell(Spell currentSpell) {
+        this.currentSpell = currentSpell;
+    }
+
     public boolean healthBarVisible() {
         return (health <= 0.33f * maxHealth) || inCombat;
     }
@@ -271,6 +285,7 @@ public abstract class Entity extends GameObject {
             System.out.println(getClass() + " died");
         }
     }
+    
 
     @Override
     public String toString() {
