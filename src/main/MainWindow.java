@@ -57,6 +57,7 @@ public class MainWindow {
 	private final static int W = Toolkit.getDefaultToolkit().getScreenSize().width;
 	private final static int H = Toolkit.getDefaultToolkit().getScreenSize().height;
 	private static int averageFPS = targetFPS;
+	private static boolean gameStarted = false;
 	  
 	public MainWindow() {
 	    frame.setSize(W, H);
@@ -143,7 +144,8 @@ public class MainWindow {
 	}
 
 	private static void gameloop() { 
-		gameworld.gamelogic();
+		if(gameStarted)
+			gameworld.gamelogic();
 		canvas.updateview();  
 		if(menu != null) {
 			menu.update();

@@ -42,6 +42,12 @@ SOFTWARE.
  * Credits: Kelly Charles (2020)
  */ 
 public class Viewer extends JPanel {
+	private Point3f cameraOffset = new Point3f();
+	private Vector3f cameraVector = new Vector3f(2f,2f,0f);
+	private final Point3f cameraBoundTopLeft = new Point3f(-92f,-38f,0f);
+	private final Point3f cameraBoundBotRight = new Point3f(1f, 133f, 0f);
+	private boolean inCameraMode = true;
+	private boolean inDebugMode = false;
 	private Model gameWorld; 
 	private ArrayList<Chunk> chunksLoaded = new ArrayList<Chunk>();
 	private ArrayList<Entity> entitiesLoaded = new ArrayList<Entity>();
@@ -60,34 +66,55 @@ public class Viewer extends JPanel {
 	public void updateview() {
 		repaint();
 	}
+
+	public void moveCamera() {
+		Point3f future = cameraOffset.plusVector(cameraVector.byScalar(1f / (float)MainWindow.getTargetFPS()));
+		if(future.getX() < cameraBoundTopLeft.getX()) cameraVector.setX(cameraVector.getX() * -1);
+		if(future.getX() > cameraBoundBotRight.getX()) cameraVector.setX(cameraVector.getX() * -1);
+		if(future.getY() < cameraBoundTopLeft.getY()) cameraVector.setY(cameraVector.getY() * -1);
+		if(future.getY() > cameraBoundBotRight.getY()) cameraVector.setY(cameraVector.getY() * -1);
+		cameraOffset.applyVector(cameraVector.byScalar(1f / (float)MainWindow.getTargetFPS()));
+	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		synchronized(gameWorld) {
+			if(inCameraMode) 
+				moveCamera();
+
 			chunksOnScreen = 0;
-			chunksLoaded = map.findClosestChunks(gameWorld.getPlayer().getCentre());
-			entitiesLoaded = gameWorld.getEntitiesLoaded();
-			gameWorld.sortEntities(entitiesLoaded);
+			chunksLoaded = map.findClosestChunks(inCameraMode ? cameraOffset : gameWorld.getPlayer().getCentre());
+
+			if(!inCameraMode) {
+				entitiesLoaded = gameWorld.getEntitiesLoaded();
+				gameWorld.sortEntities(entitiesLoaded);
+			}
+			
 			g.setColor(Color.BLACK);
 			g.fillRect(0, 0, MainWindow.getW(), MainWindow.getH());
 
 			drawBackground(g);
-			
-			drawEntities(g);
+
+			if(!inCameraMode)
+				drawEntities(g);
 
 			drawForeground(g);
 
-			drawProjectiles(g);
+			if(!inCameraMode) {
+				drawProjectiles(g);
 
-			drawHealthBars(g);
+				drawHealthBars(g);
 
-			drawSpells(g);
+				drawSpells(g);
+			}
+			if(inDebugMode && !inCameraMode) {
+				drawCollisionsNearby(g);
 
-			drawCollisionsNearby(g);
+				drawChunkLines(g);
 
-			drawChunkLines(g);
-
-			drawText(g);
+				drawText(g);
+			}
+			
 		}
 	}
 
@@ -340,12 +367,12 @@ public class Viewer extends JPanel {
 	}
 
 	public Point3f worldSpaceToScreen(Point3f p) {
-		return worldSpaceToScreen(p, gameWorld.getPlayer().getCentre());
+		return worldSpaceToScreen(p, inCameraMode ? cameraOffset : gameWorld.getPlayer().getCentre());
 	}
 
 	
 	public Point3f screenToWorldSpace(Point3f p) {
-		return screenToWorldSpace(p, gameWorld.getPlayer().getCentre());
+		return screenToWorldSpace(p, inCameraMode ? cameraOffset : gameWorld.getPlayer().getCentre());
 	}
 
 	public static Point3f worldSpaceToScreen(Point3f p, Point3f playerCentre) {
