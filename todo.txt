@@ -5,6 +5,7 @@ create the rest of the NPCs
 create default topic response classes, like farmer = tree, wheat, animal ,tools etc + responses
 create enemy class
 get enemy sprites and animations
+add final boss
 
         Collisions)
 add special collision types, half blocks, custom collisions for chests quest board etc
@@ -13,24 +14,30 @@ fix large projectile collisions
         Performance)
 fix frame drops for unknown reason
 
-        General)
+        Crucial)
 add support for different types of controller 
 add sounds
 add music
+    <>add camera mode
+add saving and loading
 
         UI)
 allow player to change buttons for actions
-add main menu ui
+    <>add main menu ui
 add esc / tab menu with settings
     <>add quest ui
 add quest chooser ui in the guild
 add shop ui
 
         Spells / Projectiles)
-lock progress of some elements / aims until unlocked
+lock progress of some elements / aims until unlocked / bought
 add mutable maxes for radius and damage
 add projectile sprites
 
         Quests)
     <>add quest class
     <>add ability to claim reward from questgiver using dialogue
+
+        Map)
+create procedurally generated caves and sewers (Binding of Issac style)
+create final boss arena

@@ -53,49 +53,24 @@ public class MainWindow {
 	private static Viewer canvas = new Viewer(gameworld);
 	private static Menu menu;
 	private final static int targetFPS = 15;
-	private static JLabel backgroundImageForStartMenu ;
 	private final static int W = Toolkit.getDefaultToolkit().getScreenSize().width;
 	private final static int H = Toolkit.getDefaultToolkit().getScreenSize().height;
 	private static int averageFPS = targetFPS;
 	private static boolean gameStarted = false;
 	  
 	public MainWindow() {
-	    frame.setSize(W, H);
+	    frame.setPreferredSize(new Dimension( W, H));
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 	    frame.setLayout(null);
 	    frame.add(canvas);  
 	    canvas.setBounds(0, 0, W, H); 
 		System.out.println("W: " + W + " H: " + H);
 		canvas.setBackground(new Color(255,255,255));
-		canvas.setVisible(false);
-		            
-		JButton startMenuButton = new JButton("Start Game");
-		startMenuButton.setBounds(400, 500, 200, 40); 
-		startMenuButton.addActionListener((ActionEvent e) -> {
-			startMenuButton.setVisible(false);
-			backgroundImageForStartMenu.setVisible(false); 
-			canvas.setVisible(true); 
-			PlayerController pc = (PlayerController)gameworld.getPlayer().getController();
-			canvas.addKeyListener(pc); 
-			canvas.addMouseListener(pc);  
-			canvas.addMouseMotionListener(pc);
-			canvas.addMouseWheelListener(pc);
-			canvas.requestFocusInWindow();   
-			beginGame();
-		});  
-		
-		File BackroundToLoad = new File("res/old/startscreen.png");
-		try {	
-			BufferedImage myPicture = ImageIO.read(BackroundToLoad);
-			backgroundImageForStartMenu = new JLabel(new ImageIcon(myPicture));
-			backgroundImageForStartMenu.setBounds(0, 0, 1000, 1000);
-			frame.add(backgroundImageForStartMenu); 
-		}  catch (IOException e) { 
-			e.printStackTrace();
-		}   
-
-		frame.add(startMenuButton);  
-		frame.setVisible(true);   
+		canvas.setVisible(true);   
+		beginGame();
+		frame.pack();
+		frame.setVisible(true);  
+		openMainMenu();    
 	}
 
 	public static void main(String[] args) {
@@ -181,6 +156,27 @@ public class MainWindow {
 
 	public static void openQuestMenu(Player p) {
 		menu = new QuestMenu(p);
+	}
+
+	public static void openMainMenu() {
+		menu = new MainMenu();
+	}
+
+	public static void newGame() {
+		menu = null;
+		canvas.setGoingToPlayer(true);
+	}
+
+	public static void ready() {
+		canvas.setInCameraMode(false);
+		canvas.setGoingToPlayer(false);
+		gameStarted = true;
+		PlayerController pc = (PlayerController)gameworld.getPlayer().getController();
+		canvas.addKeyListener(pc); 
+		canvas.addMouseListener(pc);  
+		canvas.addMouseMotionListener(pc);
+		canvas.addMouseWheelListener(pc);
+		canvas.requestFocusInWindow(); 
 	}
 
 	public static Model getModel() {

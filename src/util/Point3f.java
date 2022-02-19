@@ -25,6 +25,7 @@ SOFTWARE.
  */ 
 //Modified from Graphics 3033J course point class  by Abey Campbell 
 
+import java.util.Random;
 
 public class Point3f {
 	private float x;
@@ -124,7 +125,13 @@ public class Point3f {
 		int eighth = (int)Math.round((1 / Math.PI) * 4 * rad + 4);
 		return eighth;
 	}
-	
+
+	public static Point3f generateRandomPoint(Point3f topleft, Point3f botright) {
+		Random r = new Random(System.currentTimeMillis());
+		float x = (float)r.nextDouble() * (botright.getX() - topleft.getX()) + topleft.getX();
+		float y = (float)r.nextDouble() * (botright.getY() - topleft.getY()) + topleft.getY();
+		return new Point3f(x,y,0f);
+	}
 	public static void main(String[] args) {
 		System.out.printf("rad:%.2fpi eighth:%d\n",(0.0),radToEighth(0));
 		System.out.printf("rad:%.2fpi eighth:%d\n",(0.25),radToEighth(0.25 * Math.PI));

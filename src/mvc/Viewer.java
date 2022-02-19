@@ -42,11 +42,13 @@ SOFTWARE.
  * Credits: Kelly Charles (2020)
  */ 
 public class Viewer extends JPanel {
-	private Point3f cameraOffset = new Point3f();
-	private Vector3f cameraVector = new Vector3f(2f,2f,0f);
 	private final Point3f cameraBoundTopLeft = new Point3f(-92f,-38f,0f);
 	private final Point3f cameraBoundBotRight = new Point3f(1f, 133f, 0f);
+	private final float cameraHomingSpeed = 64f;
+	private Vector3f cameraVector;
+	private Point3f cameraOffset;
 	private boolean inCameraMode = true;
+	private boolean goingToPlayer = false;
 	private boolean inDebugMode = false;
 	private Model gameWorld; 
 	private ArrayList<Chunk> chunksLoaded = new ArrayList<Chunk>();
@@ -61,6 +63,8 @@ public class Viewer extends JPanel {
 	public Viewer(Model world) {
 		this.gameWorld = world;
 		this.map = gameWorld.getMap();
+		cameraVector = new Vector3f(2f,2f,0f);
+		cameraOffset = Point3f.generateRandomPoint(cameraBoundTopLeft, cameraBoundBotRight);
 	}
 
 	public void updateview() {
@@ -68,11 +72,27 @@ public class Viewer extends JPanel {
 	}
 
 	public void moveCamera() {
-		Point3f future = cameraOffset.plusVector(cameraVector.byScalar(1f / (float)MainWindow.getTargetFPS()));
-		if(future.getX() < cameraBoundTopLeft.getX()) cameraVector.setX(cameraVector.getX() * -1);
-		if(future.getX() > cameraBoundBotRight.getX()) cameraVector.setX(cameraVector.getX() * -1);
-		if(future.getY() < cameraBoundTopLeft.getY()) cameraVector.setY(cameraVector.getY() * -1);
-		if(future.getY() > cameraBoundBotRight.getY()) cameraVector.setY(cameraVector.getY() * -1);
+		if(!goingToPlayer) {
+			Point3f future = cameraOffset.plusVector(cameraVector.byScalar(1f / (float)MainWindow.getTargetFPS()));
+			if(future.getX() < cameraBoundTopLeft.getX()) cameraVector.setX(cameraVector.getX() * -1);
+			if(future.getX() > cameraBoundBotRight.getX()) cameraVector.setX(cameraVector.getX() * -1);
+			if(future.getY() < cameraBoundTopLeft.getY()) cameraVector.setY(cameraVector.getY() * -1);
+			if(future.getY() > cameraBoundBotRight.getY()) cameraVector.setY(cameraVector.getY() * -1);
+		} else {
+			Point3f p = gameWorld.getPlayer().getCentre();
+			Vector3f v = p.minusPoint(cameraOffset);
+			float vx = v.getX();
+			float vy = v.getY();
+			if(Math.round(vx)==0 && Math.round(vy) == 0) {
+				MainWindow.ready();
+				return;
+			}
+			vx = vx > cameraHomingSpeed ? cameraHomingSpeed : vx;
+			vx = vx < -cameraHomingSpeed ? -cameraHomingSpeed : vx;
+			vy = vy > cameraHomingSpeed ? cameraHomingSpeed : vy;
+			vy = vy < -cameraHomingSpeed ? -cameraHomingSpeed : vy;
+			cameraVector = new Vector3f(vx,vy,0f);
+		}
 		cameraOffset.applyVector(cameraVector.byScalar(1f / (float)MainWindow.getTargetFPS()));
 	}
 	
@@ -384,5 +404,17 @@ public class Viewer extends JPanel {
 		float x = (p.getX() - MainWindow.getW()/2) / UNIT_DEF + playerCentre.getX();
 		float y = (p.getY() - MainWindow.getH()/2) / UNIT_DEF + playerCentre.getY();
 		return new Point3f(x, y, 0f);
+	}
+
+	public void setInCameraMode(boolean inCameraMode) {
+		this.inCameraMode = inCameraMode;
+	}
+
+	public void setInDebugMode(boolean inDebugMode) {
+		this.inDebugMode = inDebugMode;
+	}
+
+	public void setGoingToPlayer(boolean goingToPlayer) {
+		this.goingToPlayer = goingToPlayer;
 	}
 }
