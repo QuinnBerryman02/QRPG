@@ -1,3 +1,5 @@
+Art Credits
+
 [faces, casting, attack, walking] are from https://opengameart.org/users/charlesgabriel
 by either "Antifarea" or "CharlesGabriel" (The original walking ones are by Antifarea and the subsequent art by CharlesGabriel as far as I know)
 under CC-BY 3.0 (all)
@@ -47,3 +49,45 @@ under CC-BY 3.0, GPL 2.0 (all)
 [./gui] are from https://opengameart.org/content/rpg-gui-construction-kit-v10
 by "Lamoot"
 under CC-BY 3.0 (all)
+
+Music Credits
+
+[caves, townTheme1] are from https://opengameart.org/users/cynicmusic
+by "Cynicmusic"
+under CC0 (all)
+
+[mainTheme] is from https://opengameart.org/content/grassy-world-overture-8bitorchestral
+by "Matthew Pablo"
+under CC-BY 3.0
+
+[combat2] is from https://opengameart.org/content/to-arms
+by "Alexandr Zhelanov"
+under CC-BY 4.0
+
+[townTheme2] is from https://opengameart.org/content/town-music
+by "Elerya"
+under CC-BY 3.0
+
+[combat1] is from https://opengameart.org/content/omens
+by "El-corleo"
+under CC-BY 3.0
+
+[boss] is from https://opengameart.org/content/anime-esque-intro-outro-theme
+by "CleytonKauffman"
+under CC-BY 4.0, OGA-BY 3.0
+
+[guildHall, overworld1] are from https://opengameart.org/users/remaxim
+by "Remaxim"
+under CC-BY-SA 3.0, GPL 3.0, GPL 2.0 (all)
+
+[sewer] is from https://opengameart.org/content/rat-sewer
+by "HaelDB"
+under OGA-BY 3.0, CC0 
+
+[overworld2] is from https://opengameart.org/content/rpg-costal-town-background-music
+by "Hitctrl"
+under CC-BY 3.0
+
+[overworld3] is from https://opengameart.org/content/haply
+by "Yubatake"
+under CC-BY 3.0
