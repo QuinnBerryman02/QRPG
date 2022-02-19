@@ -6,6 +6,7 @@ create default topic response classes, like farmer = tree, wheat, animal ,tools 
 create enemy class
 get enemy sprites and animations
 add final boss
+add attack damage popups
 
         Collisions)
 add special collision types, half blocks, custom collisions for chests quest board etc
@@ -18,7 +19,7 @@ fix frame drops for unknown reason
 add support for different types of controller 
 add sounds
     <>add music
-make music correspond to each area
+    <>make music correspond to each area
     <>add camera mode
 add saving and loading
 
@@ -34,6 +35,7 @@ add shop ui
 lock progress of some elements / aims until unlocked / bought
 add mutable maxes for radius and damage
 add projectile sprites
+add magic circle below feet when casting
 
         Quests)
     <>add quest class

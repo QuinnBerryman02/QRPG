@@ -57,6 +57,7 @@ public class MainWindow {
 	private final static int H = Toolkit.getDefaultToolkit().getScreenSize().height;
 	private static int averageFPS = targetFPS;
 	private static boolean gameStarted = false;
+	private static AudioManager audioManager;
 	  
 	public MainWindow() {
 	    frame.setPreferredSize(new Dimension( W, H));
@@ -67,6 +68,7 @@ public class MainWindow {
 		System.out.println("W: " + W + " H: " + H);
 		canvas.setBackground(new Color(255,255,255));
 		canvas.setVisible(true);   
+		audioManager = new AudioManager();
 		beginGame();
 		frame.pack();
 		frame.setVisible(true);  
@@ -181,5 +183,9 @@ public class MainWindow {
 
 	public static Model getModel() {
 		return gameworld;
+	}
+
+	public static AudioManager getAudioManager() {
+		return audioManager;
 	}
 }

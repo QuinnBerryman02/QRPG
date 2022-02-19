@@ -70,6 +70,13 @@ public class Model {
 	
 	public void gamelogic() { 
 		synchronized(this) {
+			AudioManager am = MainWindow.getAudioManager();
+			int id = map.getIdAudioLayer(player.getCentre());
+			if(!player.isInCombat()) {
+				am.playSongByTileId(id);
+			} else {
+				am.playSongByTileId(666);
+			}
 			entitiesLoaded.clear();
 			entities.forEach(e -> {
 				if(Viewer.isEntityOnscreen(e, player.getCentre()) && !e.isDead()) {
@@ -202,6 +209,7 @@ public class Model {
 							continue;
 						} else if (punchCollisionHandler(punch, other.getHitbox())){
 							if(other.isDead()) break;
+							e.attack();
 							System.out.println(e.getClass().getName() + " punched " + other.getClass().getName());
 							other.dealDamage((new Random()).nextInt((int)e.getDamage()));
 							if(e instanceof Player) updateQuests(other);
@@ -268,6 +276,7 @@ public class Model {
 					} else if(go instanceof Projectile) {
 						if(!other.isDead()) {
 							Projectile p = (Projectile)go;
+							p.getCaster().attack();
 							System.out.println("Projectile hit " + other.getClass().getName());
 							other.dealDamage((new Random()).nextInt((int)p.getDamage()));
 							if((p.getCaster()) instanceof Player) updateQuests(other);

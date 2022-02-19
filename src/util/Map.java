@@ -123,6 +123,18 @@ public class Map {
         return new int[]{(int)Math.floor((double)p.getX()), (int)Math.floor((double)p.getY())};
     }
 
+    public int getIdAudioLayer(Point3f p) {
+        int[] tile = findTile(p);
+        int x = tile[0], y = tile[1];
+        ArrayList<Chunk> chunks = getChunksByCoordinate(x - (x % 16 + 16) % 16,y - (y % 16 + 16) % 16);
+        for (Chunk chunk : chunks) {
+            if(chunk.getLayer().getAttribute("name").equals("audio")) {
+                return chunk.getTile((y % 16 + 16) % 16, (x % 16 + 16) % 16);
+            }
+        }
+        return 0;
+    }
+
     public int[][] findCollisionTilesNearbyAPoint(Point3f p, int radius) {
         int[][] collisions = new int[2 * radius + 1][2 * radius + 1];
         int[] tile = findTile(p);

@@ -168,6 +168,7 @@ public class Viewer extends JPanel {
 				int y = (int)relativePoint.getY();
 				//System.out.println("x: " + x+ " y: " + y + " " + chunk);
 				if (chunk.getLayer().getAttribute("name").equals("collisions")) continue;
+				if (chunk.getLayer().getAttribute("name").equals("audio")) continue;
 				if(x + UNIT_DEF * CHUNK_SIZE <= 0 || y + UNIT_DEF * CHUNK_SIZE <= 0 || x > MainWindow.getW() || y > MainWindow.getH()) {
 					continue;
 				} else {

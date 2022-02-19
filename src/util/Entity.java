@@ -237,24 +237,29 @@ public abstract class Entity extends GameObject {
         }
     }
 
-    public void dealDamage(float damage) {
-        if(dead) return;
-        if(!isHostile()) setHostile(true);
-        health -= damage;
-        if(health <= 0) {
-            die();
-        }
+    public void attack() {
         if(!inCombat) {
             (new Thread() {
                 @Override
                 public void run() {
                     inCombat = true;
                     try {
-                        sleep(5000);
+                        sleep(10000);
                     } catch (Exception e) {}
                     inCombat = false;
                 }
             }).start();
+        }
+    }
+
+    public void dealDamage(float damage) {
+        if(dead) return;
+        if(!isHostile()) setHostile(true);
+        health -= damage;
+        if(health <= 0) {
+            die();
+        } else {
+            attack();
         }
     }
 
@@ -272,6 +277,10 @@ public abstract class Entity extends GameObject {
 
     public boolean healthBarVisible() {
         return (health <= 0.33f * maxHealth) || inCombat;
+    }
+
+    public boolean isInCombat() {
+        return inCombat;
     }
 
     public void die() {
