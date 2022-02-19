@@ -177,6 +177,10 @@ public class MainWindow {
 		menu = new SpellMenu(p);
 	}
 
+	public static void openQuestMenu(Player p) {
+		menu = new QuestMenu(p);
+	}
+
 	public static Model getModel() {
 		return gameworld;
 	}

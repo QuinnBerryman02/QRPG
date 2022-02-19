@@ -66,12 +66,7 @@ public class Viewer extends JPanel {
 		synchronized(gameWorld) {
 			chunksOnScreen = 0;
 			chunksLoaded = map.findClosestChunks(gameWorld.getPlayer().getCentre());
-			entitiesLoaded.clear();
-			gameWorld.getEntities().forEach(e -> {
-				if(isEntityOnscreen(e)) {
-					entitiesLoaded.add(e);
-				}
-			});
+			entitiesLoaded = gameWorld.getEntitiesLoaded();
 			gameWorld.sortEntities(entitiesLoaded);
 			g.setColor(Color.BLACK);
 			g.fillRect(0, 0, MainWindow.getW(), MainWindow.getH());
@@ -328,6 +323,13 @@ public class Viewer extends JPanel {
 			//draw
 			x += UNIT_DEF;
 		}
+	}
+
+	public static boolean isEntityOnscreen(Entity e, Point3f playerCentre) {
+		Point3f relativePoint = worldSpaceToScreen(e.getCentre(), playerCentre);
+		int x = (int)relativePoint.getX();
+		int y = (int)relativePoint.getY();
+		return !(x + UNIT_DEF <= 0 || y + UNIT_DEF <= 0 || x > MainWindow.getW() || y > MainWindow.getH());
 	}
 
 	public boolean isEntityOnscreen(Entity e) {

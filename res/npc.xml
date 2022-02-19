@@ -1,10 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <npcs>
-    <npc name="John" x="-8" y="4" skin="Magician_M" face="null">
+    <npc name="John" x="-8" y="4" skin="Magician_M">
         <topic name="Introduction"> Hello my name is John, nice to meet you. </topic>
         <topic name="Wizardry" default="true"></topic>
         <topic name="Magic" default="true"></topic>
         <topic name="Mage"> Mage? Why I am a mage! Would you like to be one? </topic>
+    </npc>
+    <npc name="Jane" x="-9" y="5" skin="Magician_F">
+        <topic name="Introduction"> Hello my name is Jane, nice to meet you. </topic>
+        <topic name="Wizardry" default="true"></topic>
+        <topic name="Magic" default="true"></topic>
+        <topic name="Mage"> I used to be a mage... A long time ago </topic>
     </npc>
 </npcs>
 

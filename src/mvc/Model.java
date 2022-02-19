@@ -38,6 +38,7 @@ public class Model {
 	private Player player;
 	private Map map;
 	private ArrayList<Entity> entities = new ArrayList<Entity>();
+	private ArrayList<Entity> entitiesLoaded = new ArrayList<Entity>();
 	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	private final static int SCAN_RANGE = 1;
 
@@ -63,11 +64,19 @@ public class Model {
 		player.getSpells().add(s1);
 		player.getSpells().add(s2);
 		player.setCurrentSpell(s1);
+		player.getQuests().add(new SlayerQuest((NPC)entities.get(0), 200, 1, NPC.class));
+		player.getQuests().add(new AssassinationQuest((NPC)entities.get(1), 500, (NPC)entities.get(0)));
 	}
 	
 	public void gamelogic() { 
 		synchronized(this) {
-			for (Entity e : entities) {
+			entitiesLoaded.clear();
+			entities.forEach(e -> {
+				if(Viewer.isEntityOnscreen(e, player.getCentre()) && !e.isDead()) {
+					entitiesLoaded.add(e);
+				}
+			});
+			for (Entity e : entitiesLoaded) {
 				if(e instanceof Player) {
 					playerLogic(); 
 				} else {
@@ -94,6 +103,10 @@ public class Model {
 		if(controller.isKeyLeftPressed()) {
 			MainWindow.openSpellMenu(player);
 			controller.setKeyLeftPressed(false);
+		}
+		if(controller.isKeyDownPressed()) {
+			MainWindow.openQuestMenu(player);
+			controller.setKeyDownPressed(false);
 		}
 		Integer moved = (int)controller.getMouseWheelMoved();
 		if(moved != 0) {
@@ -184,12 +197,14 @@ public class Model {
             case ATTACKING:
 				if(e.getProgress()==3) {
 					Hitbox punch = getPunchHitbox(e);
-					for (Entity other : entities) {
+					for (Entity other : entitiesLoaded) {
 						if(other == e) {
 							continue;
 						} else if (punchCollisionHandler(punch, other.getHitbox())){
+							if(other.isDead()) break;
 							System.out.println(e.getClass().getName() + " punched " + other.getClass().getName());
 							other.dealDamage((new Random()).nextInt((int)e.getDamage()));
+							if(e instanceof Player) updateQuests(other);
 						}
 					}
 				}
@@ -217,9 +232,24 @@ public class Model {
 		return projectiles;
 	}
 
+	public void updateQuests(Entity e) {
+		if(e.isDead()) {
+			for (Quest q : player.getQuests()) {
+				if(q instanceof SlayerQuest) {
+					SlayerQuest sq = (SlayerQuest)q;
+					Class<? extends Entity> type = sq.getTypeOfEntity();
+					if(e.getClass().equals(type)) {
+						sq.incrementProgress();
+						System.out.println("progressed in quest " + sq.getDetails());
+					}
+				}
+			}
+		}
+	}
+
 	public boolean collisionHandler (GameObject go, Vector3f v0) {
 		Vector3f v = wallCollisionHandler(go, v0);
-		for (Entity other : entities) {
+		for (Entity other : entitiesLoaded) {
 			if(other == go) {
 				continue;
 			} else if (go instanceof Projectile && other.equals(((Projectile)go).getCaster())) {
@@ -236,9 +266,12 @@ public class Model {
 							player.getController().setKeyIPressed(false);
 						}
 					} else if(go instanceof Projectile) {
-						Projectile p = (Projectile)go;
-						System.out.println("Projectile hit " + other.getClass().getName());
-						other.dealDamage((new Random()).nextInt((int)p.getDamage()));
+						if(!other.isDead()) {
+							Projectile p = (Projectile)go;
+							System.out.println("Projectile hit " + other.getClass().getName());
+							other.dealDamage((new Random()).nextInt((int)p.getDamage()));
+							if((p.getCaster()) instanceof Player) updateQuests(other);
+						}
 						return true;
 					}
 				}
@@ -356,5 +389,9 @@ public class Model {
 
 	public static int getScanRange() {
 		return SCAN_RANGE;
+	}
+
+	public ArrayList<Entity> getEntitiesLoaded() {
+		return entitiesLoaded;
 	}
 }
