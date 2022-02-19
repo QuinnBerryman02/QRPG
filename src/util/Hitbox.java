@@ -1,7 +1,6 @@
 package util;
 
 public class Hitbox {
-    private static final float INSIDE_CHECK = 0.01f;
     private Point3f topLeft;
     private Point3f topRight;
     private Point3f botLeft;

@@ -12,11 +12,14 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.JSlider;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneLayout;
+import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -47,45 +50,53 @@ public class SpellMenu extends Menu{
     private Player player;
     private ArrayList<Spell> spells = new ArrayList<Spell>();
     private Spell currentSpell;
+    private LabelPanel labelPanel;
+    private ChangePanels changePanels;
     private SpellPanel spellPanel;
     private AimPanel aimPanel;
     private RadiusPanel radiusPanel;
     private DamagePanel damagePanel;
     private ElementPanel elementPanel;
-    private CastDelayPanel castDelayPanel; 
     private CostPanel costPanel;
+    private Color defaultColor = new Color(51,51,51,255);
+    private Font defaultFont = new Font("default",Font.BOLD,12);
 
     public SpellMenu(Player player) {
         this.player = player;
         player.getController().clear();
         spells = player.getSpells();
-        currentSpell = (spells.size()>0) ? spells.get(0) : null; 
+        currentSpell = player.getCurrentSpell();
 
         CustomBorder customBorder = new CustomBorder();
         
         setSize(new Dimension(MainWindow.getW() - 200, MainWindow.getH() - 300));
         setLocation(100, 150);
+        
 
         panel = new MainPanel();
         panel.setBorder(customBorder);
         panel.setPreferredSize(getSize());
 
+        labelPanel = new LabelPanel(getWidth(),getHeight()/10,customBorder);
+        changePanels = new ChangePanels(getWidth(),getHeight()*9/10,customBorder);
 
-        spellPanel = new SpellPanel(getWidth()/7,getHeight(), customBorder);
-        aimPanel = new AimPanel(getWidth()/7,getHeight(), customBorder);
-        radiusPanel = new RadiusPanel(getWidth()/7,getHeight(), customBorder);
-        damagePanel = new DamagePanel(getWidth()/7,getHeight(), customBorder);
-        elementPanel = new ElementPanel(getWidth()/7,getHeight(), customBorder);
-        castDelayPanel = new CastDelayPanel(getWidth()/7,getHeight(), customBorder);
-        costPanel = new CostPanel(getWidth()/7,getHeight(), customBorder);
+        spellPanel = new SpellPanel(getWidth()/6,getHeight()*9/10, customBorder);
+        aimPanel = new AimPanel(getWidth()/6,getHeight()*9/10, customBorder);
+        radiusPanel = new RadiusPanel(getWidth()/6,getHeight()*9/10, customBorder);
+        damagePanel = new DamagePanel(getWidth()/6,getHeight()*9/10, customBorder);
+        elementPanel = new ElementPanel(getWidth()/6,getHeight()*9/10, customBorder);
+        costPanel = new CostPanel(getWidth()/6,getHeight()*9/10, customBorder);
 
-        panel.add(spellPanel);
-        panel.add(aimPanel);
-        panel.add(radiusPanel);
-        panel.add(damagePanel);
-        panel.add(elementPanel);
-        panel.add(castDelayPanel);
-        panel.add(costPanel);
+        panel.add(labelPanel);
+        panel.add(changePanels);
+
+        changePanels.add(spellPanel);
+        changePanels.add(aimPanel);
+        changePanels.add(radiusPanel);
+        changePanels.add(damagePanel);
+        changePanels.add(elementPanel);
+        changePanels.add(costPanel);
+        
         add(panel);
         pack();
         setVisible(true);
@@ -98,7 +109,7 @@ public class SpellMenu extends Menu{
 
     class MainPanel extends JPanel {
         public MainPanel() {
-            setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
+            setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
             setBackground(new Color(1f,1f,1f,0f));
         }
         public void paintComponent(Graphics g) {
@@ -113,10 +124,64 @@ public class SpellMenu extends Menu{
         }
     }
 
+    class LabelPanel extends JPanel {
+        private JTextField spellNamer;
+        private ArrayList<JLabel> labels = new ArrayList<JLabel>();
+        public LabelPanel(int w, int h, CustomBorder cb) {
+            setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
+            setPreferredSize(new Dimension(w,h));
+            setBackground(new Color(1f,1f,0f,0f));
+            setBorder(cb);
+
+            spellNamer = new JTextField(currentSpell.getName());
+            spellNamer.setBackground(new Color(0f,1f,1f,0f));
+            spellNamer.setPreferredSize(new Dimension(w/6,h));
+            spellNamer.addActionListener(e -> {
+                currentSpell.setName(spellNamer.getText());
+                spellPanel.refresh();
+            });
+            spellNamer.setBorder(new EmptyBorder(0, 0, 0, 0));
+            spellNamer.setHorizontalAlignment(SwingConstants.CENTER);
+            spellNamer.setFont(defaultFont);
+            spellNamer.setForeground(defaultColor);
+            labels.add(new JLabel("AIMING", SwingConstants.CENTER));
+            labels.add(new JLabel("RADIUS", SwingConstants.CENTER));
+            labels.add(new JLabel("DAMAGE", SwingConstants.CENTER));
+            labels.add(new JLabel("ELEMENT", SwingConstants.CENTER));
+            labels.add(new JLabel("STATS", SwingConstants.CENTER));
+            add(spellNamer);
+            labels.forEach(l -> {
+                l.setBackground(new Color(1f,0f,1f,0f));
+                l.setPreferredSize(new Dimension(w/6,h));
+                add(l);
+            });
+            refresh();
+        }
+        @Override
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+        }
+
+        public void refresh() {
+            spellNamer.setText(currentSpell.getName());
+        }
+    }
+
+    class ChangePanels extends JPanel {
+        public ChangePanels(int w, int h, CustomBorder cb) {
+            setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
+            setPreferredSize(new Dimension(w,h));
+            setBackground(new Color(1f,1f,1f,0f));
+            setBorder(cb);
+        }
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+        }
+    }
+
     class SpellPanel extends JPanel {
-        //TODO add ability to name spells
         private JPanel buttonPanel;
-        private ArrayList<JButton> buttons = new ArrayList<JButton>();
+        private ArrayList<SpellButton> buttons = new ArrayList<SpellButton>();
         private int w;
         private JScrollPane sp;
         public SpellPanel(int w, int h, CustomBorder cb) {
@@ -130,10 +195,12 @@ public class SpellMenu extends Menu{
             for (Spell s : spells) {
                 addSpell(s);
             }
+            createNewButton();
             buttonPanel.setBackground(new Color(1f,1f,1f,0f));
             sp.setBackground(new Color(1f,1f,1f,0f));
             sp.getViewport().setBackground(new Color(1f,1f,1f,0f));
             //sp.setBorder(new EmptyBorder(10, 0, 20, 0));
+            refresh();
             add(sp);
         }
         public void paintComponent(Graphics g) {
@@ -142,12 +209,14 @@ public class SpellMenu extends Menu{
         }
 
         public void addSpell(Spell s) {
-            JButton button = new JButton(s.getName() != null ? s.getName() : "Empty");
-            button.addChangeListener(e -> {
+            SpellButton button = new SpellButton(s);
+            button.addActionListener(e -> {
                 currentSpell = s;
                 refreshButtons(button);
                 aimPanel.refresh();
                 elementPanel.refresh();
+                damagePanel.refresh();
+                labelPanel.refresh();
             });
             //label.setIcon(new ImageIcon());
             button.setBorder(new EmptyBorder(0,0,0,0));
@@ -158,9 +227,47 @@ public class SpellMenu extends Menu{
             button.setAlignmentY(Component.CENTER_ALIGNMENT);
         }
 
+        public void createNewButton() {
+            SpellButton button = new SpellButton(null);
+            button.addActionListener(e -> {
+                currentSpell = new Spell();
+                button.setSpell(currentSpell);
+                spells.add(currentSpell);
+                refreshButtons(button);
+                aimPanel.refresh();
+                elementPanel.refresh();
+                damagePanel.refresh();
+                labelPanel.refresh();
+                createNewButton();
+                spellPanel.refresh();
+                button.removeActionListener(button.getActionListeners()[0]);
+                button.addActionListener(t -> {
+                    currentSpell = button.getSpell();
+                    refreshButtons(button);
+                    aimPanel.refresh();
+                    elementPanel.refresh();
+                    damagePanel.refresh();
+                    labelPanel.refresh();
+                });
+            });
+            //label.setIcon(new ImageIcon());
+            button.setBorder(new EmptyBorder(0,0,0,0));
+            button.setBackground(new Color(1f,1f,1f,0f));
+            buttonPanel.add(button);
+            buttons.add(button);
+            button.setAlignmentX(Component.CENTER_ALIGNMENT);
+            button.setAlignmentY(Component.CENTER_ALIGNMENT);
+        };
+
         public void refreshButtons(JButton on) {
-            for (JButton b : buttons) {
+            for (SpellButton b : buttons) {
                 b.setBackground(b.equals(on) ? new Color(1f,1f,1f,0.3f) : new Color(1f,1f,1f,0f));
+            }
+        }
+
+        public void refresh() {
+            for (SpellButton b : buttons) {
+                b.refresh();
             }
         }
 
@@ -173,6 +280,30 @@ public class SpellMenu extends Menu{
                     vsb.removeAdjustmentListener(this);
                 }
             });
+        }
+    }
+
+    class SpellButton extends JButton {
+        private Spell spell;
+        public SpellButton(Spell s) {
+            this.spell = s;
+        }
+        public void refresh() {
+            if(spell == null) {
+                setText("New Spell");
+            } else if(spell.getName().trim().equals("")){
+                setText("Empty");
+            } else {
+                setText(spell.getName());
+            }
+        }
+
+        public void setSpell(Spell spell) {
+            this.spell = spell;
+        }
+
+        public Spell getSpell() {
+            return spell;
         }
     }
 
@@ -193,6 +324,7 @@ public class SpellMenu extends Menu{
                 currentSpell.setAim(Spell.Aim.values()[lsm.getSelectedIndex()]);
             });
             add(aims);
+            refresh();
         }
         @Override
         public void paintComponent(Graphics g) {
@@ -246,15 +378,32 @@ public class SpellMenu extends Menu{
         public void mouseMoved(MouseEvent e) {}
     }
     class DamagePanel extends JPanel {
-        //TODO implement damage panel
+        private JSlider slider;
         public DamagePanel(int w, int h, CustomBorder cb) {
             setPreferredSize(new Dimension(w,h));
             setBackground(new Color(1f,1f,1f,0f));
             setBorder(cb);
+            slider = new JSlider(JSlider.VERTICAL ,1,50,(int)currentSpell.getDamage());
+            slider.setMajorTickSpacing(10);
+            slider.setMinorTickSpacing(1);
+            slider.setPaintTicks(true);
+            slider.setSnapToTicks(true);
+            slider.addChangeListener(e -> {
+                JSlider js = (JSlider)e.getSource();
+                int newDamage = js.getValue();
+                currentSpell.setDamage(newDamage);
+            });
+            slider.setPreferredSize(getPreferredSize());
+            slider.setBackground(new Color(1f,1f,1f,0f));
+            add(slider);
         }
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
+        }
+
+        public void refresh() {
+            slider.setValue((int)currentSpell.getDamage());
         }
     }
     class ElementPanel extends JPanel {
@@ -274,6 +423,7 @@ public class SpellMenu extends Menu{
                 currentSpell.setType(Projectile.Type.values()[lsm.getSelectedIndex()]);
             });
             add(elements);
+            refresh();
         }
         @Override
         public void paintComponent(Graphics g) {
@@ -284,18 +434,7 @@ public class SpellMenu extends Menu{
             elements.setSelectedIndex(currentSpell.getType().ordinal());
         }
     }
-    class CastDelayPanel extends JPanel {
-        //TODO implement cast delay panel
-        public CastDelayPanel(int w, int h, CustomBorder cb) {
-            setPreferredSize(new Dimension(w,h));
-            setBackground(new Color(1f,1f,1f,0f));
-            setBorder(cb);
-        }
-        @Override
-        public void paintComponent(Graphics g) {
-            super.paintComponent(g);
-        }
-    }
+
     class CostPanel extends JPanel {
         public CostPanel(int w, int h, CustomBorder cb) {
             setPreferredSize(new Dimension(w,h));
@@ -307,15 +446,17 @@ public class SpellMenu extends Menu{
             super.paintComponent(g);
             int x = 10;
             int y = 10;
-            g.setColor(new Color(0f,0f,0f,1f));
-            g.setFont(new Font("Details",Font.BOLD,16));
-            char[] c = ("Radius: " + currentSpell.getRadius()).toCharArray();
+            g.setColor(defaultColor);
+            g.setFont(defaultFont);
+            char[] c = ("RADIUS: " + currentSpell.getRadius()).toCharArray();
             g.drawChars(c, 0, c.length, x, y+16);
-            c = ("Total Damage: " + currentSpell.getDamage()).toCharArray();
+            c = ("TOTAL DAMAGE: " + (int)currentSpell.getDamage()).toCharArray();
             g.drawChars(c, 0, c.length, x, y+32);
-            currentSpell.calculateCost();
-            c = ("Mana Cost: " + currentSpell.getManaCost()).toCharArray();
+            c = ("CAST DELAY: " + currentSpell.delayOfElement()).toCharArray();
             g.drawChars(c, 0, c.length, x, y+48);
+            currentSpell.calculateCost();
+            c = ("MANA COST: " + currentSpell.getManaCost()).toCharArray();
+            g.drawChars(c, 0, c.length, x, y+64);
         }
     }
 }

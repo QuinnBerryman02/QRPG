@@ -8,13 +8,12 @@ import java.awt.Color;
 public class Spell {
     private final static float MAX_VELOCITY = 4f;
     private int manaCost;
-    
-    private int castDelay;
+
     private Aim aim;
     private int damage;
     private float radius;
     private Projectile.Type type;
-    private String name;
+    private String name = "";
 
     public enum Aim {
         AIM_BY_MOUSE,
@@ -26,9 +25,8 @@ public class Spell {
     public Spell() {
         aim = Aim.AIM_BY_MOUSE;
         damage = 5;
-        radius = 0.5f;
+        radius = 0.25f;
         type = Projectile.Type.FIRE;
-        castDelay = 100;
         calculateCost();
     }
 
@@ -44,11 +42,11 @@ public class Spell {
             (new Thread() {
                 public void run() {
                     try {
-                        sleep(castDelay);
+                        sleep(delayOfElement());
                     } catch (Exception e) {}
                     Vector3f[] directions = applyAim(e);
                     for (Vector3f dir : directions) {
-                        Projectile p = new Projectile(radius, radius, e.getCentre(), dir, getDamage(), e, type);
+                        Projectile p = new Projectile(radius*2, radius*2, e.getCentre(), dir, damage, e, type);
                         MainWindow.getModel().getProjectiles().add(p);
                     }
                 };
@@ -96,7 +94,7 @@ public class Spell {
     }
 
     public float getDamage() {
-        return damage * (costOfElement()*costOfElement());
+        return damage;
     }
 
     public Vector3f[] applyAim(Entity e) {
@@ -122,18 +120,31 @@ public class Spell {
     public float costOfElement() {
         switch(type) {
             case STONE: return 0.9f;
-            case WATER: return 1.1f;
-            case WIND:  return 1.2f;
-            case FIRE: return 1.3f;
-            case ICE:   return 1.4f;
-            case LAVA: return 2f;
-            case LIGHTNING: return 3f;
+            case WATER: return 1.5f;
+            case WIND:  return 1f;
+            case FIRE: return 2.5f;
+            case ICE:   return 2f;
+            case LAVA: return 7f;
+            case LIGHTNING: return 10f;
             default: return 1f;
         }
     }
 
+    public int delayOfElement() {
+        switch(type) {
+            case STONE: return 500;
+            case WATER: return 100;
+            case WIND:  return 50;
+            case FIRE: return 150;
+            case ICE:   return 200;
+            case LAVA: return 600;
+            case LIGHTNING: return 1;
+            default: return 100;
+        }
+    }
+
     public void calculateCost() {
-        manaCost = (int)(radius * radius * damage * numberOfDirections() * costOfElement() / (castDelay / 500f));
+        manaCost = (int)(radius * radius * damage * numberOfDirections() * costOfElement());
     }
 
     public int getManaCost() {
@@ -142,22 +153,20 @@ public class Spell {
 
     @Override
     public String toString() {
+        calculateCost();
         return
         "[name: " + name + "]," +
         "[manaCost: " + manaCost + "]," +
-        "[castDelay: " + castDelay + "]," +
+        "[castDelay: " + delayOfElement() + "]," +
         "[aim: " + aim.toString() + "]," +
-        "[damage: " + damage + "]," +
+        "[baseDamage: " + damage + "]," +
+        "[totalDamage: " + getDamage() + "]," +
         "[radius: " + radius + "]," +
         "[type: " + type + "]";
     }
 
     public Aim getAim() {
         return aim;
-    }
-
-    public int getCastDelay() {
-        return castDelay;
     }
 
     public static float getMaxVelocity() {
@@ -176,16 +185,8 @@ public class Spell {
         this.aim = aim;
     }
 
-    public void setCastDelay(int castDelay) {
-        this.castDelay = castDelay;
-    }
-
     public void setDamage(int damage) {
         this.damage = damage;
-    }
-
-    public void setManaCost(int manaCost) {
-        this.manaCost = manaCost;
     }
 
     public void setRadius(float radius) {

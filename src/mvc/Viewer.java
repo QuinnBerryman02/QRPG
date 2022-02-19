@@ -218,14 +218,10 @@ public class Viewer extends JPanel {
 			Hitbox hb = p.getHitbox();
 			int x = (int)relativePoint.getX();
 			int y = (int)relativePoint.getY();
-			int w = Math.round(p.getWidth()) * UNIT_DEF;
-			int h = Math.round(p.getHeight()) * UNIT_DEF;
-			try {
-				g.setColor(p.getColor());
-				g.fillOval(x - w/2, y - h/2, w, h);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-			}
+			int w = Math.round(p.getWidth() * UNIT_DEF);
+			int h = Math.round(p.getHeight() * UNIT_DEF);
+			g.setColor(p.getColor());
+			g.fillOval(x - w/2, y - h/2, w, h);
 			w = Math.round((hb.getRightX() - hb.getLeftX()) * UNIT_DEF);
 			h = Math.round((hb.getBotY() - hb.getTopY()) * UNIT_DEF);
 			g.setColor(new Color(1f,0f,0f,0.5f));

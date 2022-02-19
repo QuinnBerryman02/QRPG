@@ -52,15 +52,13 @@ public class Model {
 		entities.add(player);
 		Spell s1 = new Spell();
 		s1.setType(Projectile.Type.LIGHTNING);
-		s1.setCastDelay(300);
 		s1.setDamage(4);
-		s1.setRadius(0.5f);
+		s1.setRadius(0.25f);
 		s1.setAim(Spell.Aim.FRONT_AND_BACK);
 		Spell s2 = new Spell();
 		s2.setType(Projectile.Type.FIRE);
-		s2.setCastDelay(100);
 		s2.setDamage(5);
-		s2.setRadius(0.5f);
+		s2.setRadius(0.25f);
 		s2.setAim(Spell.Aim.OCTOPUS);
 		player.getSpells().add(s1);
 		player.getSpells().add(s2);
