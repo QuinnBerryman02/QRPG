@@ -27,7 +27,6 @@ public class Topic {
 }
 
 class Response {
-    //TODO create default topic response classes, like farmer = tree, wheat, animal ,tools etc + responses
     private String answer;
     private final String HAS_TOPIC = "<font color=blue><b>";
     private final String DOESNT_HAVE_TOPIC = "<font color=green><b>";

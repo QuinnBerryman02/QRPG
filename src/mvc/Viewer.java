@@ -280,8 +280,11 @@ public class Viewer extends JPanel {
 					case 0:
 						g.setColor(new Color(0f,0f,0f,0.0f));
 						break;
-					default:
+					case 1028:
 						g.setColor(new Color(0f,0f,1f,0.5f));
+						break;
+					default:
+						g.setColor(new Color(1f,0f,1f,0.5f));
 						break;
 				}
 				g.fillRect(x,y,w,h);

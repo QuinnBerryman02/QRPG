@@ -1,0 +1,32 @@
+Entity)
+create the rest of the NPCs
+create default topic response classes, like farmer = tree, wheat, animal ,tools etc + responses
+create enemy class
+get enemy sprites and animations
+
+Collisions)
+add special collision types, half blocks, custom collisions for chests quest board etc
+fix large projectile collisions
+
+Performance)
+fix frame drops for unknown reason
+
+General)
+add support for different types of controller 
+add sounds
+add music
+
+UI)
+allow player to change buttons for actions
+add main menu ui
+add esc / tab menu with settings
+add quest ui
+add quest chooser ui
+add shop ui
+
+Spells / Projectiles)
+lock progress of some elements / aims until unlocked
+add mutable maxes for radius and damage
+
+Quests)
+add quest class

@@ -26,7 +26,6 @@ SOFTWARE.
    (MIT LICENSE ) e.g do what you want with this :-) 
  */ 
 public class Controller {
-	//TODO add support for different types of controller / allow player to change buttons for actions
 	protected boolean keyAWasPressed = false;
 	protected boolean keySWasPressed = false;
 	protected boolean keyDWasPressed = false;

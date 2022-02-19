@@ -286,6 +286,20 @@ public class Model {
 							return v2;
 						}
 						break;
+					case 1028:
+						c = new Hitbox(new Point3f(px - SCAN_RANGE + .5f + j,py - SCAN_RANGE + .5f + i,0),1,1);
+						v2 = hb.intersection(c, v);
+						if(v2 != null) {
+							if(go instanceof Player) {
+								Player p = (Player)go;
+								if(p.getController().isKeyRightPressed()) {
+									System.out.println("Opening guild quest board");
+									p.getController().setKeyRightPressed(false);
+								}
+							}
+							return v2;
+						}
+						break;
 					default:
 						break;
 				}

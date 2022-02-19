@@ -305,5 +305,9 @@ public abstract class Entity extends GameObject {
             "[controller= " + controller + "]"
         );
     }
+
+    public boolean isDead() {
+        return dead;
+    }
 }
 

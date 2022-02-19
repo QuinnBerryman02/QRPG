@@ -32,7 +32,6 @@ public class NPCLoader {
     }
 
     public ArrayList<NPC> createAllNpcs() {
-        //TODO create the rest of the NPCs
         NodeList npcNodes = document.getElementsByTagName("npc");
         ArrayList<NPC> npcs = new ArrayList<NPC>();
         for (int i=0;i<npcNodes.getLength();i++) {

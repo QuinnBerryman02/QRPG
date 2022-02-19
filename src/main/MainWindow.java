@@ -128,7 +128,6 @@ public class MainWindow {
 						if (sleepTime >= 0) {
 							sleep(sleepTime);
 						} else {
-							//TODO fix frame drops for unknown reason
 							System.out.println("Frame was late by " + (sleepTime * -1) + " ms");
 						}
 					} catch (InterruptedException e) {
