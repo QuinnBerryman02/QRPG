@@ -237,29 +237,31 @@ public abstract class Entity extends GameObject {
         }
     }
 
-    public void attack() {
+    public void attack(Entity other) {
         if(!inCombat) {
             (new Thread() {
                 @Override
                 public void run() {
                     inCombat = true;
-                    try {
-                        sleep(10000);
-                    } catch (Exception e) {}
+                    while(other.isHostile() && !other.isDead() && !isDead() && isHostile()) {
+                        try {
+                            sleep(1000);
+                        } catch (Exception e) {}
+                    }
                     inCombat = false;
                 }
             }).start();
         }
     }
 
-    public void dealDamage(float damage) {
+    public void dealDamage(float damage, Entity other) {
         if(dead) return;
         if(!isHostile()) setHostile(true);
         health -= damage;
         if(health <= 0) {
             die();
         } else {
-            attack();
+            attack(other);
         }
     }
 

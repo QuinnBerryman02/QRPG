@@ -7,8 +7,8 @@ create enemy class
 get enemy sprites and animations
 add final boss
 add attack damage popups
-fix combat timers to when the agressor dies / becomes non hostile
-make npc non hostile after a teleport
+    <>fix combat timers to when the agressor dies / becomes non hostile
+    <>make npc non hostile after not on screen
 
         Collisions)
 add special collision types, half blocks, custom collisions for chestsetc
