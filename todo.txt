@@ -7,9 +7,11 @@ create enemy class
 get enemy sprites and animations
 add final boss
 add attack damage popups
+fix combat timers to when the agressor dies / becomes non hostile
+make npc non hostile after a teleport
 
         Collisions)
-add special collision types, half blocks, custom collisions for chests quest board etc
+add special collision types, half blocks, custom collisions for chestsetc
 fix large projectile collisions
 
         Performance)
@@ -20,12 +22,13 @@ add support for different types of controller
 add sounds
     <>add music
     <>make music correspond to each area
-    <>add camera mode
+    
 add saving and loading
 
         UI)
 allow player to change buttons for actions
     <>add main menu ui
+    <>add camera mode
 add esc / tab menu with settings
     <>add quest ui
 add quest chooser ui in the guild
@@ -35,7 +38,7 @@ add shop ui
 lock progress of some elements / aims until unlocked / bought
 add mutable maxes for radius and damage
 add projectile sprites
-add magic circle below feet when casting
+    <>add magic circle below feet when casting
 
         Quests)
     <>add quest class

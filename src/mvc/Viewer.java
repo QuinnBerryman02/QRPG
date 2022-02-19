@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import main.MainWindow;
 
 import util.*;
+import util.Entity.AnimationPhase;
 
 
 /*
@@ -203,25 +204,42 @@ public class Viewer extends JPanel {
 	private void drawPlayer(Graphics g) { 
 		Player p = gameWorld.getPlayer();
 		File TextureToLoad = new File(p.getCurrentTexture());
-		int x = MainWindow.getW()/2;
-		int y = MainWindow.getH()/2 - (8*SCALE);
-		int w = Math.round(p.getWidth()) * UNIT_DEF;
-		int h = Math.round(p.getHeight()) * UNIT_DEF;
+		int x;
+		int y;
+		int w;
+		int h;
 		try {
+			if(p.getPhase().equals(AnimationPhase.CASTING) && p.getProgress() <= 6) {
+				int dir = p.getCurrentSpell().numberOfDirections();
+				int prog = p.getProgress() > 4 ? 4 : p.getProgress();
+				String file = "res/effects/glow" + dir + ".png";
+				Image spellImage = ImageIO.read(new File(file));
+				x = MainWindow.getW()/2;
+				y = MainWindow.getH()/2;
+				w = Math.round(0.5f * (prog+1) * UNIT_DEF);
+				h = w;
+				g.drawImage(spellImage, x - w/2, y - h/2, w, h, null); 
+			}
+			x = MainWindow.getW()/2;
+			y = MainWindow.getH()/2 - (8*SCALE);
+			w = Math.round(p.getWidth()) * UNIT_DEF;
+			h = Math.round(p.getHeight()) * UNIT_DEF;
 			int[] source = p.getSource();
 			Image myImage = ImageIO.read(TextureToLoad);
 			g.drawImage(myImage, x - w/2, y - h/2, x - w/2 + source[0]*SCALE, y - h/2 + source[1]*SCALE, source[2],source[3],source[4],source[5], null); 
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
-		Hitbox hb = p.getHitbox();
-		g.setColor(new Color(1f,0f,0f,0.5f));
-		//System.out.print(hb);
-		x = MainWindow.getW()/2;
-		y = MainWindow.getH()/2;
-		w = Math.round((hb.getRightX() - hb.getLeftX()) * UNIT_DEF);
-		h = Math.round((hb.getBotY() - hb.getTopY()) * UNIT_DEF);
-		g.fillRect(x - w/2, y - h/2, w, h);
+		if(inDebugMode) {
+			Hitbox hb = p.getHitbox();
+			g.setColor(new Color(1f,0f,0f,0.5f));
+			//System.out.print(hb);
+			x = MainWindow.getW()/2;
+			y = MainWindow.getH()/2;
+			w = Math.round((hb.getRightX() - hb.getLeftX()) * UNIT_DEF);
+			h = Math.round((hb.getBotY() - hb.getTopY()) * UNIT_DEF);
+			g.fillRect(x - w/2, y - h/2, w, h);
+		}
 	}
 
 	public void drawEntities(Graphics g) {
