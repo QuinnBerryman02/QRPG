@@ -58,6 +58,7 @@ public class QuestMenu extends Menu{
     public QuestMenu(Player player) {
         this.player = player;
         player.getController().clear();
+        player.sortQuests();
         quests = player.getQuests();
 
         CustomBorder customBorder = new CustomBorder();
@@ -197,7 +198,8 @@ public class QuestMenu extends Menu{
             labels.get(1).setText(String.valueOf(quest.getReward()));
             labels.get(2).setText(quest.getQuestGiver() != null ? quest.getQuestGiver().getName() : "NULL");
             labels.get(3).setText(quest.getDetails());
-            labels.get(4).setText(quest.isFailed() ? "FAILED" : quest.isComplete() ? "COMPLETED" : "IN PROGRESS");
+            int r = quest.getQuestRelevancy();
+            labels.get(4).setText(r==1 ? "COMPLETED" : r==2 ? "IN PROGRESS" : r==3 ? "REWARDED" : "FAILED");
         }
     }
 }

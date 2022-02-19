@@ -1,3 +1,5 @@
+    List of features to be implemented in the endgame of the project
+
         Entity)
 create the rest of the NPCs
 create default topic response classes, like farmer = tree, wheat, animal ,tools etc + responses
@@ -21,7 +23,7 @@ allow player to change buttons for actions
 add main menu ui
 add esc / tab menu with settings
     <>add quest ui
-add quest chooser ui
+add quest chooser ui in the guild
 add shop ui
 
         Spells / Projectiles)
@@ -31,4 +33,4 @@ add projectile sprites
 
         Quests)
     <>add quest class
-add ability to claim reward from questgiver using dialogue
+    <>add ability to claim reward from questgiver using dialogue

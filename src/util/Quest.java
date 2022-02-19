@@ -32,4 +32,12 @@ public abstract class Quest {
     public void setRewardCollected(boolean rewardCollected) {
         this.rewardCollected = rewardCollected;
     }
+
+    public int getQuestRelevancy() {
+        if(isRewardCollected()) return 3;
+        if(!isFailed()) {
+            return isComplete() ? 1 : 2;
+        }
+        return 4;
+    }
 }

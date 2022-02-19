@@ -48,7 +48,9 @@ public class Dialogue extends Menu {
         this.npc = npc;
         Topic t = Topic.getTopic("Introduction");
         topics.add(new TopicResponse(t, npc.getResponse(t)));
+        Topic q = Topic.getTopic("Quest");
         availableTopics = player.findCommonTopics(npc);
+        availableTopics.add(q);
 
         CustomBorder customBorder = new CustomBorder();
         
@@ -231,7 +233,42 @@ public class Dialogue extends Menu {
             setText(topic.getName());
             addActionListener((event -> {
                 System.out.println("clicked on: " + getText());
-                Response response = npc.getResponse(topic);
+                Response response;
+                if(topic.getName().equals("Quest")) {
+                    player.sortQuests();
+                    Quest q1 = player.findFirstQuestByPredicate(q -> {
+                        return q.getQuestGiver().equals(npc);
+                    });    
+                    int relevancy;              
+                    if(q1 == null) {
+                        relevancy = 0;
+                    } else {
+                        relevancy = q1.getQuestRelevancy();
+                    }
+                    String questResponse = "";
+                    switch (relevancy) {
+                        case 1:
+                            questResponse = "Thanks for completing the quest, I'll pay you your reward now. What was it again? Ah yes... " + q1.getReward() + "gold.";
+                            player.setGold(q1.getReward());
+                            q1.setRewardCollected(true);
+                            break;
+                        case 2:
+                            questResponse = "Thanks for taking on the quest, I hope you can complete it.";
+                            break;
+                        case 3:
+                            questResponse = "I've already paid you for that quest...";
+                            break;
+                        case 4:
+                            questResponse = "Worthless Adventurer... Can't even complete a simple quest like that.";
+                            break;
+                        default:
+                            questResponse = "I haven't given you a quest yet.";
+                            break;
+                    }
+                    response = new Response(questResponse);
+                } else {
+                    response = npc.getResponse(topic);
+                }
                 ArrayList<Topic> newTopics = response.findReferencedTopics();
                 TopicResponse tr = new TopicResponse(topic, response);
                 topics.add(tr);
