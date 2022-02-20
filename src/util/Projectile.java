@@ -12,7 +12,6 @@ public class Projectile extends GameObject{
     public enum Type {
         FIRE,
         WATER,
-        ICE,
         LIGHT,
         STONE,
         WIND,
@@ -61,6 +60,10 @@ public class Projectile extends GameObject{
         return spell;
     }
 
+    public Type getType() {
+        return type;
+    }
+
     public void incrementProgress() {
         if(animationProgress+1 >= spell.getFrames().size()) animationProgress = 0;
         else animationProgress++;
@@ -79,7 +82,6 @@ public class Projectile extends GameObject{
             case WIND:  return Color.GREEN;
             case STONE: return Color.DARK_GRAY;
             case LIGHT: return Color.YELLOW;
-            case ICE:   return Color.CYAN;
             case ARCANE: return Color.MAGENTA;
             default: return Color.BLACK;
         }

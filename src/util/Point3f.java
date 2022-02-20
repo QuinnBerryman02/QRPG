@@ -132,6 +132,16 @@ public class Point3f {
 		float y = (float)r.nextDouble() * (botright.getY() - topleft.getY()) + topleft.getY();
 		return new Point3f(x,y,0f);
 	}
+
+	public Vector3f bounce(Vector3f v, Point3f topleft, Point3f botright) {
+		Point3f future = this.plusVector(v);
+		Vector3f newV = v.byScalar(1);
+		if(future.getX() < topleft.getX()) newV.setX(newV.getX() * -1);
+		if(future.getX() > botright.getX()) newV.setX(newV.getX() * -1);
+		if(future.getY() < topleft.getY()) newV.setY(newV.getY() * -1);
+		if(future.getY() > botright.getY()) newV.setY(newV.getY() * -1);
+		return newV;
+	}
 	public static void main(String[] args) {
 		System.out.printf("rad:%.2fpi eighth:%d\n",(0.0),radToEighth(0));
 		System.out.printf("rad:%.2fpi eighth:%d\n",(0.25),radToEighth(0.25 * Math.PI));

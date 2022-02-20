@@ -29,6 +29,7 @@ add saving and loading
 allow player to change buttons for actions
     <>add main menu ui
     <>add camera mode
+    <>fixed bug with directions being odd
 add esc / tab menu with settings
     <>add quest ui
 add quest chooser ui in the guild
@@ -37,8 +38,9 @@ add shop ui
         Spells / Projectiles)
 lock progress of some elements / aims until unlocked / bought
 add mutable maxes for radius and damage
-add projectile sprites
+    <>add projectile sprites
     <>add magic circle below feet when casting
+randomize variants per spell
 
         Quests)
     <>add quest class

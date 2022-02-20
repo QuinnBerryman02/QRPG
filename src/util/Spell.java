@@ -65,15 +65,8 @@ public class Spell {
     public static Vector3f[] aimByMouse(Entity e) {
         Point3f dst = Viewer.screenToWorldSpace(new Point3f(e.getController().getMouseX(),e.getController().getMouseY(),0f), MainWindow.getModel().getPlayer().getCentre());
         Point3f src = e.getCentre();
-
 		Vector3f v = dst.minusPoint(src);
-		float vx = v.getX();
-		float vy = v.getY();
-		vx = vx > MAX_VELOCITY ? MAX_VELOCITY : vx;
-		vx = vx < -MAX_VELOCITY ? -MAX_VELOCITY : vx;
-		vy = vy > MAX_VELOCITY ? MAX_VELOCITY : vy;
-		vy = vy < -MAX_VELOCITY ? -MAX_VELOCITY : vy;
-		return new Vector3f[] {new Vector3f(vx,vy,0f)};
+        return new Vector3f[] {v.relativeMax(MAX_VELOCITY)};
     }
 
     public static Vector3f[] frontAndBack(Entity e) {
@@ -131,7 +124,6 @@ public class Spell {
             case WATER: return 1.5f;
             case WIND:  return 1f;
             case FIRE: return 2.5f;
-            case ICE:   return 2f;
             case BLOOD: return 7f;
             case LIGHT: return 10f;
             default: return 1f;
@@ -144,7 +136,6 @@ public class Spell {
             case WATER: return 100;
             case WIND:  return 50;
             case FIRE: return 150;
-            case ICE:   return 200;
             case BLOOD: return 600;
             case LIGHT: return 1;
             default: return 100;
@@ -221,21 +212,19 @@ public class Spell {
     public void updateFrames() {
         frames.clear();
         switch (element) {
-            case ARCANE:
+            case ARCANE:loadArcane(1);
                 break;
-            case BLOOD:
+            case BLOOD:loadBlood(1);
                 break;
             case FIRE:loadFire(2);
                 break;
-            case ICE:
+            case LIGHT:loadLight(1);
                 break;
-            case LIGHT:
+            case STONE:loadStone(1);
                 break;
-            case STONE:
+            case WATER:loadWater(1);
                 break;
-            case WATER:
-                break;
-            case WIND:
+            case WIND:loadWind(1);
                 break;
             default:
                 break;
@@ -248,6 +237,72 @@ public class Spell {
             int p = (4*i) + variant;
             try {
                 frames.add(ImageIO.read(new File("res/effects/fire/Effects_Fire_0_" + ((p < 10) ? ("0" + p) : (p)) + ".png")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void loadBlood(int variant) {
+        for(int i=1;i<5;i++) {
+            int p = (5*variant) + i;
+            try {
+                frames.add(ImageIO.read(new File("res/effects/blood/Blood-Magic-Effect_" + ((p < 10) ? ("0" + p) : (p)) + ".png")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void loadWater(int variant) {
+        File directory = new File("res/effects/water/0" + variant);
+        for (File f : directory.listFiles()) {
+            try {
+                frames.add(ImageIO.read(f));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void loadWind(int variant) {
+        for(int i=1;i<5;i++) {
+            int p = (5*variant) + i;
+            try {
+                frames.add(ImageIO.read(new File("res/effects/wind/Pure_" + ((p < 10) ? ("0" + p) : (p)) + ".png")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void loadLight(int variant) {
+        for(int i=1;i<5;i++) {
+            int p = (5*variant) + i;
+            try {
+                frames.add(ImageIO.read(new File("res/effects/light/LightEffect_" + ((p < 10) ? ("0" + p) : (p)) + ".png")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void loadArcane(int variant) {
+        File directory = new File("res/effects/arcane/0" + variant);
+        for (File f : directory.listFiles()) {
+            try {
+                frames.add(ImageIO.read(f));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void loadStone(int variant) {
+        for(int i=1;i<5;i++) {
+            int p = (5*variant) + i;
+            try {
+                frames.add(ImageIO.read(new File("res/effects/stone/Earth-Impact_" + ((p < 10) ? ("0" + p) : (p)) + ".png")));
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -4,11 +4,10 @@ Art Credits
 by either "Antifarea" or "CharlesGabriel" (The original walking ones are by Antifarea and the subsequent art by CharlesGabriel as far as I know)
 under CC-BY 3.0 (all)
 
-[village, circle glow, dungeon, outdoor] are from https://opengameart.org/users/buch
+[village, dungeon, outdoor] are from https://opengameart.org/users/buch
 by "Buch"
 under CC-BY 3.0 (outdoor)
 under CC0 (village, dungeon)
-under GPL 2.0, GPL 3.0, CC-BY-SA 3.0 (circle glow)
 
 [desert, overworld, sewer, cave] are from https://opengameart.org/users/beast
 by "Beast"
@@ -91,3 +90,13 @@ under CC-BY 3.0
 [overworld3] is from https://opengameart.org/content/haply
 by "Yubatake"
 under CC-BY 3.0
+
+Effect Credits
+
+[Fire, Water, Stone, Blood, Arcane, Light, Wind] are from https://opengameart.org/content/magic-effects
+by "Cethiel"
+under CC0 (all)
+
+[circle glow] is from https://opengameart.org/users/buch
+by "Buch"
+under GPL 2.0, GPL 3.0, CC-BY-SA 3.0 

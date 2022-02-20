@@ -128,6 +128,13 @@ public class Vector3f {
 		return new Vector3f(nx,ny,0f);
 	}
 
+	public Vector3f relativeMax(float MAX) {
+        float max = Math.max(Math.abs(x), Math.abs(y));
+		if(max < MAX) return this;
+        float proportionOver = max / MAX;
+        return byScalar(1 / proportionOver);
+	}
+
 	public static void main(String[] args) {
 		Vector3f v = new Vector3f(1f, 1f, 0f);
 		System.out.println(v.toStringInt());
