@@ -255,12 +255,30 @@ public class Model {
 
 	public boolean collisionHandler (GameObject go, Vector3f v0) {
 		Vector3f v = wallCollisionHandler(go, v0);
+		if(go instanceof Projectile && v != v0) return true;
 		for (Entity other : entitiesLoaded) {
 			if(other == go) {
 				continue;
 			} else if (go instanceof Projectile && other.equals(((Projectile)go).getCaster())) {
 				continue;
 			} else {
+				if(go instanceof Projectile) {
+					Projectile p = (Projectile)go;
+					boolean colliding = false;
+					Hitbox h2 = p.getHitbox().plusVector(v0);
+					colliding = colliding || h2.isColliding(other.getHitbox());
+					colliding = colliding || other.getHitbox().isColliding(h2);
+					if(colliding) {
+						if(!other.isDead()) {
+							System.out.println("Projectile hit " + other.getClass().getName());
+							other.dealDamage((new Random()).nextInt((int)p.getDamage()),p.getCaster());
+							p.getCaster().attack(other);
+							if((p.getCaster()) instanceof Player) updateQuests(other);
+						}
+						return true;
+					}
+					continue;
+				}
 				Vector3f v2 = entityCollisionHandler(go, other, v);
 				if (v2 != v) {
 					if(other instanceof NPC && go instanceof Player) {
@@ -271,15 +289,6 @@ public class Model {
 							System.out.println("Starting a coversation between player and " + npc.getName());
 							player.getController().setKeyIPressed(false);
 						}
-					} else if(go instanceof Projectile) {
-						if(!other.isDead()) {
-							Projectile p = (Projectile)go;
-							System.out.println("Projectile hit " + other.getClass().getName());
-							other.dealDamage((new Random()).nextInt((int)p.getDamage()),p.getCaster());
-							p.getCaster().attack(other);
-							if((p.getCaster()) instanceof Player) updateQuests(other);
-						}
-						return true;
 					}
 				}
 				v = v2;

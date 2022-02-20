@@ -12,7 +12,7 @@ add attack damage popups
 
         Collisions)
 add special collision types, half blocks, custom collisions for chestsetc
-fix large projectile collisions
+    <>fix projectile collisions
 
         Performance)
 fix frame drops for unknown reason

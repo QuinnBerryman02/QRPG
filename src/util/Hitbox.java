@@ -52,7 +52,7 @@ public class Hitbox {
 
     public boolean isColliding(Hitbox h) {
         for (Point3f p : getCorners()) {
-            if(p.getX() <= h.getRightX() && p.getX() >= h.getLeftX() && p.getY() <= h.getBotY() && p.getY() >= h.getTopY()) {
+            if(isColliding(p, h)) {
                 return true;
             }
         }
