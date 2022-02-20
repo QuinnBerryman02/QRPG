@@ -23,7 +23,7 @@ public class AIController extends Controller{
     }
 
     public void run(Model m) {
-        if(entity.isHostile()) {
+        if(entity.isInCombat()) {
             if(m.inRangeOfPlayer(entity)) {
                 setKeyQPressed(true);
                 pressMoveButtons(new Vector3f());

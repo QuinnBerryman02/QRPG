@@ -4,15 +4,22 @@ import main.MainWindow;
 import mvc.Viewer;
 
 import java.awt.Color;
+import java.io.File;
+import java.util.ArrayList;
+import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
+
 
 public class Spell {
+    private ArrayList<BufferedImage> frames = new ArrayList<BufferedImage>();
     private final static float MAX_VELOCITY = 4f;
     private int manaCost;
 
     private Aim aim;
     private int damage;
     private float radius;
-    private Projectile.Type type;
+    private Projectile.Type element;
     private String name = "";
 
     public enum Aim {
@@ -26,12 +33,13 @@ public class Spell {
         aim = Aim.AIM_BY_MOUSE;
         damage = 5;
         radius = 0.25f;
-        type = Projectile.Type.FIRE;
+        element = Projectile.Type.FIRE;
+        updateFrames();
         calculateCost();
     }
 
     public Color getColor() {
-        return Projectile.getColor(type);
+        return Projectile.getColor(element);
     }
 
     public void cast(Entity e) {
@@ -46,7 +54,7 @@ public class Spell {
                     } catch (Exception e) {}
                     Vector3f[] directions = applyAim(e);
                     for (Vector3f dir : directions) {
-                        Projectile p = new Projectile(radius*2, radius*2, e.getCentre(), dir, damage, e, type);
+                        Projectile p = new Projectile(radius*2, radius*2, e.getCentre(), dir, damage, e, element, Spell.this);
                         MainWindow.getModel().getProjectiles().add(p);
                     }
                 };
@@ -118,27 +126,27 @@ public class Spell {
     }
 
     public float costOfElement() {
-        switch(type) {
+        switch(element) {
             case STONE: return 0.9f;
             case WATER: return 1.5f;
             case WIND:  return 1f;
             case FIRE: return 2.5f;
             case ICE:   return 2f;
-            case LAVA: return 7f;
-            case LIGHTNING: return 10f;
+            case BLOOD: return 7f;
+            case LIGHT: return 10f;
             default: return 1f;
         }
     }
 
     public int delayOfElement() {
-        switch(type) {
+        switch(element) {
             case STONE: return 500;
             case WATER: return 100;
             case WIND:  return 50;
             case FIRE: return 150;
             case ICE:   return 200;
-            case LAVA: return 600;
-            case LIGHTNING: return 1;
+            case BLOOD: return 600;
+            case LIGHT: return 1;
             default: return 100;
         }
     }
@@ -162,7 +170,7 @@ public class Spell {
         "[baseDamage: " + damage + "]," +
         "[totalDamage: " + getDamage() + "]," +
         "[radius: " + radius + "]," +
-        "[type: " + type + "]";
+        "[type: " + element + "]";
     }
 
     public Aim getAim() {
@@ -177,8 +185,8 @@ public class Spell {
         return radius;
     }
 
-    public Projectile.Type getType() {
-        return type;
+    public Projectile.Type getElement() {
+        return element;
     }
 
     public void setAim(Aim aim) {
@@ -193,8 +201,9 @@ public class Spell {
         this.radius = radius;
     }
 
-    public void setType(Projectile.Type type) {
-        this.type = type;
+    public void setElement(Projectile.Type element) {
+        this.element = element;
+        updateFrames();
     }
 
     public String getName() {
@@ -203,5 +212,45 @@ public class Spell {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public ArrayList<BufferedImage> getFrames() {
+        return frames;
+    }
+
+    public void updateFrames() {
+        frames.clear();
+        switch (element) {
+            case ARCANE:
+                break;
+            case BLOOD:
+                break;
+            case FIRE:loadFire(2);
+                break;
+            case ICE:
+                break;
+            case LIGHT:
+                break;
+            case STONE:
+                break;
+            case WATER:
+                break;
+            case WIND:
+                break;
+            default:
+                break;
+            
+        }
+    }
+
+    public void loadFire(int variant) {
+        for(int i=0;i<7;i++) {
+            int p = (4*i) + variant;
+            try {
+                frames.add(ImageIO.read(new File("res/effects/fire/Effects_Fire_0_" + ((p < 10) ? ("0" + p) : (p)) + ".png")));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

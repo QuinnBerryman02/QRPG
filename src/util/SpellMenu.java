@@ -420,7 +420,7 @@ public class SpellMenu extends Menu{
             elements.setBackground(new Color(1f,1f,1f,0f));
             elements.addListSelectionListener(e -> {
                 JList<String> lsm = (JList)e.getSource();
-                currentSpell.setType(Projectile.Type.values()[lsm.getSelectedIndex()]);
+                currentSpell.setElement(Projectile.Type.values()[lsm.getSelectedIndex()]);
             });
             add(elements);
             refresh();
@@ -431,7 +431,7 @@ public class SpellMenu extends Menu{
         }
 
         public void refresh() {
-            elements.setSelectedIndex(currentSpell.getType().ordinal());
+            elements.setSelectedIndex(currentSpell.getElement().ordinal());
         }
     }
 

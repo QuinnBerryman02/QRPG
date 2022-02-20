@@ -51,19 +51,13 @@ public class Model {
 		NPCLoader npcLoader = new NPCLoader(new File("res/npc.xml"));
 		npcLoader.createAllNpcs().forEach(npc -> entities.add(npc));
 		entities.add(player);
-		Spell s1 = new Spell();
-		s1.setType(Projectile.Type.LIGHTNING);
-		s1.setDamage(4);
-		s1.setRadius(0.25f);
-		s1.setAim(Spell.Aim.FRONT_AND_BACK);
 		Spell s2 = new Spell();
-		s2.setType(Projectile.Type.FIRE);
+		s2.setElement(Projectile.Type.FIRE);
 		s2.setDamage(5);
 		s2.setRadius(0.25f);
 		s2.setAim(Spell.Aim.OCTOPUS);
-		player.getSpells().add(s1);
 		player.getSpells().add(s2);
-		player.setCurrentSpell(s1);
+		player.setCurrentSpell(s2);
 		player.getQuests().add(new SlayerQuest((NPC)entities.get(0), 200, 1, NPC.class));
 		player.getQuests().add(new AssassinationQuest((NPC)entities.get(1), 500, (NPC)entities.get(0)));
 	}

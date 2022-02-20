@@ -1,11 +1,13 @@
 package mvc;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Font;
 import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
@@ -263,17 +265,26 @@ public class Viewer extends JPanel {
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
-			x = (int)relativePoint.getX();
-			y = (int)relativePoint.getY();
-			w = Math.round((hb.getRightX() - hb.getLeftX()) * UNIT_DEF);
-			h = Math.round((hb.getBotY() - hb.getTopY()) * UNIT_DEF);
-			g.setColor(new Color(1f,0f,0f,0.5f));
-			g.fillRect(x - w/2, y - h/2, w, h);
+			if(inDebugMode) {
+				x = (int)relativePoint.getX();
+				y = (int)relativePoint.getY();
+				w = Math.round((hb.getRightX() - hb.getLeftX()) * UNIT_DEF);
+				h = Math.round((hb.getBotY() - hb.getTopY()) * UNIT_DEF);
+				g.setColor(new Color(1f,0f,0f,0.5f));
+				g.fillRect(x - w/2, y - h/2, w, h);
+			}
+			
 		}
 	}
 
 	public void drawProjectiles(Graphics g) {
 		for (Projectile p : gameWorld.getProjectiles()) {
+			BufferedImage i = p.getSpell().getFrames().get(p.getAnimationProgress());
+			BufferedImage i2 = new BufferedImage(i.getWidth(),i.getHeight(),i.getType());
+			Graphics2D g2 = i2.createGraphics();
+			double rad = Math.atan2(p.getVelocity().getY(), p.getVelocity().getX());
+			g2.rotate(rad, i.getWidth()/2, i.getHeight()/2);
+			g2.drawImage(i,null,0,0);
 			Point3f worldPoint = p.getCentre();
 			Point3f relativePoint = worldSpaceToScreen(worldPoint);
 			Hitbox hb = p.getHitbox();
@@ -281,12 +292,14 @@ public class Viewer extends JPanel {
 			int y = (int)relativePoint.getY();
 			int w = Math.round(p.getWidth() * UNIT_DEF);
 			int h = Math.round(p.getHeight() * UNIT_DEF);
-			g.setColor(p.getColor());
-			g.fillOval(x - w/2, y - h/2, w, h);
-			w = Math.round((hb.getRightX() - hb.getLeftX()) * UNIT_DEF);
-			h = Math.round((hb.getBotY() - hb.getTopY()) * UNIT_DEF);
-			g.setColor(new Color(1f,0f,0f,0.5f));
-			g.fillRect(x - w/2, y - h/2, w, h);
+			g.drawImage(i2, x - w/2, y - h/2, w, h, null);
+			if(inDebugMode) {
+				w = Math.round((hb.getRightX() - hb.getLeftX()) * UNIT_DEF);
+				h = Math.round((hb.getBotY() - hb.getTopY()) * UNIT_DEF);
+				g.setColor(new Color(1f,0f,0f,0.5f));
+				g.fillRect(x - w/2, y - h/2, w, h);
+			}
+			p.incrementProgress();
 		}
 	}
 
@@ -384,7 +397,7 @@ public class Viewer extends JPanel {
 				g.setColor(Color.white);
 				g.fillRect(x, y, UNIT_DEF, UNIT_DEF);
 			}
-			g.setColor(Projectile.getColor(s.getType()));
+			g.setColor(Projectile.getColor(s.getElement()));
 			g.fillOval(x, y, UNIT_DEF, UNIT_DEF);
 			//draw
 			x += UNIT_DEF;
