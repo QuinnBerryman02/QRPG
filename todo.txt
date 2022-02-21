@@ -6,8 +6,8 @@ create default topic response classes, like farmer = tree, wheat, animal ,tools 
     <>create enemy class
     <>get enemy sprites and animations
 fix enemy hitboxes
-fix elder witch down direction
-write enemy AIs
+    <>fix elder witch down direction
+    <>write enemy AIs
 add final boss
 add attack damage popups
     <>fix combat timers to when the agressor dies / becomes non hostile

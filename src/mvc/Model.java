@@ -48,12 +48,12 @@ public class Model {
 		map = new Map(new File("res/map.tmx"));
 		map.loadTilesets();
 		//Player 
-		//Enemy e1 = new Enemy(Type.BAT, 0.5f, 0.5f, new Point3f(-12f,-10f,0f), 100, 10, 100);
+		Enemy e1 = new Enemy(Type.WIND_ELEMENTAL, 0.5f, 0.5f, new Point3f(-12f,-10f,0f), 100, 10, 100);
 		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(0,0,0),100,10,100);
 		NPCLoader npcLoader = new NPCLoader(new File("res/npc.xml"));
 		npcLoader.createAllNpcs().forEach(npc -> entities.add(npc));
 		entities.add(player);
-		//entities.add(e1);
+		entities.add(e1);
 		Spell s2 = new Spell();
 		s2.setElement(Projectile.Type.FIRE);
 		s2.setDamage(50);
@@ -153,20 +153,20 @@ public class Model {
 
 	public void animationLogic(Entity e) {
 		float speed = e.getSpeed() / (float)MainWindow.getTargetFPS();
+		e.incrementProgress();
 		AnimationPhase ap = e.getPhase();
 		Controller controller = e.getController(); 
-		e.incrementProgress();
 		switch(ap) {
 			case NEUTRAL:
 			case WALKING:
 				if(controller.isKeyQPressed()){
 					e.setPhase(AnimationPhase.ATTACKING);
-					e.setProgress(0);
+					e.setProgress(-1);
 					break;
 				}
 				if(controller.isKeyEPressed()){
 					e.setPhase(AnimationPhase.CASTING);
-					e.setProgress(0);
+					e.setProgress(-1);
 					break;
 				}
 				boolean wasMovingVertical = e.getVerticalMovement();
@@ -206,7 +206,7 @@ public class Model {
 				}
 				break;
             case ATTACKING:
-				if(e.getProgress()==3) {
+				if(e.getProgress()==e.progressMax() / 2) {
 					Hitbox punch = getPunchHitbox(e);
 					for (Entity other : entitiesLoaded) {
 						if(other == e) {
@@ -222,7 +222,7 @@ public class Model {
 				}
 				break;
             case CASTING:
-				if(e.getProgress()==4) {
+				if(e.getProgress()==e.progressMax() / 2) {
 					Spell s = e.getCurrentSpell();
 					if(s != null) {
 						s.cast(e);
@@ -393,12 +393,11 @@ public class Model {
 		return entities;
 	}
 
-	public boolean inRangeOfPlayer(Entity entity) {
+	public boolean inRangeOfPlayer(Entity entity, float RANGE) {
 		//returns true if the entity is in attack range
-		float range = 0.66f;
 		float dx = entity.getCentre().getX() - player.getCentre().getX();
 		float dy = entity.getCentre().getY() - player.getCentre().getY();
-		return (range*range >= dx*dx + dy*dy);
+		return (RANGE*RANGE >= dx*dx + dy*dy);
 	}
 
 	public void sortEntities(ArrayList<Entity> entities) {

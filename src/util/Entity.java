@@ -6,6 +6,7 @@ import main.MainWindow;
 import mvc.Controller;
 
 public abstract class Entity extends GameObject {
+    private ArrayList<Entity> inCombatWith = new ArrayList<Entity>();
     private AnimationPhase phase = AnimationPhase.NEUTRAL;
     private Direction direction = Direction.UP;
     private boolean verticalMovement = false;
@@ -70,14 +71,10 @@ public abstract class Entity extends GameObject {
 
     public void incrementProgress() {
         progress++;
-        int modulo;
-        switch(phase) {
-            case NEUTRAL:   modulo = 1;     break;
-            case WALKING:   modulo = 4;     break;
-            case ATTACKING: modulo = 7;     break;
-            case CASTING:   modulo = 9;     break;
-            default:        modulo = -1;    break;
+        if(progress==0) {
+            return;
         }
+        int modulo = progressMax();
         progress = progress % modulo;
         if(progress==0) {
             phase = AnimationPhase.NEUTRAL;
@@ -85,15 +82,18 @@ public abstract class Entity extends GameObject {
         }
     }
 
-    public int progressWave() {
-        int max;
+    public int progressMax() {
         switch(phase) {
-            case NEUTRAL:   max = 1; break;     //0|     
-            case WALKING:   max = 4; break;     //2|     3
-            case ATTACKING: max = 7; break;     //3|     4      5     6      
-            case CASTING:   max = 9; break;     //4|     5      6     7      8
-            default:        max = -1;break;
+            case NEUTRAL:   return 1; 
+            case WALKING:   return 4; 
+            case ATTACKING: return 7; 
+            case CASTING:   return 9; 
+            default:        return -1;
         }
+    }
+
+    public int progressWave() {
+        int max = progressMax();
         if(progress > max/2) {
             return max - progress - (max % 2);
         } else {
@@ -238,17 +238,32 @@ public abstract class Entity extends GameObject {
     }
 
     public void attack(Entity other) {
+        inCombatWith.add(other);
         if(!inCombat) {
             (new Thread() {
                 @Override
                 public void run() {
-                    inCombat = true;
-                    while(other.isHostile() && !other.isDead() && !isDead() && isHostile()) {
-                        try {
-                            sleep(1000);
-                        } catch (Exception e) {}
-                    }
-                    inCombat = false;
+                    do {
+                        boolean self = !isDead() && isHostile();
+                        boolean any = false;
+                        for(int i=0;i<inCombatWith.size();i++) {
+                            if(other.isHostile() && !other.isDead()) {
+                                any = true;
+                            } else {
+                                inCombatWith.remove(other);
+                            }
+                        }
+                        if (self && any) {
+                            inCombat = true;
+                            try {
+                                
+                                sleep(500);
+                            } catch (Exception e) {}
+                            
+                        } else {
+                            inCombat = false;
+                        }
+                    } while (inCombat);
                 }
             }).start();
         }

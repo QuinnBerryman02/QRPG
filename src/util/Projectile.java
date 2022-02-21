@@ -64,6 +64,10 @@ public class Projectile extends GameObject{
         return type;
     }
 
+    public void refreshProgress() {
+        if(animationProgress >= spell.getFrames().size()) animationProgress = 0;
+    }
+
     public void incrementProgress() {
         if(animationProgress+1 >= spell.getFrames().size()) animationProgress = 0;
         else animationProgress++;

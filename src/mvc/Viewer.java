@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
@@ -273,30 +274,36 @@ public class Viewer extends JPanel {
 	}
 
 	public void drawProjectiles(Graphics g) {
-		for (Projectile p : gameWorld.getProjectiles()) {
-			BufferedImage i = p.getSpell().getFrames().get(p.getAnimationProgress());
-			BufferedImage i2 = new BufferedImage(i.getWidth(),i.getHeight(),i.getType());
-			Graphics2D g2 = i2.createGraphics();
-			double rad = Math.atan2(p.getVelocity().getY(), p.getVelocity().getX());
-			rad += p.getType().equals(Projectile.Type.ARCANE) ? -Math.PI/2 : 0;
-			g2.rotate(rad, i.getWidth()/2, i.getHeight()/2);
-			g2.drawImage(i,null,0,0);
-			Point3f worldPoint = p.getCentre();
-			Point3f relativePoint = worldSpaceToScreen(worldPoint);
-			Hitbox hb = p.getHitbox();
-			int x = (int)relativePoint.getX();
-			int y = (int)relativePoint.getY();
-			int w = Math.round(p.getWidth() * UNIT_DEF);
-			int h = Math.round(p.getHeight() * UNIT_DEF);
-			g.drawImage(i2, x - w/2, y - h/2, w, h, null);
-			if(inDebugMode) {
-				w = Math.round((hb.getRightX() - hb.getLeftX()) * UNIT_DEF);
-				h = Math.round((hb.getBotY() - hb.getTopY()) * UNIT_DEF);
-				g.setColor(new Color(1f,0f,0f,0.5f));
-				g.fillRect(x - w/2, y - h/2, w, h);
+		try {
+			for (Projectile p : gameWorld.getProjectiles()) {
+				p.refreshProgress();
+				BufferedImage i = p.getSpell().getFrames().get(p.getAnimationProgress());
+				BufferedImage i2 = new BufferedImage(i.getWidth(),i.getHeight(),i.getType());
+				Graphics2D g2 = i2.createGraphics();
+				double rad = Math.atan2(p.getVelocity().getY(), p.getVelocity().getX());
+				rad += p.getType().equals(Projectile.Type.ARCANE) ? -Math.PI/2 : 0;
+				g2.rotate(rad, i.getWidth()/2, i.getHeight()/2);
+				g2.drawImage(i,null,0,0);
+				Point3f worldPoint = p.getCentre();
+				Point3f relativePoint = worldSpaceToScreen(worldPoint);
+				Hitbox hb = p.getHitbox();
+				int x = (int)relativePoint.getX();
+				int y = (int)relativePoint.getY();
+				int w = Math.round(p.getWidth() * UNIT_DEF);
+				int h = Math.round(p.getHeight() * UNIT_DEF);
+				g.drawImage(i2, x - w/2, y - h/2, w, h, null);
+				if(inDebugMode) {
+					w = Math.round((hb.getRightX() - hb.getLeftX()) * UNIT_DEF);
+					h = Math.round((hb.getBotY() - hb.getTopY()) * UNIT_DEF);
+					g.setColor(new Color(1f,0f,0f,0.5f));
+					g.fillRect(x - w/2, y - h/2, w, h);
+				}
+				p.incrementProgress();
 			}
-			p.incrementProgress();
+		} catch (ConcurrentModificationException e) {
+			e.printStackTrace();
 		}
+		
 	}
 
 	public void drawChunkLines(Graphics g) {

@@ -1,32 +1,21 @@
 package mvc;
 
-import java.util.Random;
-
-import util.Entity;
+import main.MainWindow;
 import util.Vector3f;
 
-public class AIController extends Controller{
-    private static final float RANGE = 0.66f;
-    protected Entity entity;
-    protected Random r = new Random();
-    protected Vector3f lastMovement = new Vector3f(1f,1f,0f);
-
-    public AIController() {
-
-    }
-
-    public void setEntity(Entity entity) {
-        this.entity = entity;
-    }
-
+public class MageController extends AIController{
+    private static final float RANGE = 3;
+    @Override
     public void run(Model m) {
+        setMouseX(MainWindow.getW()/2);
+        setMouseY(MainWindow.getH()/2);
         if(entity.isInCombat()) {
             if(m.inRangeOfPlayer(entity, RANGE)) {
-                setKeyQPressed(true);
+                setKeyEPressed(true);
                 pressMoveButtons(new Vector3f());
             } else {
                 r.nextInt(4);
-                setKeyQPressed(false);
+                setKeyEPressed(false);
                 Vector3f v = entity.getCentre().calculateDirectionToPoint(m.getPlayer().getCentre());
                 switch(r.nextInt(4)) {
                     case 0:
@@ -39,7 +28,7 @@ public class AIController extends Controller{
                 lastMovement = v;
             }
         } else {
-            setKeyQPressed(false);
+            setKeyEPressed(false);
             Vector3f v = lastMovement;
             switch(r.nextInt(4)) {
                 case 0:
@@ -53,14 +42,5 @@ public class AIController extends Controller{
             pressMoveButtons(v);
             lastMovement = v;
         }
-    }
-
-    protected void pressMoveButtons(Vector3f v) {
-        int x = Math.round(v.getX());
-        int y = Math.round(v.getY());
-        setKeyDPressed(x==1 ? true : false);
-        setKeyAPressed(x==-1 ? true : false);
-        setKeyWPressed(y==-1 ? true : false);
-        setKeySPressed(y==1 ? true : false);
     }
 }

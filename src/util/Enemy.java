@@ -1,9 +1,11 @@
 package util;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import mvc.AIController;
 import mvc.Controller;
+import mvc.MageController;
 
 public class Enemy extends Entity{
     private Type type;
@@ -25,9 +27,10 @@ public class Enemy extends Entity{
         DARK_ELEMENTAL
     }
     public Enemy(Type type, float width, float height, Point3f centre, float maxHealth, float damage, float maxMana) { 
-        super(getSkin(type), width, height, centre, new AIController(), maxHealth, damage, maxMana);
+        super(getSkin(type), width, height, centre, generateController(type), maxHealth, damage, maxMana);
         ((AIController)getController()).setEntity(this);
         this.type = type;
+        generateSpell(type);
 	}
     @Override
     public ArrayList<Topic> getKnownTopics() {
@@ -38,7 +41,8 @@ public class Enemy extends Entity{
         return type;
     }
 
-    public void incrementProgress() {
+    @Override
+    public int progressMax() {
         switch(type) {
             case BLACK_KNIGHT:
             case CULTIST:
@@ -49,66 +53,26 @@ public class Enemy extends Entity{
             case WIND_ELEMENTAL:
             case FIRE_ELEMENTAL:
             case LIGHT_ELEMENTAL:
-                super.incrementProgress();
-                break;
+                return super.progressMax();
             case ELDER_WITCH:
             case YOUNG_WITCH:
             case BAT:
             case GHOST:
             case SLIME:
             case SPIDER:
-                setProgress(getProgress()+1);
-                int modulo;
-                switch(getPhase()) {
-                    case NEUTRAL:   modulo = 1;     break;
-                    case WALKING:   modulo = 4;     break;
-                    case ATTACKING: modulo = 4;     break;
-                    case CASTING:   modulo = 4;     break;
-                    default:        modulo = -1;    break;
-                }
-                setProgress(getProgress()%modulo);
-                if(getProgress()==0) {
-                    setPhase(AnimationPhase.NEUTRAL);
-                    setVerticalMovement(false);
-                }
-                break;
-        }
-    }
-
-    public int progressWave() {
-        switch(type) {
-            case BLACK_KNIGHT:
-            case CULTIST:
-            case DARK_ELEMENTAL:
-            case EARTH_ELEMENTAL:
-            case VAMPIRE:
-            case WATER_ELEMENTAL:
-            case WIND_ELEMENTAL:
-            case FIRE_ELEMENTAL:
-            case LIGHT_ELEMENTAL:
-                return super.progressWave();
-            case ELDER_WITCH:
-            case YOUNG_WITCH:
-            case BAT:
-            case GHOST:
-            case SLIME:
-            case SPIDER:
-                int max;
-                switch(getPhase()) {
-                    case NEUTRAL:   max = 1; break;    
-                    case WALKING:   max = 4; break;    
-                    case ATTACKING: max = 4; break;    
-                    case CASTING:   max = 4; break;    
-                    default:        max = -1;break;
-                }
-                if(getProgress() > max/2) {
-                    return max - getProgress() - (max % 2);
-                } else {
-                    return getProgress();
-                }
+            return getPhase().equals(AnimationPhase.NEUTRAL) ? 1 : 4;
             default:
                 return -1;
         }   
+    }
+
+    public int progressWave() {
+        int max = progressMax(); 
+        if(getProgress() > max/2) {
+            return max - getProgress() - (max % 2);
+        } else {
+            return getProgress();
+        }
     }
     @Override
     public String getCurrentTexture() {
@@ -167,7 +131,7 @@ public class Enemy extends Entity{
         int row = getDirection().ordinal();
         int column = getPhase().equals(AnimationPhase.NEUTRAL) ? 0 : progressWave();
         int dx2 = 24;
-        int dy2 = 34;
+        int dy2 = 32;
 
         int sx1 = (column * dx2);
         int sy1 = (row * dy2);
@@ -224,6 +188,66 @@ public class Enemy extends Entity{
             case GHOST:
             case SLIME:
             case SPIDER:
+            default:
+                return null;
+        }
+    }
+
+    public void generateSpell(Type t){
+        Spell s = new Spell();
+        s.setAim(Spell.Aim.AIM_BY_MOUSE);
+        s.setDamage((new Random()).nextInt(10) + 5);
+        s.setRadius((new Random()).nextFloat() / 2f + 0.25f);
+        switch(type) {
+            case CULTIST:
+                s.setElement(Projectile.Type.ARCANE);break;
+            case DARK_ELEMENTAL:
+                s.setElement(Projectile.Type.ARCANE);break;
+            case EARTH_ELEMENTAL:
+                s.setElement(Projectile.Type.STONE);break;
+            case VAMPIRE:
+                s.setElement(Projectile.Type.BLOOD);break;
+            case WATER_ELEMENTAL:
+                s.setElement(Projectile.Type.WATER);break;
+            case WIND_ELEMENTAL:
+                s.setElement(Projectile.Type.WIND);break;
+            case FIRE_ELEMENTAL:
+                s.setElement(Projectile.Type.FIRE);break;
+            case LIGHT_ELEMENTAL: 
+                s.setElement(Projectile.Type.LIGHT);break;
+            case ELDER_WITCH:
+                s.setElement(Projectile.Type.values()[(new Random()).nextInt(7)]);break;
+            case YOUNG_WITCH:
+                int type = (new Random()).nextInt(4);
+                s.setElement(type==0?Projectile.Type.FIRE:type==0?Projectile.Type.WATER:type==0?Projectile.Type.WIND:Projectile.Type.STONE);break;
+            default:
+                return;
+        }  
+        s.updateFrames();
+        s.calculateCost();
+        getSpells().add(s);
+        setCurrentSpell(s);
+    }
+
+    public static Controller generateController(Type t) {
+        switch(t) {
+            case CULTIST:
+            case DARK_ELEMENTAL:
+            case EARTH_ELEMENTAL:
+            case VAMPIRE:
+            case WATER_ELEMENTAL:
+            case WIND_ELEMENTAL:
+            case FIRE_ELEMENTAL:
+            case LIGHT_ELEMENTAL:
+            case ELDER_WITCH:
+            case YOUNG_WITCH:
+                return new MageController();
+            case BLACK_KNIGHT:
+            case BAT:
+            case GHOST:
+            case SLIME:
+            case SPIDER:
+                return new AIController();
             default:
                 return null;
         }
