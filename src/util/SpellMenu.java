@@ -418,12 +418,12 @@ public class SpellMenu extends Menu{
             }
             elements = new JList<>(model);
             elements.setBackground(new Color(1f,1f,1f,0f));
+            elements.setSelectedIndex(currentSpell.getElement().ordinal());
             elements.addListSelectionListener(e -> {
                 JList<String> lsm = (JList)e.getSource();
                 currentSpell.setElement(Projectile.Type.values()[lsm.getSelectedIndex()]);
             });
             add(elements);
-            refresh();
         }
         @Override
         public void paintComponent(Graphics g) {

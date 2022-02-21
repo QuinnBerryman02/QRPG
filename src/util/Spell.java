@@ -6,14 +6,16 @@ import mvc.Viewer;
 import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 import java.awt.image.BufferedImage;
 
 import javax.imageio.ImageIO;
 
 
 public class Spell {
-    private ArrayList<BufferedImage> frames = new ArrayList<BufferedImage>();
     private final static float MAX_VELOCITY = 4f;
+
+    private ArrayList<BufferedImage> frames = new ArrayList<BufferedImage>();
     private int manaCost;
 
     private Aim aim;
@@ -211,20 +213,21 @@ public class Spell {
 
     public void updateFrames() {
         frames.clear();
+        Random r = new Random();
         switch (element) {
-            case ARCANE:loadArcane(1);
+            case ARCANE:loadArcane(r.nextInt(6)+1);
                 break;
-            case BLOOD:loadBlood(1);
+            case BLOOD:loadBlood(r.nextInt(5)+1);
                 break;
-            case FIRE:loadFire(2);
+            case FIRE:loadFire(r.nextInt(4)+1);
                 break;
-            case LIGHT:loadLight(1);
+            case LIGHT:loadLight(r.nextInt(5)+1);
                 break;
-            case STONE:loadStone(1);
+            case STONE:loadStone(r.nextInt(5)+1);
                 break;
-            case WATER:loadWater(1);
+            case WATER:loadWater(r.nextInt(5)+1);
                 break;
-            case WIND:loadWind(1);
+            case WIND:loadWind(r.nextInt(5)+1);
                 break;
             default:
                 break;
@@ -245,7 +248,7 @@ public class Spell {
 
     public void loadBlood(int variant) {
         for(int i=1;i<5;i++) {
-            int p = (5*variant) + i;
+            int p = (5*(variant-1)) + i;
             try {
                 frames.add(ImageIO.read(new File("res/effects/blood/Blood-Magic-Effect_" + ((p < 10) ? ("0" + p) : (p)) + ".png")));
             } catch (Exception e) {
@@ -267,7 +270,7 @@ public class Spell {
 
     public void loadWind(int variant) {
         for(int i=1;i<5;i++) {
-            int p = (5*variant) + i;
+            int p = (5*(variant-1)) + i;
             try {
                 frames.add(ImageIO.read(new File("res/effects/wind/Pure_" + ((p < 10) ? ("0" + p) : (p)) + ".png")));
             } catch (Exception e) {
@@ -278,7 +281,7 @@ public class Spell {
 
     public void loadLight(int variant) {
         for(int i=1;i<5;i++) {
-            int p = (5*variant) + i;
+            int p = (5*(variant-1)) + i;
             try {
                 frames.add(ImageIO.read(new File("res/effects/light/LightEffect_" + ((p < 10) ? ("0" + p) : (p)) + ".png")));
             } catch (Exception e) {
@@ -300,7 +303,7 @@ public class Spell {
 
     public void loadStone(int variant) {
         for(int i=1;i<5;i++) {
-            int p = (5*variant) + i;
+            int p = (5*(variant-1)) + i;
             try {
                 frames.add(ImageIO.read(new File("res/effects/stone/Earth-Impact_" + ((p < 10) ? ("0" + p) : (p)) + ".png")));
             } catch (Exception e) {

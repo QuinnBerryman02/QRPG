@@ -57,7 +57,7 @@ public class Viewer extends JPanel {
 	private Point3f cameraOffset;
 	private boolean inCameraMode = true;
 	private boolean goingToPlayer = false;
-	private boolean inDebugMode = true;
+	private boolean inDebugMode = false;
 	private Model gameWorld; 
 	private ArrayList<Chunk> chunksLoaded = new ArrayList<Chunk>();
 	private ArrayList<Entity> entitiesLoaded = new ArrayList<Entity>();
@@ -113,14 +113,15 @@ public class Viewer extends JPanel {
 
 			drawBackground(g);
 
-			if(!inCameraMode)
+			if(!inCameraMode) {
 				drawEntities(g);
 
+				drawProjectiles(g);
+			}
+				
 			drawForeground(g);
 
 			if(!inCameraMode) {
-				drawProjectiles(g);
-
 				drawHealthBars(g);
 
 				drawSpells(g);
@@ -132,7 +133,6 @@ public class Viewer extends JPanel {
 
 				drawText(g);
 			}
-			
 		}
 	}
 

@@ -40,7 +40,9 @@ lock progress of some elements / aims until unlocked / bought
 add mutable maxes for radius and damage
     <>add projectile sprites
     <>add magic circle below feet when casting
-randomize variants per spell
+    <>randomize variants per spell
+show new sprites where relevant
+    <>fix weird spell bugs
 
         Quests)
     <>add quest class
