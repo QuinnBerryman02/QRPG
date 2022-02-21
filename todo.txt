@@ -4,7 +4,7 @@
 create the rest of the NPCs
 create default topic response classes, like farmer = tree, wheat, animal ,tools etc + responses
 create enemy class
-get enemy sprites and animations
+    <>get enemy sprites and animations
 add final boss
 add attack damage popups
     <>fix combat timers to when the agressor dies / becomes non hostile
@@ -41,7 +41,7 @@ add mutable maxes for radius and damage
     <>add projectile sprites
     <>add magic circle below feet when casting
     <>randomize variants per spell
-show new sprites where relevant
+    <>show new sprites where relevant
     <>fix weird spell bugs
 
         Quests)

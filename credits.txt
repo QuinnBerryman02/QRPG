@@ -23,10 +23,10 @@ under CC-BY 3.0, GPL 3.0, OGA-BY 3.0 (temple)
 by "Surt"
 under CC0 (town, roman, forest)
 
-[town_snow, town_castle] are from https://opengameart.org/users/sharm
+[town_snow, town_castle, enemies] are from https://opengameart.org/users/sharm
 by "Sharm"
 under CC-BY 3.0, CC-BY-SA 3.0, GPL 3.0, GPL 2.0 (town_snow)
-under CC-BY 3.0, OGA-BY 3.0 (town_castle)
+under CC-BY 3.0, OGA-BY 3.0 (town_castle, enemies)
 
 [./hilau] are from https://opengameart.org/users/hilau
 by "Hilau"
@@ -48,6 +48,14 @@ under CC-BY 3.0, GPL 2.0 (all)
 [./gui] are from https://opengameart.org/content/rpg-gui-construction-kit-v10
 by "Lamoot"
 under CC-BY 3.0 (all)
+
+[boss] is from https://opengameart.org/content/3-form-rpg-boss-harlequin-epicycle
+by "Redshrike"
+under CC-BY 3.0, GPL 3.0, GPL 2.0, OGA-BY 3.0
+
+[witch1, witch2] are from https://opengameart.org/content/witch-on-broomstick
+by "AntumDeluge"
+under CC-BY 4.0, CC-BY 3.0, OGA-BY 3.0
 
 Music Credits
 

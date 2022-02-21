@@ -388,13 +388,15 @@ public class Viewer extends JPanel {
 		int x = (MainWindow.getW() / 2) - (int)(p.getSpells().size() / 2f * UNIT_DEF);
 		int y = MainWindow.getH() - UNIT_DEF*2;
 		for (Spell s : p.getSpells()) {
-			
+			g.setColor(Color.BLACK);
+			g.fillRect(x, y, UNIT_DEF, UNIT_DEF);
 			if(s.equals(p.getCurrentSpell())) {
-				g.setColor(Color.white);
-				g.fillRect(x, y, UNIT_DEF, UNIT_DEF);
+				g.setColor(Color.WHITE);
+				g.drawRect(x, y, UNIT_DEF, UNIT_DEF);
 			}
-			g.setColor(Projectile.getColor(s.getElement()));
-			g.fillOval(x, y, UNIT_DEF, UNIT_DEF);
+			g.drawImage(s.getFrames().get(0), x, y, UNIT_DEF, UNIT_DEF, null);
+			// g.setColor(Projectile.getColor(s.getElement()));
+			// g.fillOval(x, y, UNIT_DEF, UNIT_DEF);
 			//draw
 			x += UNIT_DEF;
 		}

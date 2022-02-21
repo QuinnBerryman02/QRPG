@@ -21,6 +21,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneLayout;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
@@ -409,6 +411,7 @@ public class SpellMenu extends Menu{
     class ElementPanel extends JPanel {
         private DefaultListModel<String> model = new DefaultListModel<>();
         private JList<String> elements;
+        private SelectionListener selectionListener = new SelectionListener();
         public ElementPanel(int w, int h, CustomBorder cb) {
             setPreferredSize(new Dimension(w,h));
             setBackground(new Color(1f,1f,1f,0f));
@@ -419,10 +422,7 @@ public class SpellMenu extends Menu{
             elements = new JList<>(model);
             elements.setBackground(new Color(1f,1f,1f,0f));
             elements.setSelectedIndex(currentSpell.getElement().ordinal());
-            elements.addListSelectionListener(e -> {
-                JList<String> lsm = (JList)e.getSource();
-                currentSpell.setElement(Projectile.Type.values()[lsm.getSelectedIndex()]);
-            });
+            elements.addListSelectionListener(selectionListener);
             add(elements);
         }
         @Override
@@ -431,7 +431,17 @@ public class SpellMenu extends Menu{
         }
 
         public void refresh() {
+            elements.removeListSelectionListener(selectionListener);
             elements.setSelectedIndex(currentSpell.getElement().ordinal());
+            elements.addListSelectionListener(selectionListener);
+        }
+
+        class SelectionListener implements ListSelectionListener{
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                JList<String> lsm = (JList)e.getSource();
+                currentSpell.setElement(Projectile.Type.values()[lsm.getSelectedIndex()]);
+            }
         }
     }
 
