@@ -85,7 +85,7 @@ public abstract class Entity extends GameObject {
         }
     }
 
-    private int progressWave() {
+    public int progressWave() {
         int max;
         switch(phase) {
             case NEUTRAL:   max = 1; break;     //0|     
@@ -284,6 +284,9 @@ public abstract class Entity extends GameObject {
     public boolean isInCombat() {
         return inCombat;
     }
+    public void setInCombat(boolean inCombat) {
+        this.inCombat = inCombat;
+    }
 
     public void die() {
         dead = true;
@@ -292,8 +295,8 @@ public abstract class Entity extends GameObject {
             System.out.println(((NPC)this).getName() + " died");
         } else if(this instanceof Player) {
             System.out.println("Player died");
-        } else {
-            System.out.println(getClass() + " died");
+        } else if(this instanceof Enemy) {
+            System.out.println(((Enemy)this).getType() + " died");
         }
     }
     

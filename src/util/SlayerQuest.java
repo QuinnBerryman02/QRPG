@@ -3,16 +3,16 @@ package util;
 public class SlayerQuest extends Quest {
     private final int numberToKill;
     private int progress = 0;
-    private final Class<? extends Entity> typeOfEntity;
-    public SlayerQuest (NPC questGiver, int reward, int numberToKill, Class<? extends Entity> typeOfEntity) {
+    private final Enemy.Type typeOfEnemy;
+    public SlayerQuest (NPC questGiver, int reward, int numberToKill, Enemy.Type type) {
         super(questGiver, reward);
         this.numberToKill = numberToKill;
-        this.typeOfEntity = typeOfEntity;
+        this.typeOfEnemy = type;
     }
 
     @Override
     public String getDetails() {
-        String s = "Slayed " + progress + "/" + numberToKill + " " + typeOfEntity.getSimpleName(); 
+        String s = "Slayed " + progress + "/" + numberToKill + " " + typeOfEnemy.toString(); 
         return s;
     }
     @Override
@@ -28,8 +28,8 @@ public class SlayerQuest extends Quest {
         return numberToKill;
     }
 
-    public Class<? extends Entity> getTypeOfEntity() {
-        return typeOfEntity;
+    public Enemy.Type getTypeOfEnemy() {
+        return typeOfEnemy;
     }
 
     public void incrementProgress() {

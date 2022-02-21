@@ -7,6 +7,7 @@ import java.util.function.Function;
 
 import main.MainWindow;
 import util.*;
+import util.Enemy.Type;
 import util.Entity.AnimationPhase;
 import util.Entity.Direction;
 import util.Spell.Aim;
@@ -47,18 +48,20 @@ public class Model {
 		map = new Map(new File("res/map.tmx"));
 		map.loadTilesets();
 		//Player 
+		//Enemy e1 = new Enemy(Type.BAT, 0.5f, 0.5f, new Point3f(-12f,-10f,0f), 100, 10, 100);
 		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(0,0,0),100,10,100);
 		NPCLoader npcLoader = new NPCLoader(new File("res/npc.xml"));
 		npcLoader.createAllNpcs().forEach(npc -> entities.add(npc));
 		entities.add(player);
+		//entities.add(e1);
 		Spell s2 = new Spell();
 		s2.setElement(Projectile.Type.FIRE);
-		s2.setDamage(5);
+		s2.setDamage(50);
 		s2.setRadius(0.25f);
-		s2.setAim(Spell.Aim.OCTOPUS);
+		s2.setAim(Spell.Aim.AIM_BY_MOUSE);
 		player.getSpells().add(s2);
 		player.setCurrentSpell(s2);
-		player.getQuests().add(new SlayerQuest((NPC)entities.get(0), 200, 1, NPC.class));
+		player.getQuests().add(new SlayerQuest((NPC)entities.get(0), 200, 10, Enemy.Type.SLIME));
 		player.getQuests().add(new AssassinationQuest((NPC)entities.get(1), 500, (NPC)entities.get(0)));
 	}
 	
@@ -68,10 +71,13 @@ public class Model {
 			entities.forEach(e -> {
 				if(Viewer.isEntityOnscreen(e, player.getCentre())) {
 					if(!e.isDead()) entitiesLoaded.add(e);
-				} else {
-					if(e instanceof NPC) {
-						e.setHostile(false);
+					if(e instanceof Enemy) {
+						e.setHostile(true);
+						e.attack(player);
+						player.attack(e);
 					}
+				} else {
+					e.setHostile(false);
 				}
 			});
 			AudioManager am = MainWindow.getAudioManager();
@@ -243,10 +249,12 @@ public class Model {
 			for (Quest q : player.getQuests()) {
 				if(q instanceof SlayerQuest) {
 					SlayerQuest sq = (SlayerQuest)q;
-					Class<? extends Entity> type = sq.getTypeOfEntity();
-					if(e.getClass().equals(type)) {
-						sq.incrementProgress();
-						System.out.println("progressed in quest " + sq.getDetails());
+					if(e instanceof Enemy) {
+						Enemy enemy = (Enemy)e;
+						if(enemy.getType().equals(sq.getTypeOfEnemy())) {
+							sq.incrementProgress();
+							System.out.println("progressed in quest " + sq.getDetails());
+						}
 					}
 				}
 			}
