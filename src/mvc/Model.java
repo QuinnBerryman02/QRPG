@@ -3,14 +3,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-import java.util.function.Function;
 
 import main.MainWindow;
 import util.*;
 import util.Enemy.Type;
 import util.Entity.AnimationPhase;
 import util.Entity.Direction;
-import util.Spell.Aim;
 /*
  * Created by Abraham Campbell on 15/01/2020.
  *   Copyright (c) 2020  Abraham Campbell
