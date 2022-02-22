@@ -58,7 +58,7 @@ public class Viewer extends JPanel {
 	private Point3f cameraOffset;
 	private boolean inCameraMode = true;
 	private boolean goingToPlayer = false;
-	private boolean inDebugMode = false;
+	private boolean inDebugMode = true;
 	private Model gameWorld; 
 	private ArrayList<Chunk> chunksLoaded = new ArrayList<Chunk>();
 	private ArrayList<Entity> entitiesLoaded = new ArrayList<Entity>();
@@ -102,8 +102,7 @@ public class Viewer extends JPanel {
 				moveCamera();
 
 			chunksOnScreen = 0;
-			chunksLoaded = map.findClosestChunks(inCameraMode ? cameraOffset : gameWorld.getPlayer().getCentre());
-
+			chunksLoaded = map.findClosestChunks(inCameraMode ? cameraOffset : gameWorld.getPlayer().getCentre(), gameWorld.getDungeon().isInThis());
 			if(!inCameraMode) {
 				entitiesLoaded = gameWorld.getEntitiesLoaded();
 				gameWorld.sortEntities(entitiesLoaded);
@@ -161,7 +160,8 @@ public class Viewer extends JPanel {
 	private void drawChunks(Graphics g, ArrayList<Chunk> chunks) {
 		try {
 			for (Chunk chunk : chunks) {
-				Point3f worldPoint = new Point3f(Float.parseFloat(chunk.getData().getAttribute("x")), Float.parseFloat(chunk.getData().getAttribute("y")),0f);
+				int[] chunkCoords = chunk.getTrueCoords();
+				Point3f worldPoint = new Point3f(chunkCoords[0],chunkCoords[1],0f);
 				Point3f relativePoint = worldSpaceToScreen(worldPoint);
 				int x = (int)relativePoint.getX();
 				int y = (int)relativePoint.getY();
@@ -333,7 +333,7 @@ public class Viewer extends JPanel {
 
 	public void drawCollisionsNearby(Graphics g) {
 		int SCAN_RANGE = Model.getScanRange();
-		int[][] collisions = map.findCollisionTilesNearbyAPoint(gameWorld.getPlayer().getCentre(), SCAN_RANGE);
+		int[][] collisions = map.findCollisionTilesNearbyAPoint(gameWorld.getPlayer().getCentre(), SCAN_RANGE, gameWorld.getDungeon().isInThis());
 		int[] tile = map.findTile(gameWorld.getPlayer().getCentre());
         int px = tile[0];
         int py = tile[1];

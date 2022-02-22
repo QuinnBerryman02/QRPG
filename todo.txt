@@ -53,5 +53,11 @@ add saving and loading
     <>add ability to claim reward from questgiver using dialogue
 
         Map)
-create procedurally generated caves and sewers (Binding of Issac style)
+    <>create procedurally generated caves and sewers (Binding of Issac style)
+    <>render dungeons
+spawn enemyies in dungeon
+dungeon teleports
+dungeon music
+    <>fix walls in dungeon roofwall -> wall
+create more variants of dungeon, both in type and chunk
 create final boss arena

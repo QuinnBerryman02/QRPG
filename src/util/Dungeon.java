@@ -9,6 +9,7 @@ public class Dungeon {
     private static final int MAX_SIZE = 15;
     private static final int MAX_STEP_AMOUNT = MAX_SIZE * MAX_SIZE;
     private static final float SINUOSITY_FACTOR = 0.5f;
+    private int currentLayer = -1; 
     private DType type;
     private ArrayList<CTYPE[][]> layers = new ArrayList<CTYPE[][]>();
     private ArrayList<int[]> entries = new ArrayList<int[]>();
@@ -38,14 +39,15 @@ public class Dungeon {
         OPEN_UP_DOWN,
     }
 
-    public Dungeon(DType type) {
+    public Dungeon(DType type, int numLayers) {
         this.type = type;
+        while(numLayers-->0) {
+            generateNewLayer();
+        }
     }
 
     public static void main(String[] args) {
-        Dungeon d = new Dungeon(DType.SEWER);
-        d.generateNewLayer();
-        d.generateNewLayer();
+        Dungeon d = new Dungeon(DType.SEWER,2);
         d.printLayer(0);
         d.printLayer(1);
     }
@@ -59,18 +61,20 @@ public class Dungeon {
         int startX = r.nextInt(MAX_SIZE/2) * 2 + 1;
         int startY = r.nextInt(MAX_SIZE/2) * 2;
         int endX, endY, dx, dy;
-        do {
-            endX = r.nextInt(MAX_SIZE/2) * 2 + 1;
-            endY = r.nextInt(MAX_SIZE/2) * 2;
-            dx = endX - startX;
-            dy = endY - startY;
-        } while((dx == 0 && dy == 0));
-        layer[startY][startX] = first;
-        layer[endY][endX] = CTYPE.FLOOR_ENTRANCE;
-        
-        //centers
-        try {
-            int test = MAX_STEP_AMOUNT;
+        int attempts = 0;
+        int test = MAX_STEP_AMOUNT;
+        for(;;) {
+            do {
+                endX = r.nextInt(MAX_SIZE/2) * 2 + 1;
+                endY = r.nextInt(MAX_SIZE/2) * 2;
+                dx = endX - startX;
+                dy = endY - startY;
+            } while((dx == 0 && dy == 0));
+            layer[startY][startX] = first;
+            layer[endY][endX] = CTYPE.FLOOR_ENTRANCE;
+            
+            //centers
+            
             do {
                 test = MAX_STEP_AMOUNT;
                 for(int y=1;y<MAX_SIZE-1;y+=2) {
@@ -94,13 +98,13 @@ public class Dungeon {
                     }
                 }
                 test = minStepsToExit(layer, startX, startY+1, endX, endY+1);
-                System.out.println("min steps were: " + test + " max is: " + MAX_STEP_AMOUNT);
-            } while(test>MAX_STEP_AMOUNT || test < (MAX_SIZE * SINUOSITY_FACTOR));
-    
-        } catch (Exception e) {
-            e.printStackTrace();
+                System.out.println("Attempt: " + attempts++);
+            } while((test>MAX_STEP_AMOUNT || test < (MAX_SIZE * SINUOSITY_FACTOR)) && attempts < 10);
+            if(attempts<10) break;
+            attempts=0;
+            System.out.println("Redoing Intial conditions");
         }
-        
+        System.out.println("Successful Attempt!");
         //edges
         for(int y=0;y<MAX_SIZE;y++) {
             int xOff = (y + 1) % 2;
@@ -317,5 +321,88 @@ public class Dungeon {
             this.y = y;
             this.steps = steps;
         }
-    };
+    }
+
+    public ArrayList<int[]> getEntries() {
+        return entries;
+    }
+
+    public ArrayList<int[]> getExits() {
+        return exits;
+    }
+
+    public ArrayList<CTYPE[][]> getLayers() {
+        return layers;
+    }
+
+    public CTYPE getChunkByCoords(int x, int y) {       //128 + x*16   //0 + y*16
+        CTYPE[][] layer = layers.get(currentLayer);
+        int transformX = (x - Map.DUNGEON_START_CHUNK[0]) / 16;
+        int transformY = (y - Map.DUNGEON_START_CHUNK[1]) / 16;
+        if(transformX<0 || transformX >= MAX_SIZE || transformY < 0 || transformY >= MAX_SIZE) {
+            return CTYPE.EMPTY;
+        }
+        return layer[transformY][transformX];
+    }
+
+    public int[] getChunkCoords(CTYPE c) {
+        if(c==null) return new int[]{-80, 208};
+        switch(type) {
+            case CAVE:
+                switch(c) {
+                    case CENTER_A:
+                        return new int[]{-112, 208};
+                    case CENTER_B:
+                        return new int[]{-48, 208};
+                    case CENTER_C:
+                        return new int[]{-16, 208};
+                    case CLOSED_DOWN:
+                        return new int[]{-112, 224};
+                    case CLOSED_LEFT:
+                        return new int[]{-128, 208};
+                    case CLOSED_RIGHT:
+                        return new int[]{-96, 208};
+                    case CLOSED_UP:
+                        return new int[]{-112, 192};
+                    case CORNER_TL:
+                        return new int[]{-96, 192};
+                    case CORNER_TL_TR:
+                        return new int[]{-80, 192};
+                    case CORNER_TR:
+                        return new int[]{-128, 192};
+                    case EMPTY:
+                        return new int[]{-80, 208};
+                    case FLOOR_ENTRANCE:
+                        return new int[]{-32, 224};
+                    case FLOOR_ENTRANCE_CLOSED:
+                        return new int[]{-96, 224};
+                    case OPEN_LEFT_RIGHT:
+                        return new int[]{-64, 208};
+                    case OPEN_UP_DOWN:
+                        return new int[]{-48, 192};
+                    case WORLD_ENTRANCE:
+                        return new int[]{-64, 224};
+                    case WORLD_ENTRANCE_CLOSED:
+                        return new int[]{-80, 224};
+                    default:
+                        return new int[]{-80, 208};
+                }
+            case SEWER:
+                //
+            default:
+                return null;
+        }
+    }
+
+    public int getCurrentLayer() {
+        return currentLayer;
+    }
+
+    public void setCurrentLayer(int currentLayer) {
+        this.currentLayer = currentLayer;
+    }
+
+    public Dungeon isInThis() {
+        return currentLayer==-1 ? null : this;
+    }
 }

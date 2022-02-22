@@ -34,6 +34,7 @@ SOFTWARE.
    (MIT LICENSE ) e.g do what you want with this :-) 
  */ 
 public class Model {
+	private Dungeon dungeon;
 	private Player player;
 	private Map map;
 	private ArrayList<Entity> entities = new ArrayList<Entity>();
@@ -45,6 +46,7 @@ public class Model {
 		//World
 		map = new Map(new File("res/map.tmx"));
 		map.loadTilesets();
+		dungeon = new Dungeon(Dungeon.DType.CAVE, 5);
 		//Player 
 		Enemy e1 = new Enemy(Type.WIND_ELEMENTAL, 0.5f, 0.5f, new Point3f(-12f,-10f,0f), 100, 10, 100);
 		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(0,0,0),100,10,100);
@@ -79,7 +81,7 @@ public class Model {
 				}
 			});
 			AudioManager am = MainWindow.getAudioManager();
-			int id = map.getIdAudioLayer(player.getCentre());
+			int id = map.getIdAudioLayer(player.getCentre(), dungeon.isInThis());
 			if(!player.isInCombat()) {
 				am.playSongByTileId(id);
 			} else {
@@ -305,7 +307,7 @@ public class Model {
 	}
 
 	public Vector3f wallCollisionHandler(GameObject go, Vector3f v) {
-		int[][] collisions = map.findCollisionTilesNearbyAPoint(go.getCentre(), SCAN_RANGE);
+		int[][] collisions = map.findCollisionTilesNearbyAPoint(go.getCentre(), SCAN_RANGE, dungeon.isInThis());
 		int[] tile = map.findTile(go.getCentre());
         int px = tile[0];
         int py = tile[1];
@@ -420,5 +422,13 @@ public class Model {
 
 	public ArrayList<Entity> getEntitiesLoaded() {
 		return entitiesLoaded;
+	}
+
+	public Dungeon getDungeon() {
+		return dungeon;
+	}
+
+	public void setDungeon(Dungeon dungeon) {
+		this.dungeon = dungeon;
 	}
 }

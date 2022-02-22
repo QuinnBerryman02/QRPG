@@ -8,6 +8,7 @@ public class Chunk {
     private static final int  FLIPPED_DIAGONALLY_FLAG   = 0x20000000;
     private Element data;
     private Element layer;
+    private int[] trueCoords;
     public Chunk(Element data, Element layer) {
         this.data = data;
         this.layer = layer;
@@ -52,5 +53,13 @@ public class Chunk {
     public String toStringSimple() {
         return "x=" + data.getAttribute("x") + 
         " y=" + data.getAttribute("y");
+    }
+
+    public void setTrueCoords(int[] trueCoords) {
+        this.trueCoords = trueCoords;
+    }
+
+    public int[] getTrueCoords() {
+        return trueCoords;
     }
 }

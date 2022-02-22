@@ -12,6 +12,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 
 public class Map {
+    public static final int[] DUNGEON_START_CHUNK = {256,0};
     private DocumentBuilderFactory factory;
     private DocumentBuilder builder;
     private Document document;
@@ -36,7 +37,7 @@ public class Map {
     public static void main(String[] args) {
         File file = new File("res/map.tmx");
         Map mapLoader = new Map(file);
-        ArrayList<Chunk> chunks = mapLoader.getChunksByCoordinate(-32, -64);
+        ArrayList<Chunk> chunks = mapLoader.getChunksByCoordinate(-32, -64,null);
         chunks.forEach((c) -> System.out.println(((Chunk)c).getData().getTextContent()));
         mapLoader.printChunksByCoordinate(-32, -64);
         System.out.println(chunks.get(3).getTile(15, 15));
@@ -63,8 +64,15 @@ public class Map {
         }
     }
 
-    public ArrayList<Chunk> getChunksByCoordinate(int x, int y) {
+    public ArrayList<Chunk> getChunksByCoordinate(int x, int y, Dungeon dungeon) {
         ArrayList<Chunk> chunksAtPosition = new ArrayList<Chunk>();
+        if(dungeon!=null) {
+            Dungeon.CTYPE c =  dungeon.getChunkByCoords(x, y);
+            int[] chunkCoords = dungeon.getChunkCoords(c);
+            //System.out.println(c + " coords: " + chunkCoords);
+            x = chunkCoords[0];
+            y = chunkCoords[1];
+        }
         for (int i=0;i<chunks.getLength();i++) {
             Element chunk = (Element)chunks.item(i);
             Element layer = (Element)chunk.getParentNode().getParentNode();   
@@ -75,8 +83,7 @@ public class Map {
         return chunksAtPosition;
     }
 
-    public ArrayList<Chunk> findClosestChunks(Point3f p) {
-        ArrayList<Chunk> nearestChunks = new ArrayList<Chunk>();
+    public int[][] findClosestChunkCoords(Point3f p) {
         int[] tile = findTile(p);
         int x = tile[0];
         int y = tile[1];
@@ -98,12 +105,22 @@ public class Map {
         //System.out.println("X: " + x + " y: " + y + " closeX: " + closestX + " closeY: " + closestY);
         int[] chunkColumms = new int[] {closestX - 32, closestX - 16, closestX, closestX + 16};
         int[] chunkRows = new int[] {closestY - 32, closestY - 16, closestY, closestY + 16};
-        //System.out.println("Player x=" + x + " y=" + y);
+        return new int[][] {chunkColumms, chunkRows};
+    }
+
+    public ArrayList<Chunk> findClosestChunks(Point3f p, Dungeon dungeon) {
+        ArrayList<Chunk> nearestChunks = new ArrayList<Chunk>();
+        int[][] coords = findClosestChunkCoords(p);
+        int[] chunkRows = coords[1];
+        int[] chunkColumms = coords[0];
         for (int i : chunkRows) {
             for (int j : chunkColumms) {
-                ArrayList<Chunk> chunks = getChunksByCoordinate(j, i);
-                chunks.forEach((c) -> nearestChunks.add(c));
-                //System.out.print(chunks.size()>0 ? chunks.get(0).toStringSimple() + " | ": "empty | ");
+                ArrayList<Chunk> foundChunks = getChunksByCoordinate(j, i, dungeon);
+                foundChunks.forEach((c) -> {
+                    nearestChunks.add(c);
+                    c.setTrueCoords(new int[] {j,i});
+                });
+                //System.out.print(foundChunks.size()>0 ? foundChunks.get(0).toStringSimple() + " | ": "empty | ");
             }
             //System.out.println();
         }
@@ -123,11 +140,11 @@ public class Map {
         return new int[]{(int)Math.floor((double)p.getX()), (int)Math.floor((double)p.getY())};
     }
 
-    public int getIdAudioLayer(Point3f p) {
+    public int getIdAudioLayer(Point3f p, Dungeon dungeon) {
         int[] tile = findTile(p);
         int x = tile[0], y = tile[1];
-        ArrayList<Chunk> chunks = getChunksByCoordinate(x - (x % 16 + 16) % 16,y - (y % 16 + 16) % 16);
-        for (Chunk chunk : chunks) {
+        ArrayList<Chunk> foundChunks = getChunksByCoordinate(x - (x % 16 + 16) % 16,y - (y % 16 + 16) % 16, dungeon);
+        for (Chunk chunk : foundChunks) {
             if(chunk.getLayer().getAttribute("name").equals("audio")) {
                 return chunk.getTile((y % 16 + 16) % 16, (x % 16 + 16) % 16);
             }
@@ -135,7 +152,7 @@ public class Map {
         return 0;
     }
 
-    public int[][] findCollisionTilesNearbyAPoint(Point3f p, int radius) {
+    public int[][] findCollisionTilesNearbyAPoint(Point3f p, int radius, Dungeon dungeon) {
         int[][] collisions = new int[2 * radius + 1][2 * radius + 1];
         int[] tile = findTile(p);
         int x = tile[0];
@@ -152,7 +169,7 @@ public class Map {
                 if(collisions[i].length - j - 1 < positionInChunkX - (15 - radius)) chunkX += 16;
                 if(i < radius - positionInChunkY)                                   chunkY -= 16;
                 if(collisions.length - i - 1 < positionInChunkY - (15 - radius))    chunkY += 16;
-                ArrayList<Chunk> allLayers = getChunksByCoordinate(chunkX, chunkY);
+                ArrayList<Chunk> allLayers = getChunksByCoordinate(chunkX, chunkY, dungeon);
                 allLayers.removeIf((c) -> !c.getLayer().getAttribute("name").equals("collisions"));
                 if(allLayers.isEmpty()) {
                     collisions[i][j] = 0;
