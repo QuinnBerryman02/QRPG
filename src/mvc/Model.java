@@ -82,6 +82,11 @@ public class Model {
 			});
 			AudioManager am = MainWindow.getAudioManager();
 			int id = map.getIdAudioLayer(player.getCentre(), dungeon.isInThis());
+			if(dungeon.isInThis()!=null) {
+				if(dungeon.getType().equals(Dungeon.DType.CAVE)) {
+					am.playSongByTileId(639 + 36);
+				}
+			}
 			if(!player.isInCombat()) {
 				am.playSongByTileId(id);
 			} else {

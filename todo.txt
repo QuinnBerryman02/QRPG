@@ -1,15 +1,27 @@
     List of features to be implemented in the endgame of the project
 
-        Entity)
-[default topics] create the rest of the NPCs
+        Crucial)
+add support for different types of controller 
+add tutorial / start area
+[boss arena] add final boss
+
+add saving and loading
+add sounds
+fix frame drops for unknown reason
+
+[procedural enemy] add quest chooser ui in the guild
 create default topic response classes, like farmer = tree, wheat, animal ,tools etc + responses
+[default topics] create the rest of the NPCs
+[multi controller] allow player to change buttons for actions
+[save + controls]  add esc / tab menu with settings
+
+        Entity)
+(minor) fix enemy hitboxes
+(minor) add attack damage popups
     <>create enemy class
     <>get enemy sprites and animations
-(minor) fix enemy hitboxes
     <>fix elder witch down direction
     <>write enemy AIs
-[boss arena] add final boss
-(minor) add attack damage popups
     <>fix combat timers to when the agressor dies / becomes non hostile
     <>make npc non hostile after not on screen
 
@@ -18,26 +30,17 @@ create default topic response classes, like farmer = tree, wheat, animal ,tools 
     <>fix projectile collisions
     <>allow projectiles to fly over water / low things
 
-        Performance)
-fix frame drops for unknown reason
-
-        Crucial)
-add support for different types of controller 
-add sounds
+        Music)
     <>add music
     <>make music correspond to each area
-    
-add saving and loading
 
         UI)
-[multi controller] allow player to change buttons for actions
+[quest chooser + procedural enemy] add shop ui
     <>add main menu ui
     <>add camera mode
     <>fixed bug with directions being odd
-[save + controls]  add esc / tab menu with settings
     <>add quest ui
-[procedural enemy] add quest chooser ui in the guild
-[quest chooser + procedural enemy] add shop ui
+
 
         Spells / Projectiles)
 [shop]  lock progress of some elements / aims until unlocked / bought
@@ -55,9 +58,9 @@ add saving and loading
         Map)
     <>create procedurally generated caves and sewers (Binding of Issac style)
     <>render dungeons
-spawn enemyies in dungeon
+spawn enemies in dungeon
 dungeon teleports
-dungeon music
+    <>dungeon music
     <>fix walls in dungeon roofwall -> wall
 create more variants of dungeon, both in type and chunk
 create final boss arena

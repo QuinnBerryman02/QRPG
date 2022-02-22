@@ -345,6 +345,10 @@ public class Dungeon {
         return layer[transformY][transformX];
     }
 
+    public DType getType() {
+        return type;
+    }
+
     public int[] getChunkCoords(CTYPE c) {
         if(c==null) return new int[]{-80, 208};
         switch(type) {
