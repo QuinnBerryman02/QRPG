@@ -320,6 +320,12 @@ public class Model {
 						Vector3f v2 = hb.intersection(c, v);
 						if(v2 != null) return v2;
 						break;
+					case 3236:
+						if(go instanceof Projectile) continue;
+						c = new Hitbox(new Point3f(px - SCAN_RANGE + .5f + j,py - SCAN_RANGE + .5f + i,0),1,1);
+						v2 = hb.intersection(c, v);
+						if(v2 != null) return v2;
+						break;
 					case 300:
 						c = new Hitbox(new Point3f(px - SCAN_RANGE + .5f + j,py - SCAN_RANGE + .5f + i,0),1,1);
 						Vector3f wasIntersecting = hb.intersection(c, new Vector3f());
