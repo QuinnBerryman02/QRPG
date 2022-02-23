@@ -329,6 +329,13 @@ public class Viewer extends JPanel {
 		g.drawChars(chunksInfo, 0, chunksInfo.length, 10, 15);
 		g.drawChars(averageFPS, 0, averageFPS.length, 10, 30);
 		g.drawChars(playerInfo, 0, playerInfo.length, 10, 45);
+		Dungeon d = gameWorld.getDungeon().isInThis();
+		if(d!=null) {
+			char[] dungeonInfo = ("Current Dungeon: " + String.valueOf(d.getType())).toCharArray();
+			char[] dungeonLevelInfo = ("Current Floor: " + String.valueOf(d.getCurrentLayer())).toCharArray();
+			g.drawChars(dungeonInfo, 0, dungeonInfo.length, 10, 60);
+			g.drawChars(dungeonLevelInfo, 0, dungeonLevelInfo.length, 10, 75);
+		}
 	}
 
 	public void drawCollisionsNearby(Graphics g) {

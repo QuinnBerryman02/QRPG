@@ -9,6 +9,8 @@ public class Dungeon {
     private static final int MAX_SIZE = 9;
     private static final int MAX_STEP_AMOUNT = MAX_SIZE * MAX_SIZE;
     private static final float SINUOSITY_FACTOR = 0.5f;
+    private static final int[][] SPAWN_LOCATIONS = {{6,1}, {11,1}, {14,4}, {14,9}, {11,12}, {6,12}, {3,9}, {3,4}};
+    private ArrayList<boolean[][]> cleared = new ArrayList<boolean[][]>();
     private int currentLayer = -1; 
     private DType type;
     private ArrayList<CTYPE[][]> layers = new ArrayList<CTYPE[][]>();
@@ -197,6 +199,7 @@ public class Dungeon {
         layers.add(layer);
         entries.add(new int[] {startX,startY});
         exits.add(new int[] {endX,endY});
+        cleared.add(new boolean[MAX_SIZE][MAX_SIZE]);
     }
 
     public int minStepsToExit(CTYPE[][] layer, int sx, int sy, int dx, int dy) {
@@ -235,14 +238,22 @@ public class Dungeon {
         return MAX_STEP_AMOUNT+1;
     }
 
-    public int[][] createCheckArray() {
-        int[][] array = new int[MAX_SIZE][MAX_SIZE];
-        for (int[] sub : array) {
-            for(int i=0;i<sub.length;i++) {
-                sub[i] = -1;
+    public Enemy[] generateEnemies(int x, int y) {
+        Random r = new Random();
+        int dx = x * 16 + Map.DUNGEON_START_CHUNK[0];
+        int dy = y * 16 + Map.DUNGEON_START_CHUNK[1];
+        Enemy[] enemies = new Enemy[8];
+        for(int i=0;i<enemies.length;i++) {
+            double isEnemy = r.nextDouble();
+            if(isEnemy < 0.5) {
+                int px = SPAWN_LOCATIONS[i][0];
+                int py = SPAWN_LOCATIONS[i][1];
+                Enemy.Type t = Enemy.Type.values()[r.nextInt(Enemy.Type.values().length)];
+                Enemy e = new Enemy(t, 0.5f, 0.5f, new Point3f(dx+px,dy+py,0), 100 * (currentLayer/5+1), 10 * (currentLayer/5+1), 100 * (currentLayer/5+1));
+                enemies[i] = e;
             }
         }
-        return array;
+        return enemies;
     }
 
     public void printLayer(int index) {
@@ -343,6 +354,10 @@ public class Dungeon {
             return CTYPE.EMPTY;
         }
         return layer[transformY][transformX];
+    }
+
+    public ArrayList<boolean[][]> getCleared() {
+        return cleared;
     }
 
     public DType getType() {

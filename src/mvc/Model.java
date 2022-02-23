@@ -68,6 +68,24 @@ public class Model {
 	public void gamelogic() { 
 		synchronized(this) {
 			entitiesLoaded.clear();
+			if(dungeon.isInThis()!=null) {
+				int[] coord = map.findTile(player.getCentre());
+				int x = coord[0];
+				int y = coord[1];
+				int cx = x - (x % 16 + 16) % 16;
+				int cy = y - (y % 16 + 16) % 16;
+				Dungeon.CTYPE chunkType = dungeon.getChunkByCoords(cx, cy);
+				if(chunkType.ordinal()-8 <= 2) {
+					int transformX = (cx - Map.DUNGEON_START_CHUNK[0]) / 16;
+					int transformY = (cy - Map.DUNGEON_START_CHUNK[1]) / 16;
+					if(!dungeon.getCleared().get(dungeon.getCurrentLayer())[transformY][transformX]) {
+						dungeon.getCleared().get(dungeon.getCurrentLayer())[transformY][transformX] = true;
+						Enemy[] enemies = dungeon.generateEnemies(transformX, transformY);
+						for(Enemy e : enemies) if(e!=null) {entities.add(e); System.out.println(e);};
+						System.out.println();
+					}
+				}
+			}
 			entities.forEach(e -> {
 				if(Viewer.isEntityOnscreen(e, player.getCentre())) {
 					if(!e.isDead()) entitiesLoaded.add(e);
@@ -86,12 +104,14 @@ public class Model {
 				if(dungeon.getType().equals(Dungeon.DType.CAVE)) {
 					am.playSongByTileId(639 + 36);
 				}
-			}
-			if(!player.isInCombat()) {
-				am.playSongByTileId(id);
 			} else {
-				am.playSongByTileId(666);
+				if(!player.isInCombat()) {
+					am.playSongByTileId(id);
+				} else {
+					am.playSongByTileId(666);
+				}
 			}
+			
 			for (Entity e : entitiesLoaded) {
 				if(e instanceof Player) {
 					playerLogic(); 

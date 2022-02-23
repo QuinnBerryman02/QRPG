@@ -195,8 +195,8 @@ public class Enemy extends Entity{
 
     public void generateSpell(Type t){
         Spell s = new Spell();
-        s.setAim(Spell.Aim.AIM_BY_MOUSE);
-        s.setDamage((new Random()).nextInt(10) + 5);
+        s.setAim(Spell.Aim.values()[(new Random()).nextInt((int)getMaxMana()/100)]);
+        s.setDamage((new Random()).nextInt((int)getDamage()) + 5);
         s.setRadius((new Random()).nextFloat() / 2f + 0.25f);
         switch(type) {
             case CULTIST:
