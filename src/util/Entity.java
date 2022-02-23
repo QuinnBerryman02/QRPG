@@ -10,7 +10,6 @@ public abstract class Entity extends GameObject {
     private AnimationPhase phase = AnimationPhase.NEUTRAL;
     private Direction direction = Direction.UP;
     private boolean verticalMovement = false;
-    private boolean inCombat = false;
     private boolean dead = false;
     private float hostileSpeed = 4;
     private int progress = 0;
@@ -237,46 +236,43 @@ public abstract class Entity extends GameObject {
         }
     }
 
-    public void attack(Entity other) {
-        inCombatWith.add(other);
-        if(!inCombat) {
-            (new Thread() {
-                @Override
-                public void run() {
-                    do {
-                        boolean self = !isDead() && isHostile();
-                        boolean any = false;
-                        for(int i=0;i<inCombatWith.size();i++) {
-                            if(other.isHostile() && !other.isDead()) {
-                                any = true;
-                            } else {
-                                inCombatWith.remove(other);
-                            }
-                        }
-                        if (self && any) {
-                            inCombat = true;
-                            try {
-                                
-                                sleep(500);
-                            } catch (Exception e) {}
-                            
-                        } else {
-                            inCombat = false;
-                        }
-                    } while (inCombat);
-                }
-            }).start();
+    public void updateCombat() {
+        if(dead) {
+            inCombatWith.forEach(e -> e.setHostile(false));
+            return;
         }
+        for(int i=0;i<inCombatWith.size();i++) {
+            Entity e = inCombatWith.get(i);
+            if(!e.isHostile() || e.isDead()) {
+                inCombatWith.remove(e);
+                i--;
+            }
+        }
+    }
+
+    public void commenceCombat(Entity other) {
+        setHostile(true);
+        if(!other.getInCombatWith().contains(this)) {
+            other.getInCombatWith().add(this);
+        }
+    }
+
+    public ArrayList<Entity> getInCombatWith() {
+        return inCombatWith;
     }
 
     public void dealDamage(float damage, Entity other) {
         if(dead) return;
-        if(!isHostile()) setHostile(true);
         health -= damage;
         if(health <= 0) {
             die();
         } else {
-            attack(other);
+            if(other instanceof Player) {
+                commenceCombat(other);
+            }
+            if(this instanceof Player) {
+                other.commenceCombat(this);
+            }
         }
     }
 
@@ -293,14 +289,11 @@ public abstract class Entity extends GameObject {
     }
 
     public boolean healthBarVisible() {
-        return (health <= 0.33f * maxHealth) || inCombat;
+        return (health <= 0.33f * maxHealth) || isHostile();
     }
 
     public boolean isInCombat() {
-        return inCombat;
-    }
-    public void setInCombat(boolean inCombat) {
-        this.inCombat = inCombat;
+        return !inCombatWith.isEmpty();
     }
 
     public void die() {

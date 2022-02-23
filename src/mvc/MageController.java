@@ -9,7 +9,7 @@ public class MageController extends AIController{
     public void run(Model m) {
         setMouseX(MainWindow.getW()/2);
         setMouseY(MainWindow.getH()/2);
-        if(entity.isInCombat()) {
+        if(entity.isHostile()) {
             if(m.inRangeOfPlayer(entity, RANGE)) {
                 setKeyEPressed(true);
                 pressMoveButtons(new Vector3f());

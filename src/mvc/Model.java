@@ -89,29 +89,28 @@ public class Model {
 			entities.forEach(e -> {
 				if(Viewer.isEntityOnscreen(e, player.getCentre())) {
 					if(!e.isDead()) entitiesLoaded.add(e);
-					if(e instanceof Enemy) {
+					if(e instanceof Enemy && !e.isDead()) {
 						e.setHostile(true);
-						e.attack(player);
-						player.attack(e);
+						e.commenceCombat(player);
 					}
 				} else {
 					e.setHostile(false);
 				}
 			});
+			player.updateCombat();
 			AudioManager am = MainWindow.getAudioManager();
 			int id = map.getIdAudioLayer(player.getCentre(), dungeon.isInThis());
-			if(dungeon.isInThis()!=null) {
-				if(dungeon.getType().equals(Dungeon.DType.CAVE)) {
-					am.playSongByTileId(639 + 36);
-				}
+			if(player.isInCombat()) {
+				am.playSongByTileId(666);
 			} else {
-				if(!player.isInCombat()) {
-					am.playSongByTileId(id);
+				if(dungeon.isInThis()!=null) {
+					if(dungeon.getType().equals(Dungeon.DType.CAVE)) {
+						am.playSongByTileId(639 + 36);
+					}
 				} else {
-					am.playSongByTileId(666);
+					am.playSongByTileId(id);
 				}
 			}
-			
 			for (Entity e : entitiesLoaded) {
 				if(e instanceof Player) {
 					playerLogic(); 
@@ -240,7 +239,6 @@ public class Model {
 							if(other.isDead()) break;
 							System.out.println(e.getClass().getName() + " punched " + other.getClass().getName());
 							other.dealDamage((new Random()).nextInt((int)e.getDamage()),e);
-							e.attack(other);
 							if(e instanceof Player) updateQuests(other);
 						}
 					}
@@ -305,7 +303,6 @@ public class Model {
 						if(!other.isDead()) {
 							System.out.println("Projectile hit " + other.getClass().getName());
 							other.dealDamage((new Random()).nextInt((int)p.getDamage()),p.getCaster());
-							p.getCaster().attack(other);
 							if((p.getCaster()) instanceof Player) updateQuests(other);
 						}
 						return true;

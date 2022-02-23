@@ -58,7 +58,7 @@ public class Viewer extends JPanel {
 	private Point3f cameraOffset;
 	private boolean inCameraMode = true;
 	private boolean goingToPlayer = false;
-	private boolean inDebugMode = true;
+	private boolean inDebugMode = false;
 	private Model gameWorld; 
 	private ArrayList<Chunk> chunksLoaded = new ArrayList<Chunk>();
 	private ArrayList<Entity> entitiesLoaded = new ArrayList<Entity>();
