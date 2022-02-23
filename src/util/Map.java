@@ -218,12 +218,70 @@ public class Map {
         return Arrays.asList(layerOrder).indexOf(layer);
     }
 
-    public Point3f findTeleportPointByOther(String type, Point3f p) {
-        return doorLoader.findTeleportPointByOther(type,p);
+    public Point3f findTeleportPointByOther(String type, Point3f p, Dungeon dungeon) {
+        if(type.equals("caves")) {
+            if(dungeon.isInThis()==null) {
+                dungeon.setCurrentLayer(0);
+                int[] startCoords = dungeon.getEntries().get(0);
+                int[] getDoorCoords = dungeon.getDoorCoords(1);
+                int x = (startCoords[0] * 16 + Map.DUNGEON_START_CHUNK[0]) + getDoorCoords[0];
+		        int y = (startCoords[1] * 16 + Map.DUNGEON_START_CHUNK[1]) + getDoorCoords[1];
+                return new Point3f(x,y,0);
+            } else {
+                System.out.println("Inner cave door (layer " + dungeon.getCurrentLayer() + ")");
+                int[] tile = findTile(p);
+                int x = tile[0];
+                int y = tile[1];
+                int chunkX = x - (x % 16 + 16) % 16;
+                int chunkY = y - (y % 16 + 16) % 16;
+                int transformX = (chunkX - Map.DUNGEON_START_CHUNK[0]) / 16;
+                int transformY = (chunkY - Map.DUNGEON_START_CHUNK[1]) / 16;
+                int[] loc = {transformX, transformY};
+                boolean entry = false;
+                int layer = dungeon.getCurrentLayer();
+                int[] entryCoord = dungeon.getEntries().get(layer);
+                int[] exitCoord = dungeon.getExits().get(layer);
+                if (loc[0]==entryCoord[0] && loc[1]==entryCoord[1]) {
+                    System.out.print("via Entry ");
+                    entry=true;
+                } else if (loc[0]==exitCoord[0] && loc[1]==exitCoord[1]) {
+                    System.out.print("via Exit ");
+                    entry=false;
+                }
+                layer += entry ? -1 : 1;
+                int px = (x % 16 + 16) % 16;
+                dungeon.setCurrentLayer(layer);
+                if(layer<0) {
+                    System.out.println("Leaving Caves (layer " + layer + ")");
+                    return doorLoader.findTeleportPointByOther(type, p);
+                } else if(layer>=dungeon.getLayers().size()) {
+                    System.out.println("Going deeper than ever before (layer " + layer + ")");
+                    dungeon.generateNewLayer();
+                    int[] newCoords = dungeon.getEntries().get(layer);
+                    int[] doorCoords = dungeon.getDoorCoords(px - 7);
+                    int newX = (newCoords[0] * 16 + Map.DUNGEON_START_CHUNK[0]) + doorCoords[0];
+		            int newY = (newCoords[1] * 16 + Map.DUNGEON_START_CHUNK[1]) + doorCoords[1];
+                    return new Point3f(newX,newY,0);
+                } else {
+                    System.out.println("Changing Floors (layer " + layer + ")");
+                    int[] newCoords = entry ? dungeon.getExits().get(layer) : dungeon.getEntries().get(layer);
+                    int[] doorCoords = dungeon.getDoorCoords(px - 7);
+                    int newX = (newCoords[0] * 16 + Map.DUNGEON_START_CHUNK[0]) + doorCoords[0];
+		            int newY = (newCoords[1] * 16 + Map.DUNGEON_START_CHUNK[1]) + doorCoords[1];
+                    return new Point3f(newX,newY,0);
+                }
+            }
+        } else {
+            return doorLoader.findTeleportPointByOther(type,p);
+        }
     }
     
-    public String findTeleportTypeByPoint(Point3f p) {
-        return doorLoader.findTeleportTypeByPoint(p);
+    public String findTeleportTypeByPoint(Point3f p, Dungeon dungeon) {
+        if(dungeon.isInThis()!=null) {
+            return "caves";
+        } else {
+            return doorLoader.findTeleportTypeByPoint(p);
+        }
     }
 }
 

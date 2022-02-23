@@ -39,6 +39,7 @@ create default topic response classes, like farmer = tree, wheat, animal ,tools 
     <>add main menu ui
     <>add camera mode
     <>fixed bug with directions being odd
+fix camera bounce
     <>add quest ui
 
 
@@ -58,9 +59,10 @@ create default topic response classes, like farmer = tree, wheat, animal ,tools 
         Map)
     <>create procedurally generated caves and sewers (Binding of Issac style)
     <>render dungeons
-spawn enemies in dungeon
-dungeon teleports
+    <>dungeon teleports
     <>dungeon music
     <>fix walls in dungeon roofwall -> wall
+spawn enemies in dungeon
+dungeon UI to show floor / enemies killed or something etc 
 create more variants of dungeon, both in type and chunk
 create final boss arena

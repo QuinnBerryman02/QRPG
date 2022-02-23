@@ -208,5 +208,7 @@
    <door x="-12" y="-118">town_house_16_second</door>
    <door x="-66" y="-95">town_house_16_basement</door>
    <door x="55" y="-119">town_house_16_basement</door>
+
+   <door x="-46" y="3">caves</door>
 </doors>
 

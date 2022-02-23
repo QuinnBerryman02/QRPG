@@ -343,8 +343,8 @@ public class Model {
 								Player p = (Player)go;
 								if(p.getController().isKeyUpPressed()) {
 									Point3f portalPoint = new Point3f(px - SCAN_RANGE + j, py - SCAN_RANGE + i, 0f);
-									String teleport = map.findTeleportTypeByPoint(portalPoint);
-									Point3f destinationPoint = map.findTeleportPointByOther(teleport, portalPoint); 
+									String teleport = map.findTeleportTypeByPoint(portalPoint, dungeon);
+									Point3f destinationPoint = map.findTeleportPointByOther(teleport, portalPoint, dungeon); 
 									System.out.println("Teleporting from " + portalPoint + " to " + destinationPoint + " via " + teleport);
 									p.getController().setKeyUpPressed(false);
 									p.move(new Point3f(destinationPoint.getX()+0.5f,destinationPoint.getY()+0.5f,0f).minusPoint(p.getCentre()));

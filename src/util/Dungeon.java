@@ -6,7 +6,7 @@ import java.util.Queue;
 import java.util.Random;
 
 public class Dungeon {
-    private static final int MAX_SIZE = 15;
+    private static final int MAX_SIZE = 9;
     private static final int MAX_STEP_AMOUNT = MAX_SIZE * MAX_SIZE;
     private static final float SINUOSITY_FACTOR = 0.5f;
     private int currentLayer = -1; 
@@ -84,14 +84,14 @@ public class Dungeon {
                             if(which >=0 && which < 0.5) {
                                 layer[y][x] = CTYPE.CENTER_A;
                             } else {
-                                layer[y][x] = layers.size()>=1 ? CTYPE.CENTER_C : CTYPE.CENTER_B;
+                                layer[y][x] = layers.size()>=5 ? CTYPE.CENTER_C : CTYPE.CENTER_B;
                             }
                             continue;
                         }
                         if(which >=0 && which < 0.33) {
                             layer[y][x] = CTYPE.CENTER_A;
                         } else if (which >=0.33 && which < 0.66) {
-                            layer[y][x] = layers.size()>=1 ? CTYPE.CENTER_C : CTYPE.CENTER_B;
+                            layer[y][x] = layers.size()>=5 ? CTYPE.CENTER_C : CTYPE.CENTER_B;
                         } else {
                             layer[y][x] = CTYPE.EMPTY;
                         }
@@ -408,5 +408,9 @@ public class Dungeon {
 
     public Dungeon isInThis() {
         return currentLayer==-1 ? null : this;
+    }
+
+    public int[] getDoorCoords(int which) {
+        return new int[]{7+which, 9};
     }
 }
