@@ -6,7 +6,7 @@ import java.util.Queue;
 import java.util.Random;
 
 public class Dungeon {
-    private static final int MAX_SIZE = 9;
+    public static final int MAX_SIZE = 9;
     private static final int MAX_STEP_AMOUNT = MAX_SIZE * MAX_SIZE;
     private static final float SINUOSITY_FACTOR = 0.5f;
     private static final int[][] SPAWN_LOCATIONS = {{6,1}, {11,1}, {14,4}, {14,9}, {11,12}, {6,12}, {3,9}, {3,4}};
@@ -45,13 +45,13 @@ public class Dungeon {
         this.type = type;
         while(numLayers-->0) {
             generateNewLayer();
+            printLayer(layers.size()-1);
         }
+        
     }
 
     public static void main(String[] args) {
-        Dungeon d = new Dungeon(DType.SEWER,2);
-        d.printLayer(0);
-        d.printLayer(1);
+        Dungeon d = new Dungeon(DType.SEWER,10);
     }
 
     public void generateNewLayer() {
@@ -62,10 +62,12 @@ public class Dungeon {
         CTYPE first = layers.isEmpty() ? CTYPE.WORLD_ENTRANCE : CTYPE.FLOOR_ENTRANCE;
         int startX = r.nextInt(MAX_SIZE/2) * 2 + 1;
         int startY = r.nextInt(MAX_SIZE/2) * 2;
-        int endX, endY, dx, dy;
+        int endX=startX, endY=startY, dx, dy;
         int attempts = 0;
         int test = MAX_STEP_AMOUNT;
         for(;;) {
+            layer[startY][startX] = null;
+            layer[endY][endX] = null;
             do {
                 endX = r.nextInt(MAX_SIZE/2) * 2 + 1;
                 endY = r.nextInt(MAX_SIZE/2) * 2;
@@ -100,13 +102,13 @@ public class Dungeon {
                     }
                 }
                 test = minStepsToExit(layer, startX, startY+1, endX, endY+1);
-                System.out.println("Attempt: " + attempts++);
-            } while((test>MAX_STEP_AMOUNT || test < (MAX_SIZE * SINUOSITY_FACTOR)) && attempts < 10);
+                //System.out.println("Attempt: " + attempts++);
+            } while((test>MAX_STEP_AMOUNT || test < (MAX_SIZE * SINUOSITY_FACTOR)) && attempts++ < 10);
             if(attempts<10) break;
             attempts=0;
-            System.out.println("Redoing Intial conditions");
+            //System.out.println("Redoing Intial conditions");
         }
-        System.out.println("Successful Attempt!");
+        //System.out.println("Successful Attempt!");
         //edges
         for(int y=0;y<MAX_SIZE;y++) {
             int xOff = (y + 1) % 2;
@@ -238,10 +240,33 @@ public class Dungeon {
         return MAX_STEP_AMOUNT+1;
     }
 
-    public Enemy[] generateEnemies(int x, int y) {
+    public int[] dungeonSpaceToWorldSpace(int[] d) {
+        int cx = d[0] * 16 + (Map.DUNGEON_START_CHUNK[0] * (currentLayer+1));
+        int cy = d[1] * 16 + (Map.DUNGEON_START_CHUNK[1] * (currentLayer+1));
+        return new int[] {cx, cy};
+    }
+
+    public int[] worldSpaceToDungeonSpace(Point3f p) {
+        int[] tile = Map.findTile(p);
+        int x = tile[0];
+        int y = tile[1];
+        int cx = x - (x % 16 + 16) % 16;
+        int cy = y - (y % 16 + 16) % 16;
+        int dx = (cx - Map.DUNGEON_START_CHUNK[0] * (currentLayer+1)) / 16;
+        int dy = (cy - Map.DUNGEON_START_CHUNK[1] * (currentLayer+1)) / 16;
+        return new int[] {dx, dy};
+    }
+
+    public Enemy[] generateEnemies(Point3f p) {
+        int[] d = worldSpaceToDungeonSpace(p);
+        if(cleared.get(currentLayer)[d[1]][d[0]]) {
+            return null;
+        }
+        cleared.get(currentLayer)[d[1]][d[0]] = true;
         Random r = new Random();
-        int dx = x * 16 + Map.DUNGEON_START_CHUNK[0];
-        int dy = y * 16 + Map.DUNGEON_START_CHUNK[1];
+        int[] c = dungeonSpaceToWorldSpace(d);
+        int cx = c[0];
+        int cy = c[1];
         Enemy[] enemies = new Enemy[8];
         for(int i=0;i<enemies.length;i++) {
             double isEnemy = r.nextDouble();
@@ -249,7 +274,7 @@ public class Dungeon {
                 int px = SPAWN_LOCATIONS[i][0];
                 int py = SPAWN_LOCATIONS[i][1];
                 Enemy.Type t = Enemy.Type.values()[r.nextInt(Enemy.Type.values().length)];
-                Enemy e = new Enemy(t, 0.5f, 0.5f, new Point3f(dx+px,dy+py,0), 100 * (currentLayer/5+1), 10 * (currentLayer/5+1), 100 * (currentLayer/5+1));
+                Enemy e = new Enemy(t, 0.5f, 0.5f, new Point3f(cx+px,cy+py,0), 100 * (currentLayer/5+1), 10 * (currentLayer/5+1), 100 * (currentLayer/5+1));
                 enemies[i] = e;
             }
         }
@@ -346,14 +371,13 @@ public class Dungeon {
         return layers;
     }
 
-    public CTYPE getChunkByCoords(int x, int y) {       //128 + x*16   //0 + y*16
+    public CTYPE getChunkByCoords(Point3f p) {       //128 + x*16   //0 + y*16
         CTYPE[][] layer = layers.get(currentLayer);
-        int transformX = (x - Map.DUNGEON_START_CHUNK[0]) / 16;
-        int transformY = (y - Map.DUNGEON_START_CHUNK[1]) / 16;
-        if(transformX<0 || transformX >= MAX_SIZE || transformY < 0 || transformY >= MAX_SIZE) {
+        int[] d = worldSpaceToDungeonSpace(p);
+        if(d[0]<0 || d[0] >= MAX_SIZE || d[1] < 0 || d[1] >= MAX_SIZE) {
             return CTYPE.EMPTY;
         }
-        return layer[transformY][transformX];
+        return layer[d[1]][d[0]];
     }
 
     public ArrayList<boolean[][]> getCleared() {

@@ -9,9 +9,9 @@ add saving and loading
 add sounds
 fix frame drops for unknown reason
 
-[procedural enemy] add quest chooser ui in the guild
 create default topic response classes, like farmer = tree, wheat, animal ,tools etc + responses
 [default topics] create the rest of the NPCs
+[more npcs] add quest chooser ui in the guild
 [multi controller] allow player to change buttons for actions
 [save + controls]  add esc / tab menu with settings
 
@@ -63,9 +63,12 @@ fix camera bounce
     <>dungeon music
     <>fix walls in dungeon roofwall -> wall
     <>spawn enemies in dungeon
-fix enemy sprite glitching
+fix enemy / all? sprite glitching when casting
     <>fix combat system again
-fix enemies spawning in walls / not despawning on different floors
+    <>fix dungeon gen
+    <>fix dungeon teleports
+    <>fix enemies spawning in walls
+    <> fix not despawning on different floors
     <>dungeon UI to show floor / enemies killed or something etc 
 create more variants of dungeon, both in type and chunk
 create final boss arena

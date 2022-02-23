@@ -58,7 +58,7 @@ public class Viewer extends JPanel {
 	private Point3f cameraOffset;
 	private boolean inCameraMode = true;
 	private boolean goingToPlayer = false;
-	private boolean inDebugMode = false;
+	private boolean inDebugMode = true;
 	private Model gameWorld; 
 	private ArrayList<Chunk> chunksLoaded = new ArrayList<Chunk>();
 	private ArrayList<Entity> entitiesLoaded = new ArrayList<Entity>();
@@ -308,13 +308,14 @@ public class Viewer extends JPanel {
 
 	public void drawChunkLines(Graphics g) {
 		for (Chunk chunk : chunksLoaded) {
-			Point3f worldPoint = new Point3f(Float.parseFloat(chunk.getData().getAttribute("x")), Float.parseFloat(chunk.getData().getAttribute("y")),0f);
+			int[] chunkCoords = chunk.getTrueCoords();
+			Point3f worldPoint = new Point3f(chunkCoords[0],chunkCoords[1],0f);
 			Point3f relativePoint = worldSpaceToScreen(worldPoint);
 			int x = (int)relativePoint.getX();
 			int y = (int)relativePoint.getY();
 			g.setColor(new Color(1f,1f,1f,1f));
 			g.drawRect(x, y, CHUNK_SIZE * UNIT_DEF, CHUNK_SIZE * UNIT_DEF);
-			char[] chunkInfo = ("x=" + chunk.getData().getAttribute("x") + " y=" + chunk.getData().getAttribute("y")).toCharArray();
+			char[] chunkInfo = ("x=" + chunkCoords[0] + " y=" + chunkCoords[1]).toCharArray();
 			g.setFont(new Font("Debug", Font.BOLD, 15));
 			g.drawChars(chunkInfo, 0, chunkInfo.length, x+ 15, y+15);
 		}

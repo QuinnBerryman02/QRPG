@@ -12,7 +12,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 
 public class Map {
-    public static final int[] DUNGEON_START_CHUNK = {256,0};
+    public static final int[] DUNGEON_START_CHUNK = {Dungeon.MAX_SIZE*16+96,0};
     private DocumentBuilderFactory factory;
     private DocumentBuilder builder;
     private Document document;
@@ -67,7 +67,7 @@ public class Map {
     public ArrayList<Chunk> getChunksByCoordinate(int x, int y, Dungeon dungeon) {
         ArrayList<Chunk> chunksAtPosition = new ArrayList<Chunk>();
         if(dungeon!=null) {
-            Dungeon.CTYPE c =  dungeon.getChunkByCoords(x, y);
+            Dungeon.CTYPE c =  dungeon.getChunkByCoords(new Point3f(x,y,0));
             int[] chunkCoords = dungeon.getChunkCoords(c);
             //System.out.println(c + " coords: " + chunkCoords);
             x = chunkCoords[0];
@@ -136,7 +136,7 @@ public class Map {
         return nearestChunks;
     }
 
-    public int[] findTile(Point3f p) {
+    public static int[] findTile(Point3f p) {
         return new int[]{(int)Math.floor((double)p.getX()), (int)Math.floor((double)p.getY())};
     }
 
@@ -224,21 +224,15 @@ public class Map {
                 dungeon.setCurrentLayer(0);
                 int[] startCoords = dungeon.getEntries().get(0);
                 int[] getDoorCoords = dungeon.getDoorCoords(1);
-                int x = (startCoords[0] * 16 + Map.DUNGEON_START_CHUNK[0]) + getDoorCoords[0];
-		        int y = (startCoords[1] * 16 + Map.DUNGEON_START_CHUNK[1]) + getDoorCoords[1];
+                int[] dst = dungeon.dungeonSpaceToWorldSpace(startCoords);
+                int x = dst[0] + getDoorCoords[0];
+		        int y = dst[1] + getDoorCoords[1];
                 return new Point3f(x,y,0);
             } else {
                 System.out.println("Inner cave door (layer " + dungeon.getCurrentLayer() + ")");
-                int[] tile = findTile(p);
-                int x = tile[0];
-                int y = tile[1];
-                int chunkX = x - (x % 16 + 16) % 16;
-                int chunkY = y - (y % 16 + 16) % 16;
-                int transformX = (chunkX - Map.DUNGEON_START_CHUNK[0]) / 16;
-                int transformY = (chunkY - Map.DUNGEON_START_CHUNK[1]) / 16;
-                int[] loc = {transformX, transformY};
-                boolean entry = false;
                 int layer = dungeon.getCurrentLayer();
+                int[] loc = dungeon.worldSpaceToDungeonSpace(p);
+                boolean entry = false;
                 int[] entryCoord = dungeon.getEntries().get(layer);
                 int[] exitCoord = dungeon.getExits().get(layer);
                 if (loc[0]==entryCoord[0] && loc[1]==entryCoord[1]) {
@@ -249,7 +243,9 @@ public class Map {
                     entry=false;
                 }
                 layer += entry ? -1 : 1;
-                int px = (x % 16 + 16) % 16;
+                int px = (findTile(p)[0] % 16 + 16) % 16;
+                int[] doorCoords = dungeon.getDoorCoords(px - 7);
+                int[] newCoords;
                 dungeon.setCurrentLayer(layer);
                 if(layer<0) {
                     System.out.println("Leaving Caves (layer " + layer + ")");
@@ -257,19 +253,15 @@ public class Map {
                 } else if(layer>=dungeon.getLayers().size()) {
                     System.out.println("Going deeper than ever before (layer " + layer + ")");
                     dungeon.generateNewLayer();
-                    int[] newCoords = dungeon.getEntries().get(layer);
-                    int[] doorCoords = dungeon.getDoorCoords(px - 7);
-                    int newX = (newCoords[0] * 16 + Map.DUNGEON_START_CHUNK[0]) + doorCoords[0];
-		            int newY = (newCoords[1] * 16 + Map.DUNGEON_START_CHUNK[1]) + doorCoords[1];
-                    return new Point3f(newX,newY,0);
+                    newCoords = dungeon.getEntries().get(layer);
                 } else {
                     System.out.println("Changing Floors (layer " + layer + ")");
-                    int[] newCoords = entry ? dungeon.getExits().get(layer) : dungeon.getEntries().get(layer);
-                    int[] doorCoords = dungeon.getDoorCoords(px - 7);
-                    int newX = (newCoords[0] * 16 + Map.DUNGEON_START_CHUNK[0]) + doorCoords[0];
-		            int newY = (newCoords[1] * 16 + Map.DUNGEON_START_CHUNK[1]) + doorCoords[1];
-                    return new Point3f(newX,newY,0);
+                    newCoords = entry ? dungeon.getExits().get(layer) : dungeon.getEntries().get(layer);
                 }
+                int[] dst = dungeon.dungeonSpaceToWorldSpace(newCoords);
+                int x = dst[0] + doorCoords[0];
+                int y = dst[1] + doorCoords[1];
+                return new Point3f(x,y,0);
             }
         } else {
             return doorLoader.findTeleportPointByOther(type,p);
