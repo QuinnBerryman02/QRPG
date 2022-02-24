@@ -136,19 +136,20 @@ public class Vector3f {
 	}
 
 	public static void main(String[] args) {
-		Vector3f v = new Vector3f(1f, 1f, 0f);
+		Vector3f v = new Vector3f(1f, 0f, 0f);
 		System.out.println(v.toStringInt());
 		for(int i=0;i<9;i++) {
 			v.rotate(Math.PI/4);
-			System.out.println(v.toStringInt());
+			System.out.println(v.toString());
+			System.out.println(v.rotateCreate(Math.PI/8).roundToOctet());
 		}
 	}
 
     public Vector3f roundToOctet() {
 		double rad = Math.atan2(-y, x);
 		int eighth = Point3f.radToEighth(rad);
-		int vx;
-		int vy;
+		float vx;
+		float vy;
 		switch(eighth % 8) {
 			case 7:case 0:case 1:	vx=-1; break;
 			case 3:case 4:case 5: 	vx=1;  break;

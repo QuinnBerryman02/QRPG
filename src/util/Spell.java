@@ -56,8 +56,10 @@ public class Spell {
                     } catch (Exception e) {}
                     Vector3f[] directions = applyAim(e);
                     for (Vector3f dir : directions) {
-                        Projectile p = new Projectile(radius*2, radius*2, e.getCentre(), dir, damage, e, element, Spell.this);
-                        MainWindow.getModel().getProjectiles().add(p);
+                        if(dir.getX()!=0||dir.getY()!=0) {
+                            Projectile p = new Projectile(radius*2, radius*2, e.getCentre(), dir, damage, e, element, Spell.this);
+                            MainWindow.getModel().getProjectiles().add(p);
+                        }
                     }
                 };
             }).start();

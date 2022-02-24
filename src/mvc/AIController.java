@@ -29,10 +29,9 @@ public class AIController extends Controller{
                 setAttackPressed(true);
                 moveDirection = new Vector3f();
             } else {
-                r.nextInt(4);
                 setAttackPressed(false);
                 Vector3f v = aimDirection.roundToOctet();
-                switch(r.nextInt(4)) {
+                switch(r.nextInt(8)) {
                     case 0:
                         v.rotate((r.nextInt(2)*2-1) * (Math.PI/4.0));     //rotates the direction vector by 45 deg either cw or ccw 
                         break;

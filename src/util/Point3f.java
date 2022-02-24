@@ -145,7 +145,7 @@ public class Point3f {
 			for(int j=-10;j<=10;j+=10) {
 				Point3f e = new Point3f(j,i,0f);
 				Vector3f v = e.calculateDirectionToPoint(p);
-				System.out.printf("[%d,%d] -> [%d,%d] via [%d,%d]\n",j,i,0,0,(int)v.getX(),(int)v.getY());
+				System.out.printf("[%d,%d] -> [%d,%d] via [%f,%f]\n",j,i,0,0,v.getX(),v.getY());
 			} 
 		}
 	}

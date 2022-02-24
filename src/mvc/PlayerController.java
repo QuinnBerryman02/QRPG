@@ -37,6 +37,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		} else {
 			System.out.println("Found Controller");
 			controllerMode = true;
+			
 		}
 		initializeDefaultControls();
 	}
@@ -97,31 +98,36 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 	}
 
 	public Component findComponentByName(String name) {
-		for(Component c : gameController.getComponents()) {
-			if(c.getName().equals(name)) {
-				return c;
+		if(controllerMode) {
+			for(Component c : gameController.getComponents()) {
+				if(c.getName().equals(name)) {
+					return c;
+				}
 			}
 		}
 		return null;
 	}
 	public Component[] findComponentsByName(String[] names) {
-		Component[] cs = new Component[names.length];
-		for(int i=0;i<names.length;i++) {
-			for(Component c : gameController.getComponents()) {
-				if(c.getName().equals(names[i])) {
-					cs[i] = c;
+		if(controllerMode) {
+			Component[] cs = new Component[names.length];
+			for(int i=0;i<names.length;i++) {
+				for(Component c : gameController.getComponents()) {
+					if(c.getName().equals(names[i])) {
+						cs[i] = c;
+					}
 				}
 			}
-		}
-		return cs;
+			return cs;
+		} 
+		return null;
 	}
 
 	public void initializeDefaultControls() {
 		buttonSet.add(makeButton("talk", KeyEvent.VK_T, "Button 1"));		//A
-		buttonSet.add(makeButton("attack", KeyEvent.VK_Q, "Button 2"));		//Y
-		buttonSet.add(makeButton("cast", KeyEvent.VK_E, "Button 3"));		//X
-		buttonSet.add(makeButton("quest", KeyEvent.VK_Y, "Button 4"));		//L
-		buttonSet.add(makeButton("spell", KeyEvent.VK_U, "Button 5"));		//R
+		buttonSet.add(makeButton("quest", KeyEvent.VK_Y, "Button 2"));		//Y
+		buttonSet.add(makeButton("spell", KeyEvent.VK_U, "Button 3"));		//X
+		buttonSet.add(makeButton("attack", KeyEvent.VK_Q, "Button 4"));		//L
+		buttonSet.add(makeButton("cast", KeyEvent.VK_E, "Button 5"));		//R
 		buttonSet.add(makeButton("guild", KeyEvent.VK_G, "Button 6"));		//ZL
 		buttonSet.add(makeButton("skin", KeyEvent.VK_H, "Button 7"));		//ZR
 		toggleSet.add(makeToggle("move", new int[] {KeyEvent.VK_W,KeyEvent.VK_D,KeyEvent.VK_S,KeyEvent.VK_A}, new String[]{"X Axis","Y Axis"}));
@@ -179,7 +185,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		if(!controllerMode) {
-			aimDirection = new Vector3f(1,0,0).rotateCreate(Math.atan2(MainWindow.getH()/2-e.getY(), MainWindow.getW()/2-e.getX()));
+			aimDirection = new Vector3f(1,0,0).rotateCreate(Math.atan2(e.getY()-MainWindow.getH()/2, e.getX()-MainWindow.getW()/2));
 		}
 	}
 
@@ -211,6 +217,8 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 				if(hypeSqrd>PRECISION*PRECISION) {
 					Vector3f v = new Vector3f(1,0,0).rotateCreate(Math.atan2(y, x));
 					setDirectionByName(toggle.getName(), v);
+				} else {
+					setDirectionByName(toggle.getName(), new Vector3f());
 				}
 				
 			}
@@ -263,7 +271,7 @@ class Button {
 class Toggle {
 	private String name;
 	private int[] keys;
-	private boolean[] values;
+	private boolean[] values = {false,false,false,false};
 	private Component[] toggles;
 	public Toggle(String name) {
 		this.name = name;
