@@ -121,8 +121,17 @@ public class Point3f {
 		return new Point3f(x,y,0f);
 	}
 
+	public boolean inBounds(Point3f topleft, Point3f botright) {
+		if(x < topleft.getX()) return false;
+		if(x > botright.getX()) return false;
+		if(y < topleft.getY()) return false;
+		if(y > botright.getY()) return false;
+		return true;
+	}
+
 	public Vector3f bounce(Vector3f v, Point3f topleft, Point3f botright) {
 		Point3f future = this.plusVector(v);
+		
 		Vector3f newV = v.byScalar(1);
 		if(future.getX() < topleft.getX()) newV.setX(newV.getX() * -1);
 		if(future.getX() > botright.getX()) newV.setX(newV.getX() * -1);

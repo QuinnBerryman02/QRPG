@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.function.Predicate;
 
 import mvc.PlayerController;
+import mvc.Viewer;
 
 public class Player extends Entity {
 	private ArrayList<Topic> topics = new ArrayList<Topic>();
@@ -40,6 +41,11 @@ public class Player extends Entity {
 		}
 		return null;
 	}
+
+	public boolean isIndoors() {
+		return !centre.inBounds(Viewer.CAMERA_BOUND_TL, Viewer.CAMERA_BOUND_BR);
+	}
+	
 
 	public int getGold() {
 		return gold;

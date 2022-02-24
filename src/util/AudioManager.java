@@ -8,6 +8,7 @@ import java.util.Random;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 import javax.sound.sampled.LineUnavailableException;
@@ -29,13 +30,19 @@ public class AudioManager {
     private Song lastTownPlayedSong;
 
     public AudioManager() {
+        setup(true);
+    }
+    public AudioManager(boolean playMain) {
+        setup(playMain);
+    }
+    public void setup(boolean playMain) {
         try {
             musicClip = AudioSystem.getClip();
             File folder = new File("./res/music");
             for (File songFile : folder.listFiles()) {
                 Song mb = new Song(songFile);
                 songs.add(mb);
-                if(mb.isMainSong()) mb.play();
+                if(mb.isMainSong()&&playMain) mb.play();
             }
             folder = new File("./res/sounds");
             for(File soundFile : folder.listFiles()) {
@@ -49,7 +56,7 @@ public class AudioManager {
     }
     public static void main(String[] args) {
         try {
-            AudioManager am = new AudioManager();
+            AudioManager am = new AudioManager(false);
             JFrame f = new JFrame();
             f.getContentPane().setLayout(new BoxLayout(f.getContentPane(), BoxLayout.Y_AXIS));
             am.songs.forEach(s -> f.add(am.new SongButton(s)));
@@ -209,6 +216,7 @@ public class AudioManager {
                 try {
                     soundClip.open(as);
                     soundClip.start();
+                    
                     soundClip.addLineListener(e -> {
                         if(e.getType().equals(LineEvent.Type.STOP)) {
                             soundClip.close();

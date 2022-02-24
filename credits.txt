@@ -136,6 +136,10 @@ under CC-BY 3.0
 by "Iwan Gabovitch"
 under CC0
 
-[wood_steps] are from https://opengameart.org/content/foot-walking-step-sounds-on-stone-water-snow-wood-and-dirt
-by "Jute"
-under GPL 3.0, GPL 2.0
+[punch] are from https://opengameart.org/content/37-hitspunches
+by "Independent.nu"
+under CC0
+
+[wood_steps, cave_steps] are from https://opengameart.org/content/different-steps-on-wood-stone-leaves-gravel-and-mud
+by "TinyWorlds"
+under CC0

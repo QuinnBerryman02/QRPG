@@ -46,9 +46,9 @@ public class Spell {
 
     public void cast(Entity e) {
         calculateCost();
-        MainWindow.getAudioManager().playSoundByName("magic");
         System.out.println(toString());
         if(e.getMana() >= manaCost) {
+            MainWindow.getAudioManager().playSoundByName("magic");
             e.setMana(e.getMana()-manaCost);
             (new Thread() {
                 public void run() {
@@ -64,6 +64,8 @@ public class Spell {
                     }
                 };
             }).start();
+        } else {
+            //fizzle sound
         }
     }
 

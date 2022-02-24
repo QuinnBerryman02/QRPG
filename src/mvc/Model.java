@@ -212,11 +212,24 @@ public class Model {
 						e.setProgress(0);
 						break;
 				}
+				if(dir!=-1 && e.getProgress()==1) {
+					if(player.isIndoors()) {
+						if(dungeon.isInThis()!=null) {
+							MainWindow.getAudioManager().playSoundByName("cave_steps");
+						} else {
+							MainWindow.getAudioManager().playSoundByName("wood_steps");
+						}
+					} else {
+						MainWindow.getAudioManager().playSoundByName("dirt_steps");
+					}
+					
+				}
 				collisionHandler(e, new Vector3f(v.getX(),0,0));
 				collisionHandler(e, new Vector3f(0,v.getY(),0));
 				break;
             case ATTACKING:
 				if(e.getProgress()==e.progressMax() / 2) {
+					MainWindow.getAudioManager().playSoundByName("punch");
 					Hitbox punch = getPunchHitbox(e);
 					for (Entity other : entitiesLoaded) {
 						if(other == e) {

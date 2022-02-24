@@ -46,8 +46,8 @@ SOFTWARE.
  * Credits: Kelly Charles (2020)
  */ 
 public class Viewer extends JPanel {
-	private final Point3f CAMERA_BOUND_TL = new Point3f(-92f,-38f,0f);
-	private final Point3f CAMERA_BOUND_BR = new Point3f(1f, 133f, 0f);
+	public static final Point3f CAMERA_BOUND_TL = new Point3f(-92f,-38f,0f);
+	public static final Point3f CAMERA_BOUND_BR = new Point3f(1f, 133f, 0f);
 	private final float CAMERA_HOMING_SPEED = 64f;
 	private static final int CHUNK_SIZE = 16;
 	private static final int TILE_SIZE_DEF = 16;
