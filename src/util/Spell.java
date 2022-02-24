@@ -48,22 +48,24 @@ public class Spell {
         calculateCost();
         System.out.println(toString());
         if(e.getMana() >= manaCost) {
-            MainWindow.getAudioManager().playSoundByName("magic");
-            e.setMana(e.getMana()-manaCost);
-            (new Thread() {
-                public void run() {
-                    try {
-                        sleep(delayOfElement());
-                    } catch (Exception e) {}
-                    Vector3f[] directions = applyAim(e);
-                    for (Vector3f dir : directions) {
-                        if(dir.getX()!=0||dir.getY()!=0) {
+            Vector3f[] directions = applyAim(e);
+            if(directions[0].getX()!=0||directions[0].getY()!=0) {
+                MainWindow.getAudioManager().playSoundByName("magic");
+                e.setMana(e.getMana()-manaCost);
+                (new Thread() {
+                    public void run() {
+                        try {
+                            sleep(delayOfElement());
+                        } catch (Exception e) {}
+                        for (Vector3f dir : directions) {
                             Projectile p = new Projectile(radius*2, radius*2, e.getCentre(), dir, damage, e, element, Spell.this);
                             MainWindow.getModel().getProjectiles().add(p);
                         }
-                    }
-                };
-            }).start();
+                    };
+                }).start();
+            } else {
+                //Wasnt aiming
+            }
         } else {
             //fizzle sound
         }

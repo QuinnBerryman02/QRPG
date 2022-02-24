@@ -11,14 +11,16 @@
     <>fix camera bounce
     <>add/make title art
     <>come up with name
+    <>make walls not cover sprites head when going downstairs
+    <>fix spell casting sound
+    <>fix enemy / all? sprite glitching when casting
+improve camera bounds
 add dpad option for spell swapping
 add tutorial / start area
 add saving and loading
 fix frame drops for unknown reason
 create default topic response classes, like farmer = tree, wheat, animal ,tools etc + responses
 allow player to change buttons for actions
-make walls not cover npcs head when going downstairs
-fix enemy / all? sprite glitching when casting
 create more variants of dungeon, both in type and chunk
 create final boss arena
     

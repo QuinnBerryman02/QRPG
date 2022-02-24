@@ -172,12 +172,12 @@ public class Model {
 			case WALKING:
 				if(controller.isAttackPressed()){
 					e.setPhase(AnimationPhase.ATTACKING);
-					e.setProgress(-1);
+					e.setProgress(0);
 					break;
 				}
 				if(controller.isCastPressed()){
 					e.setPhase(AnimationPhase.CASTING);
-					e.setProgress(-1);
+					e.setProgress(0);
 					break;
 				}
 				
