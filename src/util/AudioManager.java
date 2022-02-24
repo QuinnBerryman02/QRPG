@@ -20,22 +20,29 @@ import javax.swing.SwingUtilities;
 
 public class AudioManager {
     private ArrayList<Song> songs = new ArrayList<Song>();
-    private Clip clip;
+    private ArrayList<Sound> sounds = new ArrayList<Sound>();
+    private Clip musicClip;
     private Song lastNonCombatSong;
-    private Song lastPlayed;
-    private Song lastCombatPlayed;
-    private Song lastOverworldPlayed;
-    private Song lastTownPlayed;
+    private Song lastPlayedSong;
+    private Song lastCombatPlayedSong;
+    private Song lastOverworldPlayedSong;
+    private Song lastTownPlayedSong;
 
     public AudioManager() {
         try {
-            clip = AudioSystem.getClip();
+            musicClip = AudioSystem.getClip();
             File folder = new File("./res/music");
             for (File songFile : folder.listFiles()) {
                 Song mb = new Song(songFile);
                 songs.add(mb);
                 if(mb.isMainSong()) mb.play();
             }
+            folder = new File("./res/sounds");
+            for(File soundFile : folder.listFiles()) {
+                Sound s = new Sound(soundFile);
+                sounds.add(s);
+            }
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -46,6 +53,7 @@ public class AudioManager {
             JFrame f = new JFrame();
             f.getContentPane().setLayout(new BoxLayout(f.getContentPane(), BoxLayout.Y_AXIS));
             am.songs.forEach(s -> f.add(am.new SongButton(s)));
+            
             JButton randomTown = new JButton("Random Town Song");
             randomTown.addActionListener(e -> {
                 am.playSongByType(Song.Type.TOWN);
@@ -58,10 +66,10 @@ public class AudioManager {
             randomCombat.addActionListener(e -> {
                 am.playSongByType(Song.Type.COMBAT);
             });
-
             f.add(randomTown);
             f.add(randomCombat);
             f.add(randomOverworld);
+            am.sounds.forEach(s -> f.add(am.new SoundButton(s)));
             f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             f.setBounds(0, 0, 600, 400);
             f.pack();
@@ -77,6 +85,17 @@ public class AudioManager {
             this.song = s;
             addActionListener(e -> {
                 song.play();
+            });
+        }
+    }
+
+    class SoundButton extends JButton {
+        private Sound sound;
+        public SoundButton(Sound s) {
+            super(s.getFile().getName());
+            this.sound = s;
+            addActionListener(e -> {
+                sound.play();
             });
         }
     }
@@ -109,27 +128,27 @@ public class AudioManager {
         }
         public void play() {
             try {
-                clip.close();
+                musicClip.close();
                 AudioInputStream as = AudioSystem.getAudioInputStream(file);
-                clip.open(as);
-                clip.start();
+                musicClip.open(as);
+                musicClip.start();
                 System.out.println("Playing song: " + file.getName());
                 LineListener ll = new LineListener() {
                     public void update(LineEvent e) {
                         if(e.getType()==LineEvent.Type.STOP) {
-                            clip.removeLineListener(this);
+                            musicClip.removeLineListener(this);
                             playSongByType(type);
                         }
                     };
                 };
-                clip.addLineListener(ll);
+                musicClip.addLineListener(ll);
                 switch(type) {
-                    case COMBAT:lastCombatPlayed = this;break;
-                    case OVERWORLD:lastOverworldPlayed=this;break;
-                    case TOWN:lastTownPlayed = this;break;
+                    case COMBAT:lastCombatPlayedSong = this;break;
+                    case OVERWORLD:lastOverworldPlayedSong=this;break;
+                    case TOWN:lastTownPlayedSong = this;break;
                     default:break;
                 }
-                lastPlayed = this;
+                lastPlayedSong = this;
                 if(!type.equals(Type.COMBAT)) lastNonCombatSong = this;
             }catch (IllegalStateException t) {
                 //ignore 
@@ -172,45 +191,91 @@ public class AudioManager {
         }
     }
 
+    class Sound {
+        private File folder; 
+
+        public Sound(File folder) {
+            super();
+            this.folder = folder;
+        }
+        public File chooseRandom() {
+            return folder.listFiles()[new Random().nextInt(folder.listFiles().length)];
+        }
+        public void play() {
+            try {
+                Clip soundClip = AudioSystem.getClip();
+                AudioInputStream as = AudioSystem.getAudioInputStream(chooseRandom());
+                System.out.println("Playing sound: " + chooseRandom().getName());
+                try {
+                    soundClip.open(as);
+                    soundClip.start();
+                    soundClip.addLineListener(e -> {
+                        if(e.getType().equals(LineEvent.Type.STOP)) {
+                            soundClip.close();
+                        }
+                    });
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
+                
+            }catch (IllegalStateException t) {
+                //ignore 
+            } catch (IOException|LineUnavailableException|UnsupportedAudioFileException t)  {
+                t.printStackTrace();
+            } 
+
+        }
+
+        public File getFile() {
+            return folder;
+        }
+    }
+
+    public void playSoundByName(String name) {
+        sounds.forEach(s -> {
+            if(s.getFile().getName().equals(name)) s.play();
+        });
+    }
+
     public void playSongByTileId(int id) {
         switch(id) {
             case (1357 + 16):   //overworld
-                if(!Song.Type.OVERWORLD.equals(lastPlayed.getType())) {
+                if(!Song.Type.OVERWORLD.equals(lastPlayedSong.getType())) {
                     playSongByType(Song.Type.OVERWORLD);
                 }
                 break;
             case (1912 + 123):  //town
-                if(!Song.Type.TOWN.equals(lastPlayed.getType())) {
+                if(!Song.Type.TOWN.equals(lastPlayedSong.getType())) {
                     playSongByType(Song.Type.TOWN);
                 }
                 break;
             case (5152 + 1681): //guildhall
-                if(!Song.Type.GUILDHALL.equals(lastPlayed.getType())) {
+                if(!Song.Type.GUILDHALL.equals(lastPlayedSong.getType())) {
                     playSongByType(Song.Type.GUILDHALL);
                 }
                 break;
             case (4314 + 16):   //boss
-                if(!Song.Type.BOSS.equals(lastPlayed.getType())) {
+                if(!Song.Type.BOSS.equals(lastPlayedSong.getType())) {
                     playSongByType(Song.Type.BOSS);
                 }
                 break;
             case (639 + 36):    //caves
-                if(!Song.Type.CAVES.equals(lastPlayed.getType())) {
+                if(!Song.Type.CAVES.equals(lastPlayedSong.getType())) {
                     playSongByType(Song.Type.CAVES);
                 }
                 break;
             case (3424 + 81):   //sewers
-                if(!Song.Type.SEWERS.equals(lastPlayed.getType())) {
+                if(!Song.Type.SEWERS.equals(lastPlayedSong.getType())) {
                     playSongByType(Song.Type.SEWERS);
                 }
                 break;
             case (666):
-                if(!Song.Type.COMBAT.equals(lastPlayed.getType())) {
+                if(!Song.Type.COMBAT.equals(lastPlayedSong.getType())) {
                     playSongByType(Song.Type.COMBAT);
                 }
                 break;
             case (0):
-                if(lastPlayed.getType().equals(Song.Type.COMBAT)) {
+                if(lastPlayedSong.getType().equals(Song.Type.COMBAT)) {
                     playSongByType(lastNonCombatSong.getType());
                 }
                 break;
@@ -222,9 +287,9 @@ public class AudioManager {
     public void playSongByType(Song.Type t) {
         Song lastPlayedByType;
         switch(t) {
-            case COMBAT:lastPlayedByType = lastCombatPlayed;break;
-            case OVERWORLD:lastPlayedByType = lastOverworldPlayed;break;
-            case TOWN:lastPlayedByType = lastTownPlayed;break;
+            case COMBAT:lastPlayedByType = lastCombatPlayedSong;break;
+            case OVERWORLD:lastPlayedByType = lastOverworldPlayedSong;break;
+            case TOWN:lastPlayedByType = lastTownPlayedSong;break;
             default:lastPlayedByType = null;break;
         }
         ArrayList<Song> availableSongs = new ArrayList<Song>();

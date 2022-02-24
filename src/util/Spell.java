@@ -46,6 +46,7 @@ public class Spell {
 
     public void cast(Entity e) {
         calculateCost();
+        MainWindow.getAudioManager().playSoundByName("magic");
         System.out.println(toString());
         if(e.getMana() >= manaCost) {
             e.setMana(e.getMana()-manaCost);

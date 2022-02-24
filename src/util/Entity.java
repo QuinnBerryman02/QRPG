@@ -267,6 +267,7 @@ public abstract class Entity extends GameObject {
         if(health <= 0) {
             die();
         } else {
+            MainWindow.getAudioManager().playSoundByName("hit_" + (isFemale() ? "female" : isMale() ? "male" : "monster"));
             if(other instanceof Player) {
                 commenceCombat(other);
             }
@@ -296,7 +297,49 @@ public abstract class Entity extends GameObject {
         return !inCombatWith.isEmpty();
     }
 
+    public boolean isMale() {
+        if(skin!=null) {
+            return skin.isMale();
+        } 
+        if(this instanceof Enemy) {
+            Enemy e = (Enemy)this;
+            if(e.getType().equals(Enemy.Type.ELDER_WITCH) || e.getType().equals(Enemy.Type.YOUNG_WITCH)) {
+                return false;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+    public boolean isFemale() {
+        if(skin!=null) {
+            return skin.isFemale();
+        } 
+        if(this instanceof Enemy) {
+            Enemy e = (Enemy)this;
+            if(e.getType().equals(Enemy.Type.ELDER_WITCH) || e.getType().equals(Enemy.Type.YOUNG_WITCH)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public boolean isMonster() {
+        if(this instanceof Enemy && skin==null) {
+            Enemy e = (Enemy)this;
+            if(e.getType().equals(Enemy.Type.ELDER_WITCH) || e.getType().equals(Enemy.Type.YOUNG_WITCH)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void die() {
+        MainWindow.getAudioManager().playSoundByName("death_" + (isFemale() ? "female" : isMale() ? "male" : "monster"));
         dead = true;
         setHostile(false);
         if(this instanceof NPC) {

@@ -9,6 +9,9 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
+
+import main.MainWindow;
+
 import org.w3c.dom.Element;
 
 public class Map {
@@ -264,6 +267,7 @@ public class Map {
                 return new Point3f(x,y,0);
             }
         } else {
+            MainWindow.getAudioManager().playSoundByName("door");
             return doorLoader.findTeleportPointByOther(type,p);
         }
     }

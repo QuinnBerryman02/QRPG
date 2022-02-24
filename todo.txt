@@ -11,7 +11,8 @@ add tutorial / start area
 [boss arena] add final boss
 
 add saving and loading
-add sounds
+    <>add sounds
+add step sounds and punch sounds
 fix frame drops for unknown reason
 
 create default topic response classes, like farmer = tree, wheat, animal ,tools etc + responses

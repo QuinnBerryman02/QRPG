@@ -196,6 +196,14 @@ public class Skin {
         return new int[] {dx2, dy2, sx1, sy1, sx2, sy2};
     }
 
+    public boolean isFemale() {
+        return name.substring(name.length()-1).equals("F");
+    }
+
+    public boolean isMale() {
+        return !isFemale();
+    }
+
     public int[] getFaceCoords() {
         int row = id % 6;
         int column = id / 6;

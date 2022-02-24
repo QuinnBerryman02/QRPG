@@ -108,3 +108,34 @@ under CC0 (all)
 [circle glow] is from https://opengameart.org/users/buch
 by "Buch"
 under GPL 2.0, GPL 3.0, CC-BY-SA 3.0 
+
+Sound Effect Credits
+
+[hit_female] are from https://opengameart.org/content/female-warrior-grunts
+by "SkyRae"
+under CC-BY 3.0
+
+[hit_monster, death_monster, hit_male] are from https://opengameart.org/content/15-monster-gruntpaindeath-sounds
+by "Michel Baradari"
+under CC-BY 3.0
+
+[death_male, death_female] are from https://opengameart.org/content/aargh-male-screams
+by "Congusbongus"
+under CC-BY 3.0 (death_male)
+under CC0 (death_female)
+
+[fireball] is from https://opengameart.org/content/fireball-1
+by "Julien Matthey"
+under CC0
+
+[dirt_steps] are from https://opengameart.org/content/grass-foot-step-sounds-yo-frankie
+by "Blender Foundation"
+under CC-BY 3.0
+
+[doors] are from https://opengameart.org/content/door-open-door-close
+by "Iwan Gabovitch"
+under CC0
+
+[wood_steps] are from https://opengameart.org/content/foot-walking-step-sounds-on-stone-water-snow-wood-and-dirt
+by "Jute"
+under GPL 3.0, GPL 2.0
