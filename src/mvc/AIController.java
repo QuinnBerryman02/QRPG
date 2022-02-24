@@ -22,11 +22,11 @@ public class AIController extends Controller{
     public void run(Model m) {
         if(entity.isHostile()) {
             if(m.inRangeOfPlayer(entity, RANGE)) {
-                setKeyQPressed(true);
+                setAttackPressed(true);
                 pressMoveButtons(new Vector3f());
             } else {
                 r.nextInt(4);
-                setKeyQPressed(false);
+                setAttackPressed(false);
                 Vector3f v = entity.getCentre().calculateDirectionToPoint(m.getPlayer().getCentre());
                 switch(r.nextInt(4)) {
                     case 0:
@@ -39,7 +39,7 @@ public class AIController extends Controller{
                 lastMovement = v;
             }
         } else {
-            setKeyQPressed(false);
+            setAttackPressed(false);
             Vector3f v = lastMovement;
             switch(r.nextInt(4)) {
                 case 0:
@@ -58,9 +58,9 @@ public class AIController extends Controller{
     protected void pressMoveButtons(Vector3f v) {
         int x = Math.round(v.getX());
         int y = Math.round(v.getY());
-        setKeyDPressed(x==1 ? true : false);
-        setKeyAPressed(x==-1 ? true : false);
-        setKeyWPressed(y==-1 ? true : false);
-        setKeySPressed(y==1 ? true : false);
+        setRightPressed(x==1 ? true : false);
+        setLeftPressed(x==-1 ? true : false);
+        setUpPressed(y==-1 ? true : false);
+        setDownPressed(y==1 ? true : false);
     }
 }

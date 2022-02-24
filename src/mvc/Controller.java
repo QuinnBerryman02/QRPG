@@ -26,156 +26,134 @@ SOFTWARE.
    (MIT LICENSE ) e.g do what you want with this :-) 
  */ 
 public class Controller {
-	protected boolean keyAWasPressed = false;
-	protected boolean keySWasPressed = false;
-	protected boolean keyDWasPressed = false;
-	protected boolean keyWWasPressed = false;
+	//Make it a direction vector
+	protected boolean leftWasPressed = false;
+	protected boolean downWasPressed = false;
+	protected boolean rightWasPressed = false;
+	protected boolean upWasPressed = false;
 
-	protected boolean keyAPressed = false;
-	protected boolean keySPressed = false;
-	protected boolean keyDPressed = false;
-	protected boolean keyWPressed = false;
-	protected boolean keyQPressed = false;
-	protected boolean keyEPressed = false;
-	protected boolean keyIPressed = false;
-	protected boolean keySpacePressed = false;
-	protected boolean keyUpPressed = false;
-	protected boolean keyRightPressed = false;
-	protected boolean keyDownPressed = false;
-	protected boolean keyLeftPressed = false;
+	protected boolean leftPressed = false;
+	protected boolean downPressed = false;
+	protected boolean rightPressed = false;
+	protected boolean upPressed = false;
+
+	protected boolean attackPressed = false;
+	protected boolean castPressed = false;
+	protected boolean talkPressed = false;
+	protected boolean changeSkinPressed = false;
+	protected boolean guildPressed = false;
+	protected boolean questPressed = false;
+	protected boolean spellPressed = false;
 
 	protected int mouseX;
 	protected int mouseY;
 	protected double mouseWheelMoved;
 
-	public boolean isKeyAPressed() {
-		return keyAPressed;
+	public boolean isAttackPressed() {
+		return attackPressed;
 	}
-
-	public void setKeyAPressed(boolean value) {
-		keyAPressed = value;
+	public boolean isCastPressed() {
+		return castPressed;
 	}
-
-	public boolean isKeySPressed() {
-		return keySPressed;
+	public boolean isChangeSkinPressed() {
+		return changeSkinPressed;
 	}
-
-	public void setKeySPressed(boolean value) {
-		keySPressed = value;
+	public boolean isDownPressed() {
+		return downPressed;
 	}
-
-	public boolean isKeyDPressed() {
-		return keyDPressed;
+	public boolean isDownWasPressed() {
+		return downWasPressed;
 	}
-
-	public void setKeyDPressed(boolean value) {
-		keyDPressed = value;
+	public boolean isGuildPressed() {
+		return guildPressed;
 	}
-
-	public boolean isKeyWPressed() {
-		return keyWPressed;
+	public boolean isLeftPressed() {
+		return leftPressed;
 	}
-
-	public void setKeyWPressed(boolean value) {
-		keyWPressed = value;
+	public boolean isLeftWasPressed() {
+		return leftWasPressed;
 	}
-
-	public boolean isKeySpacePressed() {
-		return keySpacePressed;
+	public boolean isQuestPressed() {
+		return questPressed;
 	}
-
-	public void setKeySpacePressed(boolean value) {
-		keySpacePressed = value;
+	public boolean isRightPressed() {
+		return rightPressed;
 	}
-
-	public boolean isKeyEPressed() {
-		return keyEPressed;
+	public boolean isRightWasPressed() {
+		return rightWasPressed;
 	}
-
-	public boolean isKeyQPressed() {
-		return keyQPressed;
+	public boolean isSpellPressed() {
+		return spellPressed;
 	}
-	public void setKeyEPressed(boolean value) {
-		keyEPressed = value;
+	public boolean isTalkPressed() {
+		return talkPressed;
 	}
-
-	public void setKeyQPressed(boolean value) {
-		keyQPressed = value;
+	public boolean isUpPressed() {
+		return upPressed;
 	}
-
-	public boolean isKeyDownPressed() {
-		return keyDownPressed;
+	public boolean isUpWasPressed() {
+		return upWasPressed;
 	}
-	public boolean isKeyLeftPressed() {
-		return keyLeftPressed;
+	public void setAttackPressed(boolean attackPressed) {
+		this.attackPressed = attackPressed;
 	}
-	public boolean isKeyRightPressed() {
-		return keyRightPressed;
+	public void setCastPressed(boolean castPressed) {
+		this.castPressed = castPressed;
 	}
-	public boolean isKeyUpPressed() {
-		return keyUpPressed;
+	public void setChangeSkinPressed(boolean changeSkinPressed) {
+		this.changeSkinPressed = changeSkinPressed;
 	}
-	public void setKeyDownPressed(boolean value) {
-		keyDownPressed = value;
+	public void setDownPressed(boolean downPressed) {
+		this.downPressed = downPressed;
 	}
-	public void setKeyLeftPressed(boolean value) {
-		keyLeftPressed = value;
+	public void setDownWasPressed(boolean downWasPressed) {
+		this.downWasPressed = downWasPressed;
 	}
-	public void setKeyRightPressed(boolean value) {
-		keyRightPressed = value;
+	public void setGuildPressed(boolean guildPressed) {
+		this.guildPressed = guildPressed;
 	}
-	public void setKeyUpPressed(boolean value) {
-		keyUpPressed = value;
+	public void setLeftPressed(boolean leftPressed) {
+		this.leftPressed = leftPressed;
 	}
-
-	public void setKeyAWasPressed(boolean value) {
-		keyAWasPressed = value;
+	public void setLeftWasPressed(boolean leftWasPressed) {
+		this.leftWasPressed = leftWasPressed;
 	}
-	public void setKeyDWasPressed(boolean value) {
-		keyDWasPressed = value;
+	public void setQuestPressed(boolean questPressed) {
+		this.questPressed = questPressed;
 	}
-	public void setKeySWasPressed(boolean value) {
-		keySWasPressed = value;
+	public void setRightPressed(boolean rightPressed) {
+		this.rightPressed = rightPressed;
 	}
-	public void setKeyWWasPressed(boolean value) {
-		keyWWasPressed = value;
+	public void setRightWasPressed(boolean rightWasPressed) {
+		this.rightWasPressed = rightWasPressed;
 	}
-	public boolean isKeyAWasPressed() {
-		return keyAWasPressed;
+	public void setSpellPressed(boolean spellPressed) {
+		this.spellPressed = spellPressed;
 	}
-	public boolean isKeyDWasPressed() {
-		return keyDWasPressed;
+	public void setTalkPressed(boolean talkPressed) {
+		this.talkPressed = talkPressed;
 	}
-	public boolean isKeySWasPressed() {
-		return keySWasPressed;
+	public void setUpPressed(boolean upPressed) {
+		this.upPressed = upPressed;
 	}
-	public boolean isKeyWWasPressed() {
-		return keyWWasPressed;
-	}
-
-	public void setKeyIPressed(boolean value) {
-		this.keyIPressed = value;
-	}
-
-	public boolean isKeyIPressed() {
-		return keyIPressed;
+	public void setUpWasPressed(boolean upWasPressed) {
+		this.upWasPressed = upWasPressed;
 	}
 
 	public void clear() {
-		keyAPressed = false; 
-		keySPressed = false; 
-		keyWPressed = false; 
-		keyDPressed = false; 
-		keyQPressed = false; 
-		keyIPressed = false; 
-		keyEPressed = false; 
-		keySpacePressed = false; 
-		keyUpPressed = false; 
-		keyRightPressed = false; 
-		keyDownPressed = false; 
-		keyLeftPressed = false; 
+		leftPressed = false; 
+		downPressed = false; 
+		upPressed = false; 
+		rightPressed = false; 
+		attackPressed = false; 
+		talkPressed = false; 
+		castPressed = false; 
+		changeSkinPressed = false; 
+		guildPressed = false; 
+		questPressed = false; 
+		spellPressed = false; 
 	}
-
+	//TODO make it direction instead of seperate values
 	public int getMouseX() {
 		return mouseX;
 	}
@@ -191,7 +169,7 @@ public class Controller {
 	public void setMouseY(int mouseY) {
 		this.mouseY = mouseY;
 	}
-
+	//TODO make it work with controller
 	public double getMouseWheelMoved() {
 		return mouseWheelMoved;
 	}

@@ -11,11 +11,11 @@ public class MageController extends AIController{
         setMouseY(MainWindow.getH()/2);
         if(entity.isHostile()) {
             if(m.inRangeOfPlayer(entity, RANGE)) {
-                setKeyEPressed(true);
+                setCastPressed(true);
                 pressMoveButtons(new Vector3f());
             } else {
                 r.nextInt(4);
-                setKeyEPressed(false);
+                setCastPressed(false);
                 Vector3f v = entity.getCentre().calculateDirectionToPoint(m.getPlayer().getCentre());
                 switch(r.nextInt(4)) {
                     case 0:
@@ -28,7 +28,7 @@ public class MageController extends AIController{
                 lastMovement = v;
             }
         } else {
-            setKeyEPressed(false);
+            setCastPressed(false);
             Vector3f v = lastMovement;
             switch(r.nextInt(4)) {
                 case 0:

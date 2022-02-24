@@ -13,20 +13,19 @@ public class PlayerController extends Controller implements KeyListener, MouseLi
 	public void keyTyped(KeyEvent e) {}
 
 	@Override
-	public void keyPressed(KeyEvent e) { 
+	public void keyPressed(KeyEvent e) {
 		switch (e.getKeyChar()) {
-			case 'a': keyAPressed = true; break;  
-			case 's': keySPressed = true; break;
-			case 'w': keyWPressed = true; break;
-			case 'd': keyDPressed = true; break;
-			case 'q': keyQPressed = true; break;
-            case 'i': keyIPressed = true; break;
-			case 'e': keyEPressed = true; break;
-			case ' ': keySpacePressed = true; break; 
-			case 'y': keyUpPressed = true; break;
-			case 'j': keyRightPressed = true; break;
-			case 'h': keyDownPressed = true; break;
-			case 'g': keyLeftPressed = true; break;
+			case 'a': leftPressed = true; break;  
+			case 's': downPressed = true; break;
+			case 'w': upPressed = true; break;
+			case 'd': rightPressed = true; break;
+			case 'q': attackPressed = true; break;
+            case 'i': talkPressed = true; break;
+			case 'e': castPressed = true; break;
+			case ' ': changeSkinPressed = true; break; 
+			case 'j': guildPressed = true; break;
+			case 'h': questPressed = true; break;
+			case 'g': spellPressed = true; break;
 		    default: break;
 		}  
 	}
@@ -34,18 +33,17 @@ public class PlayerController extends Controller implements KeyListener, MouseLi
 	@Override
 	public void keyReleased(KeyEvent e) { 
 		switch (e.getKeyChar()) {
-			case 'a': keyAPressed = false; break;  
-			case 's': keySPressed = false; break;
-			case 'w': keyWPressed = false; break;
-			case 'd': keyDPressed = false; break;
-			case 'q': keyQPressed = false; break;
-            case 'i': keyIPressed = false; break;
-			case 'e': keyEPressed = false; break;
-			case ' ': keySpacePressed = false; break; 
-			case 'y': keyUpPressed = false; break;
-			case 'j': keyRightPressed = false; break;
-			case 'h': keyDownPressed = false; break;
-			case 'g': keyLeftPressed = false; break;
+			case 'a': leftPressed = false; break;  
+			case 's': downPressed = false; break;
+			case 'w': upPressed = false; break;
+			case 'd': rightPressed = false; break;
+			case 'q': attackPressed = false; break;
+            case 'i': talkPressed = false; break;
+			case 'e': castPressed = false; break;
+			case ' ': changeSkinPressed = false; break; 
+			case 'j': guildPressed = false; break;
+			case 'h': questPressed = false; break;
+			case 'g': spellPressed = false; break;
 		    default: break;
 		}  
 	}

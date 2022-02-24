@@ -120,17 +120,17 @@ public class Model {
 	private void playerLogic() {
 		player.regenMana();
 		Controller controller = player.getController();
-		if(controller.isKeySpacePressed()) {
+		if(controller.isChangeSkinPressed()) {
 			player.setSkin(Skin.getSkins()[(player.getSkin().getIndex()+1)%Skin.getSkins().length]);
-			controller.setKeySpacePressed(false);
+			controller.setChangeSkinPressed(false);
 		}
-		if(controller.isKeyLeftPressed()) {
+		if(controller.isSpellPressed()) {
 			MainWindow.openSpellMenu(player);
-			controller.setKeyLeftPressed(false);
+			controller.setSpellPressed(false);
 		}
-		if(controller.isKeyDownPressed()) {
+		if(controller.isQuestPressed()) {
 			MainWindow.openQuestMenu(player);
-			controller.setKeyDownPressed(false);
+			controller.setQuestPressed(false);
 		}
 		Integer moved = (int)controller.getMouseWheelMoved();
 		if(moved != 0) {
@@ -142,10 +142,10 @@ public class Model {
 			controller.setMouseWheelMoved(0.0);
 		}
 		animationLogic(player);
-		controller.setKeyAWasPressed(controller.isKeyAPressed());
-		controller.setKeyDWasPressed(controller.isKeyDPressed());
-		controller.setKeyWWasPressed(controller.isKeyWPressed());
-		controller.setKeySWasPressed(controller.isKeySPressed());
+		controller.setLeftWasPressed(controller.isLeftPressed());
+		controller.setRightWasPressed(controller.isRightPressed());
+		controller.setUpWasPressed(controller.isUpPressed());
+		controller.setDownWasPressed(controller.isDownPressed());
 	}
 
 	private void entityLogic(Entity e) {
@@ -153,10 +153,10 @@ public class Model {
 		AIController controller = (AIController)e.getController();
 		controller.run(this);
 		animationLogic(e);
-		controller.setKeyAWasPressed(controller.isKeyAPressed());
-		controller.setKeyDWasPressed(controller.isKeyDPressed());
-		controller.setKeyWWasPressed(controller.isKeyWPressed());
-		controller.setKeySWasPressed(controller.isKeySPressed());
+		controller.setLeftWasPressed(controller.isLeftPressed());
+		controller.setRightWasPressed(controller.isRightPressed());
+		controller.setUpWasPressed(controller.isUpPressed());
+		controller.setDownWasPressed(controller.isDownPressed());
 	}
 
 	private boolean projectileLogic(Projectile p) {
@@ -172,45 +172,45 @@ public class Model {
 		switch(ap) {
 			case NEUTRAL:
 			case WALKING:
-				if(controller.isKeyQPressed()){
+				if(controller.isAttackPressed()){
 					e.setPhase(AnimationPhase.ATTACKING);
 					e.setProgress(-1);
 					break;
 				}
-				if(controller.isKeyEPressed()){
+				if(controller.isCastPressed()){
 					e.setPhase(AnimationPhase.CASTING);
 					e.setProgress(-1);
 					break;
 				}
 				boolean wasMovingVertical = e.getVerticalMovement();
-				e.setVerticalMovement(controller.isKeyWPressed() || controller.isKeySPressed());
-				if(ap==AnimationPhase.WALKING && !controller.isKeyAPressed() && !controller.isKeyDPressed() && !e.getVerticalMovement()) {
+				e.setVerticalMovement(controller.isUpPressed() || controller.isDownPressed());
+				if(ap==AnimationPhase.WALKING && !controller.isLeftPressed() && !controller.isRightPressed() && !e.getVerticalMovement()) {
 					e.setPhase(AnimationPhase.NEUTRAL);
 					e.setProgress(0);
 					break;
 				}
-				if(controller.isKeyAPressed()) {
+				if(controller.isLeftPressed()) {
 					if(!e.setDirection(Direction.LEFT) && !e.getVerticalMovement()) {
 						e.setProgress(0);
 					}
 					e.setPhase(AnimationPhase.WALKING);
 					collisionHandler(e,new Vector3f(-speed,0,0)); 
 				}
-				if(controller.isKeyDPressed()) {
+				if(controller.isRightPressed()) {
 					if(!e.setDirection(Direction.RIGHT) && !e.getVerticalMovement()) {
 						e.setProgress(0);
 					}
 					e.setPhase(AnimationPhase.WALKING);
 					collisionHandler(e,new Vector3f(speed,0,0));
 				}
-				if(controller.isKeyWPressed()) {
+				if(controller.isUpPressed()) {
 					if(!e.setDirection(Direction.UP) && !wasMovingVertical) {
 						e.setProgress(0);
 					}
 					e.setPhase(AnimationPhase.WALKING);
 					collisionHandler(e,new Vector3f(0,-speed,0));
 				}
-				if(controller.isKeySPressed()){
+				if(controller.isDownPressed()){
 					if(!e.setDirection(Direction.DOWN) && !wasMovingVertical) {
 						e.setProgress(0);
 					}
@@ -303,10 +303,10 @@ public class Model {
 					if(other instanceof NPC && go instanceof Player) {
 						NPC npc = (NPC)other;
 						Player player = (Player)go;
-						if(player.getController().isKeyIPressed()) {
+						if(player.getController().isTalkPressed()) {
 							MainWindow.initiateConversation(player, npc);
 							System.out.println("Starting a coversation between player and " + npc.getName());
-							player.getController().setKeyIPressed(false);
+							player.getController().setTalkPressed(false);
 						}
 					}
 				}
@@ -347,15 +347,14 @@ public class Model {
 							}
 							if(go instanceof Player) {
 								Player p = (Player)go;
-								if(p.getController().isKeyUpPressed()) {
+								//if(p.getController().isDoorPressed()) {
 									Point3f portalPoint = new Point3f(px - SCAN_RANGE + j, py - SCAN_RANGE + i, 0f);
 									String teleport = map.findTeleportTypeByPoint(portalPoint, dungeon);
 									Point3f destinationPoint = map.findTeleportPointByOther(teleport, portalPoint, dungeon); 
 									System.out.println("Teleporting from " + portalPoint + " to " + destinationPoint + " via " + teleport);
-									p.getController().setKeyUpPressed(false);
 									p.move(new Point3f(destinationPoint.getX()+0.5f,destinationPoint.getY()+0.5f,0f).minusPoint(p.getCentre()));
 									return new Vector3f();
-								}
+								//}
 							}
 							return v2;
 						}
@@ -366,9 +365,9 @@ public class Model {
 						if(v2 != null) {
 							if(go instanceof Player) {
 								Player p = (Player)go;
-								if(p.getController().isKeyRightPressed()) {
+								if(p.getController().isGuildPressed()) {
 									System.out.println("Opening guild quest board");
-									p.getController().setKeyRightPressed(false);
+									p.getController().setGuildPressed(false);
 								}
 							}
 							return v2;

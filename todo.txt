@@ -63,12 +63,13 @@ fix camera bounce
     <>dungeon music
     <>fix walls in dungeon roofwall -> wall
     <>spawn enemies in dungeon
-fix enemy / all? sprite glitching when casting
     <>fix combat system again
     <>fix dungeon gen
     <>fix dungeon teleports
     <>fix enemies spawning in walls
     <> fix not despawning on different floors
     <>dungeon UI to show floor / enemies killed or something etc 
+make walls not cover npcs head when going downstairs
+fix enemy / all? sprite glitching when casting
 create more variants of dungeon, both in type and chunk
 create final boss arena
