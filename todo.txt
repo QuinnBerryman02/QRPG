@@ -1,7 +1,8 @@
     List of features to be implemented in the endgame of the project
 
         Crucial)
-add support for different types of controller 
+    <>add support for different types of controller 
+fix various bugs to do with controller eg. hard to stop, cant slide against walls
 add tutorial / start area
 [boss arena] add final boss
 

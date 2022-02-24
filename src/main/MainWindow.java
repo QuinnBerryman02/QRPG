@@ -180,16 +180,16 @@ public class MainWindow {
 		canvas.addMouseWheelListener(pc);
 		canvas.requestFocusInWindow(); 
 		
-		int[] entry = gameworld.getDungeon().getEntries().get(0);
-		gameworld.getDungeon().setCurrentLayer(0);
-		int[] c = gameworld.getDungeon().dungeonSpaceToWorldSpace(entry);
-		System.out.println(c[0] + " " + c[1]);
-		int x = c[0] + 8;
-		int y = c[1] + 10;
+		// int[] entry = gameworld.getDungeon().getEntries().get(0);
+		// gameworld.getDungeon().setCurrentLayer(0);
+		// int[] c = gameworld.getDungeon().dungeonSpaceToWorldSpace(entry);
+		// System.out.println(c[0] + " " + c[1]);
+		// int x = c[0] + 8;
+		// int y = c[1] + 10;
 
-		float dx = x - gameworld.getPlayer().getCentre().getX();
-		float dy = y - gameworld.getPlayer().getCentre().getY();
-		gameworld.getPlayer().move(new Vector3f(dx,dy,0));
+		// float dx = x - gameworld.getPlayer().getCentre().getX();
+		// float dy = y - gameworld.getPlayer().getCentre().getY();
+		// gameworld.getPlayer().move(new Vector3f(dx,dy,0));
 		
 	}
 

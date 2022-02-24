@@ -1,5 +1,6 @@
 package mvc;
 
+import util.Vector3f;
 
 /*
  * Created by Abraham Campbell on 15/01/2020.
@@ -26,16 +27,9 @@ SOFTWARE.
    (MIT LICENSE ) e.g do what you want with this :-) 
  */ 
 public class Controller {
-	//Make it a direction vector
-	protected boolean leftWasPressed = false;
-	protected boolean downWasPressed = false;
-	protected boolean rightWasPressed = false;
-	protected boolean upWasPressed = false;
 
-	protected boolean leftPressed = false;
-	protected boolean downPressed = false;
-	protected boolean rightPressed = false;
-	protected boolean upPressed = false;
+	protected Vector3f moveDirection = new Vector3f();
+	protected Vector3f aimDirection = new Vector3f();
 
 	protected boolean attackPressed = false;
 	protected boolean castPressed = false;
@@ -45,8 +39,6 @@ public class Controller {
 	protected boolean questPressed = false;
 	protected boolean spellPressed = false;
 
-	protected int mouseX;
-	protected int mouseY;
 	protected double mouseWheelMoved;
 
 	public boolean isAttackPressed() {
@@ -58,41 +50,17 @@ public class Controller {
 	public boolean isChangeSkinPressed() {
 		return changeSkinPressed;
 	}
-	public boolean isDownPressed() {
-		return downPressed;
-	}
-	public boolean isDownWasPressed() {
-		return downWasPressed;
-	}
 	public boolean isGuildPressed() {
 		return guildPressed;
 	}
-	public boolean isLeftPressed() {
-		return leftPressed;
-	}
-	public boolean isLeftWasPressed() {
-		return leftWasPressed;
-	}
 	public boolean isQuestPressed() {
 		return questPressed;
-	}
-	public boolean isRightPressed() {
-		return rightPressed;
-	}
-	public boolean isRightWasPressed() {
-		return rightWasPressed;
 	}
 	public boolean isSpellPressed() {
 		return spellPressed;
 	}
 	public boolean isTalkPressed() {
 		return talkPressed;
-	}
-	public boolean isUpPressed() {
-		return upPressed;
-	}
-	public boolean isUpWasPressed() {
-		return upWasPressed;
 	}
 	public void setAttackPressed(boolean attackPressed) {
 		this.attackPressed = attackPressed;
@@ -103,29 +71,11 @@ public class Controller {
 	public void setChangeSkinPressed(boolean changeSkinPressed) {
 		this.changeSkinPressed = changeSkinPressed;
 	}
-	public void setDownPressed(boolean downPressed) {
-		this.downPressed = downPressed;
-	}
-	public void setDownWasPressed(boolean downWasPressed) {
-		this.downWasPressed = downWasPressed;
-	}
 	public void setGuildPressed(boolean guildPressed) {
 		this.guildPressed = guildPressed;
 	}
-	public void setLeftPressed(boolean leftPressed) {
-		this.leftPressed = leftPressed;
-	}
-	public void setLeftWasPressed(boolean leftWasPressed) {
-		this.leftWasPressed = leftWasPressed;
-	}
 	public void setQuestPressed(boolean questPressed) {
 		this.questPressed = questPressed;
-	}
-	public void setRightPressed(boolean rightPressed) {
-		this.rightPressed = rightPressed;
-	}
-	public void setRightWasPressed(boolean rightWasPressed) {
-		this.rightWasPressed = rightWasPressed;
 	}
 	public void setSpellPressed(boolean spellPressed) {
 		this.spellPressed = spellPressed;
@@ -133,18 +83,10 @@ public class Controller {
 	public void setTalkPressed(boolean talkPressed) {
 		this.talkPressed = talkPressed;
 	}
-	public void setUpPressed(boolean upPressed) {
-		this.upPressed = upPressed;
-	}
-	public void setUpWasPressed(boolean upWasPressed) {
-		this.upWasPressed = upWasPressed;
-	}
 
 	public void clear() {
-		leftPressed = false; 
-		downPressed = false; 
-		upPressed = false; 
-		rightPressed = false; 
+		moveDirection = new Vector3f();
+		aimDirection = new Vector3f();
 		attackPressed = false; 
 		talkPressed = false; 
 		castPressed = false; 
@@ -153,22 +95,15 @@ public class Controller {
 		questPressed = false; 
 		spellPressed = false; 
 	}
-	//TODO make it direction instead of seperate values
-	public int getMouseX() {
-		return mouseX;
+
+	public Vector3f getAimDirection() {
+		return aimDirection;
 	}
 
-	public int getMouseY() {
-		return mouseY;
+	public Vector3f getMoveDirection() {
+		return moveDirection;
 	}
 
-	public void setMouseX(int mouseX) {
-		this.mouseX = mouseX;
-	}
-
-	public void setMouseY(int mouseY) {
-		this.mouseY = mouseY;
-	}
 	//TODO make it work with controller
 	public double getMouseWheelMoved() {
 		return mouseWheelMoved;

@@ -65,10 +65,7 @@ public class Spell {
     }
 
     public static Vector3f[] aimByMouse(Entity e) {
-        Point3f dst = Viewer.screenToWorldSpace(new Point3f(e.getController().getMouseX(),e.getController().getMouseY(),0f), MainWindow.getModel().getPlayer().getCentre());
-        Point3f src = e.getCentre();
-		Vector3f v = dst.minusPoint(src);
-        return new Vector3f[] {v.relativeMax(MAX_VELOCITY)};
+        return new Vector3f[] {e.getController().getAimDirection().byScalar(MAX_VELOCITY)};
     }
 
     public static Vector3f[] frontAndBack(Entity e) {

@@ -2,14 +2,16 @@ package mvc;
 
 import java.util.Random;
 
+import main.MainWindow;
 import util.Entity;
+import util.Point3f;
 import util.Vector3f;
 
 public class AIController extends Controller{
     private static final float RANGE = 0.66f;
     protected Entity entity;
     protected Random r = new Random();
-    protected Vector3f lastMovement = new Vector3f(1f,1f,0f);
+    protected Vector3f lastMovement = new Vector3f(1f,0f,0f);
 
     public AIController() {
 
@@ -20,14 +22,16 @@ public class AIController extends Controller{
     }
 
     public void run(Model m) {
+        Point3f p = Viewer.worldSpaceToScreen(entity.getCentre(), m.getPlayer().getCentre());
+        aimDirection = new Vector3f(1,0,0).rotateCreate(Math.atan2(MainWindow.getH()/2-p.getY(), MainWindow.getW()/2-p.getX()));
         if(entity.isHostile()) {
             if(m.inRangeOfPlayer(entity, RANGE)) {
                 setAttackPressed(true);
-                pressMoveButtons(new Vector3f());
+                moveDirection = new Vector3f();
             } else {
                 r.nextInt(4);
                 setAttackPressed(false);
-                Vector3f v = entity.getCentre().calculateDirectionToPoint(m.getPlayer().getCentre());
+                Vector3f v = aimDirection.roundToOctet();
                 switch(r.nextInt(4)) {
                     case 0:
                         v.rotate((r.nextInt(2)*2-1) * (Math.PI/4.0));     //rotates the direction vector by 45 deg either cw or ccw 
@@ -35,7 +39,7 @@ public class AIController extends Controller{
                     default:
                         break;
                 }
-                pressMoveButtons(v);
+                moveDirection = v;
                 lastMovement = v;
             }
         } else {
@@ -50,17 +54,8 @@ public class AIController extends Controller{
                 default:
                     break;
             }
-            pressMoveButtons(v);
+            moveDirection = v;
             lastMovement = v;
         }
-    }
-
-    protected void pressMoveButtons(Vector3f v) {
-        int x = Math.round(v.getX());
-        int y = Math.round(v.getY());
-        setRightPressed(x==1 ? true : false);
-        setLeftPressed(x==-1 ? true : false);
-        setUpPressed(y==-1 ? true : false);
-        setDownPressed(y==1 ? true : false);
     }
 }

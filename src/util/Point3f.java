@@ -99,26 +99,14 @@ public class Point3f {
 		return ("Point3F (" + x + "," + y + "," + z + ")");
     }
 
+	
+
 	public Vector3f calculateDirectionToPoint(Point3f p) {
 		//returns a vector with 1s and 0s to represent the direction
 		float dx = p.getX() - x;
 		float dy = p.getY() - y;
 		if(dx==0 && dy==0) return new Vector3f();
-		double rad = Math.atan2(-dy, dx);
-		int eighth = radToEighth(rad);
-		int vx;
-		int vy;
-		switch(eighth % 8) {
-			case 7:case 0:case 1:	vx=-1; break;
-			case 3:case 4:case 5: 	vx=1;  break;
-			default: 				vx=0;  break;
-		}
-		switch(eighth % 8) {
-			case 1:case 2:case 3:	vy=1;  break;
-			case 5:case 6:case 7: 	vy=-1; break;
-			default: 				vy=0;  break;
-		}
-		return new Vector3f(vx,vy,0f);
+		return new Vector3f(dx,dy,0).roundToOctet();
 	}
 
 	public static int radToEighth(double rad) {

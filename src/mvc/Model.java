@@ -120,6 +120,7 @@ public class Model {
 	private void playerLogic() {
 		player.regenMana();
 		Controller controller = player.getController();
+		((PlayerController)controller).update();
 		if(controller.isChangeSkinPressed()) {
 			player.setSkin(Skin.getSkins()[(player.getSkin().getIndex()+1)%Skin.getSkins().length]);
 			controller.setChangeSkinPressed(false);
@@ -142,10 +143,6 @@ public class Model {
 			controller.setMouseWheelMoved(0.0);
 		}
 		animationLogic(player);
-		controller.setLeftWasPressed(controller.isLeftPressed());
-		controller.setRightWasPressed(controller.isRightPressed());
-		controller.setUpWasPressed(controller.isUpPressed());
-		controller.setDownWasPressed(controller.isDownPressed());
 	}
 
 	private void entityLogic(Entity e) {
@@ -153,10 +150,6 @@ public class Model {
 		AIController controller = (AIController)e.getController();
 		controller.run(this);
 		animationLogic(e);
-		controller.setLeftWasPressed(controller.isLeftPressed());
-		controller.setRightWasPressed(controller.isRightPressed());
-		controller.setUpWasPressed(controller.isUpPressed());
-		controller.setDownWasPressed(controller.isDownPressed());
 	}
 
 	private boolean projectileLogic(Projectile p) {
@@ -166,6 +159,7 @@ public class Model {
 
 	public void animationLogic(Entity e) {
 		float speed = e.getSpeed() / (float)MainWindow.getTargetFPS();
+		Vector3f v = e.getController().getMoveDirection().byScalar(speed);
 		e.incrementProgress();
 		AnimationPhase ap = e.getPhase();
 		Controller controller = e.getController(); 
@@ -182,40 +176,37 @@ public class Model {
 					e.setProgress(-1);
 					break;
 				}
-				boolean wasMovingVertical = e.getVerticalMovement();
-				e.setVerticalMovement(controller.isUpPressed() || controller.isDownPressed());
-				if(ap==AnimationPhase.WALKING && !controller.isLeftPressed() && !controller.isRightPressed() && !e.getVerticalMovement()) {
-					e.setPhase(AnimationPhase.NEUTRAL);
-					e.setProgress(0);
-					break;
-				}
-				if(controller.isLeftPressed()) {
-					if(!e.setDirection(Direction.LEFT) && !e.getVerticalMovement()) {
+				collisionHandler(e,v);
+				int dir = v.roundToQuad();
+				switch(dir) {
+					case 0:
+						if(!e.setDirection(Direction.UP)) {
+							e.setProgress(0);
+						}
+						e.setPhase(AnimationPhase.WALKING);
+						break;
+					case 1:
+						if(!e.setDirection(Direction.RIGHT)) {
+							e.setProgress(0);
+						}
+						e.setPhase(AnimationPhase.WALKING);
+						break;
+					case 2:
+						if(!e.setDirection(Direction.DOWN)) {
+							e.setProgress(0);
+						}
+						e.setPhase(AnimationPhase.WALKING);
+						break;
+					case 3:
+						if(!e.setDirection(Direction.LEFT)) {
+							e.setProgress(0);
+						}
+						e.setPhase(AnimationPhase.WALKING);
+						break;
+					default:
+						e.setPhase(AnimationPhase.NEUTRAL);
 						e.setProgress(0);
-					}
-					e.setPhase(AnimationPhase.WALKING);
-					collisionHandler(e,new Vector3f(-speed,0,0)); 
-				}
-				if(controller.isRightPressed()) {
-					if(!e.setDirection(Direction.RIGHT) && !e.getVerticalMovement()) {
-						e.setProgress(0);
-					}
-					e.setPhase(AnimationPhase.WALKING);
-					collisionHandler(e,new Vector3f(speed,0,0));
-				}
-				if(controller.isUpPressed()) {
-					if(!e.setDirection(Direction.UP) && !wasMovingVertical) {
-						e.setProgress(0);
-					}
-					e.setPhase(AnimationPhase.WALKING);
-					collisionHandler(e,new Vector3f(0,-speed,0));
-				}
-				if(controller.isDownPressed()){
-					if(!e.setDirection(Direction.DOWN) && !wasMovingVertical) {
-						e.setProgress(0);
-					}
-					e.setPhase(AnimationPhase.WALKING);
-					collisionHandler(e,new Vector3f(0,speed,0));
+						break;
 				}
 				break;
             case ATTACKING:

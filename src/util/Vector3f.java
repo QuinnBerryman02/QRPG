@@ -143,4 +143,37 @@ public class Vector3f {
 			System.out.println(v.toStringInt());
 		}
 	}
+
+    public Vector3f roundToOctet() {
+		double rad = Math.atan2(-y, x);
+		int eighth = Point3f.radToEighth(rad);
+		int vx;
+		int vy;
+		switch(eighth % 8) {
+			case 7:case 0:case 1:	vx=-1; break;
+			case 3:case 4:case 5: 	vx=1;  break;
+			default: 				vx=0;  break;
+		}
+		switch(eighth % 8) {
+			case 1:case 2:case 3:	vy=1;  break;
+			case 5:case 6:case 7: 	vy=-1; break;
+			default: 				vy=0;  break;
+		}
+		if(vx!=0 && vy!=0) {
+			vx /= Math.sqrt(2);
+			vy /= Math.sqrt(2);
+		}
+		return new Vector3f(vx,vy,0f);
+    }
+
+	public int roundToQuad() {
+		if(y==0 && x==0) return -1;
+		double rad = Math.atan2(-y, x) + Math.PI;
+
+		if(rad < Math.PI/4) return 3;
+		if(rad >= Math.PI/4 && rad < Math.PI*3/4) return 2;
+		if(rad >= Math.PI*3/4 && rad < Math.PI*5/4) return 1;
+		if(rad >= Math.PI*5/4 && rad < Math.PI*7/4) return 0;
+		else return 3;
+    }
 }
