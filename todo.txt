@@ -6,19 +6,25 @@
     <>hard to stop, 
     <>cant slide against walls
     <>stop menus from being spam opened
-add dpad option for spell swapping
-add tutorial / start area
-[boss arena] add final boss
-
-add saving and loading
     <>add sounds
     <>add step sounds and punch sounds
+    <>fix camera bounce
+    <>add/make title art
+    <>come up with name
+add dpad option for spell swapping
+add tutorial / start area
+add saving and loading
 fix frame drops for unknown reason
-
 create default topic response classes, like farmer = tree, wheat, animal ,tools etc + responses
+allow player to change buttons for actions
+make walls not cover npcs head when going downstairs
+fix enemy / all? sprite glitching when casting
+create more variants of dungeon, both in type and chunk
+create final boss arena
+    
+[boss arena] add final boss
 [default topics] create the rest of the NPCs
 [more npcs] add quest chooser ui in the guild
-[multi controller] allow player to change buttons for actions
 [save + controls]  add esc / tab menu with settings
 
         Entity)
@@ -41,11 +47,10 @@ create default topic response classes, like farmer = tree, wheat, animal ,tools 
     <>make music correspond to each area
 
         UI)
-[quest chooser + procedural enemy] add shop ui
+[quest chooser] add shop ui
     <>add main menu ui
     <>add camera mode
     <>fixed bug with directions being odd
-fix camera bounce
     <>add quest ui
 
 
@@ -75,7 +80,3 @@ fix camera bounce
     <>fix enemies spawning in walls
     <> fix not despawning on different floors
     <>dungeon UI to show floor / enemies killed or something etc 
-make walls not cover npcs head when going downstairs
-fix enemy / all? sprite glitching when casting
-create more variants of dungeon, both in type and chunk
-create final boss arena

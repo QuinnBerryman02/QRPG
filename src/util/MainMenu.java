@@ -4,12 +4,16 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Component;
 import java.awt.Graphics;
+import java.io.File;
 import java.awt.Font;
+import java.awt.Image;
 
+import javax.imageio.ImageIO;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
@@ -45,6 +49,7 @@ public class MainMenu extends Menu{
         loadGame = new CustomButton("LOAD GAME");
         settings = new CustomButton("SETTINGS");
         exit = new CustomButton("QUIT");
+        
 
         newGame.addActionListener(e -> {
             MainWindow.newGame();
@@ -59,7 +64,13 @@ public class MainMenu extends Menu{
             System.exit(0);
         });
 
-        panel.add(Box.createRigidArea(new Dimension(1,startY)));
+        Title title = new Title(800, 200, "res/title.png");
+        Title titleEng = new Title(600, 66, "res/titleEnglish.png");
+        panel.add(Box.createRigidArea(new Dimension(1,spacing)));
+        panel.add(title);
+        panel.add(Box.createRigidArea(new Dimension(1,spacing)));
+        panel.add(titleEng);
+        panel.add(Box.createRigidArea(new Dimension(1,spacing)));
         panel.add(newGame);
         panel.add(Box.createRigidArea(new Dimension(1,spacing)));
         panel.add(loadGame);
@@ -78,12 +89,63 @@ public class MainMenu extends Menu{
     }
 
     class CustomButton extends JButton {
+        private int w;
+        private int h;
         public CustomButton(String text) {
             super(text);
             setFont(defaultFont.deriveFont(30f));
+            setForeground(Color.WHITE);
             setBackground(new Color(0f,0f,0f,0f));
             setBorder(new EmptyBorder(0,0,0,0));
             setAlignmentX(Component.CENTER_ALIGNMENT);
+            int w = 200;
+            int h = 50;
+            setPreferredSize(new Dimension(w,h));
+            setMaximumSize(new Dimension(w,h));
+            setMinimumSize(new Dimension(w,h));
+            this.w = w;
+            this.h = h;
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            g.setColor(new Color(117, 204, 32));  //117 204 32 ?
+            g.fillRoundRect(0, 0, w, h, 10, 10);
+            super.paintComponent(g);
+        }
+    }
+
+    class Title extends JLabel {
+        private int w;
+        private int h;
+        private String s;
+        public Title(int w, int h, String s) {
+            super();
+            setBackground(new Color(0f,0f,0f,0f));
+            setBorder(new EmptyBorder(0,0,0,0));
+            setAlignmentX(Component.CENTER_ALIGNMENT);
+            setPreferredSize(new Dimension(w,h));
+            setMaximumSize(new Dimension(w,h));
+            setMinimumSize(new Dimension(w,h));
+            this.w = w;
+            this.h = h;
+            this.s = s;
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            try {
+                File f = new File(s);
+                if(s.equals("res/titleEnglish.png")) {
+                   g.setColor(Color.WHITE); 
+                   g.fillRoundRect(0, 0, w, h, 10, 10);
+                }
+                Image i = ImageIO.read(f);
+                g.drawImage(i, 0, 0, w, h, null);
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 }

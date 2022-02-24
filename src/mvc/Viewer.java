@@ -81,6 +81,7 @@ public class Viewer extends JPanel {
 			Vector3f realSpeed = cameraVector.byScalar(1f / (float)MainWindow.getTargetFPS());
 			realSpeed = cameraOffset.bounce(realSpeed, CAMERA_BOUND_TL, CAMERA_BOUND_BR);
 			cameraOffset.applyVector(realSpeed);
+			cameraVector = realSpeed.byScalar((float)MainWindow.getTargetFPS());
 		} else {
 			Point3f p = gameWorld.getPlayer().getCentre();
 			Vector3f v = p.minusPoint(cameraOffset);
