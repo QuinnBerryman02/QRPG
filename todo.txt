@@ -2,10 +2,11 @@
 
         Crucial)
     <>add support for different types of controller 
-fix various bugs to do with controller eg. 
+    <>fix various bugs to do with controller eg. 
     <>hard to stop, 
-cant slide against walls
+    <>cant slide against walls
     <>stop menus from being spam opened
+add dpad option for spell swapping
 add tutorial / start area
 [boss arena] add final boss
 

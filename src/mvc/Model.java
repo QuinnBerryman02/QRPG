@@ -180,7 +180,7 @@ public class Model {
 					e.setProgress(-1);
 					break;
 				}
-				collisionHandler(e,v);
+				
 				int dir = v.roundToQuad();
 				switch(dir) {
 					case 0:
@@ -212,6 +212,8 @@ public class Model {
 						e.setProgress(0);
 						break;
 				}
+				collisionHandler(e, new Vector3f(v.getX(),0,0));
+				collisionHandler(e, new Vector3f(0,v.getY(),0));
 				break;
             case ATTACKING:
 				if(e.getProgress()==e.progressMax() / 2) {
