@@ -31,6 +31,7 @@ public class Controller {
 	protected Vector3f moveDirection = new Vector3f();
 	protected Vector3f aimDirection = new Vector3f();
 
+	protected boolean escapePressed = false;
 	protected boolean attackPressed = false;
 	protected boolean castPressed = false;
 	protected boolean talkPressed = false;
@@ -41,6 +42,12 @@ public class Controller {
 
 	protected double mouseWheelMoved;
 
+	public boolean isEscapePressed() {
+		return escapePressed;
+	}
+	public void setEscapePressed(boolean escapePressed) {
+		this.escapePressed = escapePressed;
+	}
 	public boolean isAttackPressed() {
 		return attackPressed;
 	}

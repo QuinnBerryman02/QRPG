@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Font;
-import java.awt.event.WindowEvent;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -49,8 +48,6 @@ public class MainMenu extends Menu{
 
         newGame.addActionListener(e -> {
             MainWindow.newGame();
-            dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
-
         });
         loadGame.addActionListener(e -> {
             //TODO

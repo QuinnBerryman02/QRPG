@@ -123,13 +123,14 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 	}
 
 	public void initializeDefaultControls() {
+		buttonSet.add(makeButton("skin", KeyEvent.VK_H, "Button 0"));		//B
 		buttonSet.add(makeButton("talk", KeyEvent.VK_T, "Button 1"));		//A
 		buttonSet.add(makeButton("quest", KeyEvent.VK_Y, "Button 2"));		//Y
 		buttonSet.add(makeButton("spell", KeyEvent.VK_U, "Button 3"));		//X
 		buttonSet.add(makeButton("attack", KeyEvent.VK_Q, "Button 4"));		//L
 		buttonSet.add(makeButton("cast", KeyEvent.VK_E, "Button 5"));		//R
 		buttonSet.add(makeButton("guild", KeyEvent.VK_G, "Button 6"));		//ZL
-		buttonSet.add(makeButton("skin", KeyEvent.VK_H, "Button 7"));		//ZR
+		buttonSet.add(makeButton("escape", KeyEvent.VK_ESCAPE,"Button 7")); //ZR
 		toggleSet.add(makeToggle("move", new int[] {KeyEvent.VK_W,KeyEvent.VK_D,KeyEvent.VK_S,KeyEvent.VK_A}, new String[]{"X Axis","Y Axis"}));
 		toggleSet.add(makeToggle("aim", new int[] {-1,-1,-1,-1}, new String[]{"X Rotation","Y Rotation"}));
 	}
@@ -164,6 +165,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 			case "guild": guildPressed = value; break;
 			case "quest": questPressed = value; break;
 			case "spell": spellPressed = value; break;
+			case "escape": escapePressed = value; break;
 			default: break;
 		}  
 	}

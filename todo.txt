@@ -5,7 +5,7 @@
 fix various bugs to do with controller eg. 
     <>hard to stop, 
 cant slide against walls
-stop menus from being spam opened
+    <>stop menus from being spam opened
 add tutorial / start area
 [boss arena] add final boss
 

@@ -12,6 +12,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import java.awt.event.WindowEvent;
 
 import mvc.Model;
 import mvc.PlayerController;
@@ -150,23 +151,47 @@ public class MainWindow {
 	}
 
 	public static void initiateConversation(Player p, NPC npc) {
-		menu = new Dialogue(p, npc);
+		if(eligibleToOpenMenu(Dialogue.class)) {
+			closeMenu();
+			menu = new Dialogue(p, npc);
+		}
 	}
 	public static void openSpellMenu(Player p) {
-		menu = new SpellMenu(p);
+		if(eligibleToOpenMenu(SpellMenu.class)) {
+			closeMenu();
+			menu = new SpellMenu(p);
+		}
 	}
 
 	public static void openQuestMenu(Player p) {
-		menu = new QuestMenu(p);
+		if(eligibleToOpenMenu(QuestMenu.class)) {
+			closeMenu();
+			menu = new QuestMenu(p);
+		}
 	}
 
 	public static void openMainMenu() {
-		menu = new MainMenu();
+		if(eligibleToOpenMenu(MainMenu.class)) {
+			closeMenu();
+			menu = new MainMenu();
+		}
 	}
 
 	public static void newGame() {
+		closeMenu();
 		menu = null;
 		canvas.setGoingToPlayer(true);
+	}
+
+	public static boolean eligibleToOpenMenu(Class<?> newMenu) {
+		if(menu==null) return true;
+		if(!menu.isVisible()) return true;
+		return (!menu.getClass().equals(newMenu));
+	}
+
+	public static void closeMenu() {
+		if(menu!=null) menu.dispatchEvent(new WindowEvent(menu, WindowEvent.WINDOW_CLOSING));
+		System.gc();
 	}
 
 	public static void ready() {

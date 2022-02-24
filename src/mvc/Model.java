@@ -133,6 +133,10 @@ public class Model {
 			MainWindow.openQuestMenu(player);
 			controller.setQuestPressed(false);
 		}
+		if(controller.isEscapePressed()) {
+			MainWindow.closeMenu();
+			controller.setEscapePressed(false);
+		}
 		Integer moved = (int)controller.getMouseWheelMoved();
 		if(moved != 0) {
 			int index = player.getSpells().indexOf(player.getCurrentSpell());

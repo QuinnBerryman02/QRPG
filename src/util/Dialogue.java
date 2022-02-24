@@ -301,6 +301,10 @@ public class Dialogue extends Menu {
         return overview;
     }
 
+    public NPC getNpc() {
+        return npc;
+    }
+
     public DetailPanel getDetails() {
         return details;
     }
