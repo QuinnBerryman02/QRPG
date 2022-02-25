@@ -241,6 +241,22 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 			}
 		}
 	}
+
+	@Override
+	public void clear() {
+		super.clear();
+		java.awt.Component c = MainWindow.getCanvas();
+		for (Button button : buttonSet) {
+			KeyEvent k = new KeyEvent(c,KeyEvent.KEY_RELEASED,0,0,button.getKey(),KeyEvent.CHAR_UNDEFINED);
+			keyReleased(k);
+		}
+		for (Toggle t : toggleSet) {
+			for (int i : t.getKeys()) {
+				KeyEvent k = new KeyEvent(c,KeyEvent.KEY_RELEASED,0,0,i,KeyEvent.CHAR_UNDEFINED);
+				keyReleased(k);
+			}
+		}
+	}
 }
 
 class Button {

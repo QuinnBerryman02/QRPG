@@ -20,7 +20,9 @@
     <>add camera scripting
     <>make the player always be shown, but include the camera offset to allow cutscenes(?)
     <>create default topic response classes. implemented differently but same outcome
-mute sounds until player can move
+    <>mute sounds until player can move
+    <fix keyboard not releasing again>
+fix menu glitching
 add tutorial 
 fix enemy hitboxes
 improve camera bounds

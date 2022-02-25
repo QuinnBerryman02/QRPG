@@ -231,7 +231,7 @@ public class Model {
 						e.setProgress(0);
 						break;
 				}
-				if(dir!=-1 && e.getProgress()==1) {
+				if(dir!=-1 && e.getProgress()==1 && !MainWindow.getCanvas().isInCameraMode()) {
 					if(player.isIndoors()) {
 						if(inADungeon()) {
 							MainWindow.getAudioManager().playSoundByName("cave_steps");
