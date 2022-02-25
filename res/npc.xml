@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <npcs>
     <npc name="John" x="-8" y="4" skin="Magician_M">
-        <topic name="Introduction"> Hello my name is John, nice to meet you. </topic>
-        <topic name="Wizardry" default="true"></topic>
-        <topic name="Magic" default="true"></topic>
+        <topic name="Introduction"> Hello my name is John, I have been (sent=Who sent you?) to (free you=Free me?) and (guide you=Guide me?). You can (ask me=Ask) about (anything=Anything) if you are unsure.</topic>
+        <topic name="Who sent you?"> Why the (mayor=Mayor) of course. He has determined that you are innocent of your (crimes=What crimes?).</topic>
+        <topic name="What crimes?"> The past does not matter. You are (free=Free) now. </topic>
+        <topic name="Free me?"> Well you aren't in this cell voluntarily... </topic>
+        <topic name="Ask"> I'll do my best to answer if I know (anything=Anything) about the topic.</topic>
+        <topic name="Anything"> Maybe not anything... </topic>
+        <topic name="Guide me?"> Now that you have been released and (don't have anywhere else to go=Home?), you will be needing something to do, and we have no job openings. So I have decided your (new profession=New Profession) for you. </topic>
+        <topic name="Home?"> After (what you did=What crimes?) I wouldn't be thinking of home... </topic>
+        <topic name="New Profession"> Your going to be an (Adventurer=Adventurer) ( =What next?) ( =Why an Adventurer?)!</topic>
+        <topic name="What next?"> Well to start with, you can practice your adventuring on some slimes in the sewers. First go to the guild hall and accept my quest.</topic>
+        <topic name="Why an Adventurer?"> Lately a lot of dungeons have been popping up around the town. </topic>
+
         <topic name="Mage"> Mage? Why I am a mage! Would you like to be one? </topic>
     </npc>
     <npc name="Jane" x="-9" y="5" skin="Magician_F">
         <topic name="Introduction"> Hello my name is Jane, nice to meet you. </topic>
-        <topic name="Wizardry" default="true"></topic>
-        <topic name="Magic" default="true"></topic>
+
         <topic name="Mage"> I used to be a mage... A long time ago </topic>
     </npc>
 </npcs>

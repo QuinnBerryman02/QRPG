@@ -19,6 +19,8 @@
     <>properly check sewer dungeon for bugs
     <>add camera scripting
     <>make the player always be shown, but include the camera offset to allow cutscenes(?)
+    <>create default topic response classes. implemented differently but same outcome
+mute sounds until player can move
 add tutorial 
 fix enemy hitboxes
 improve camera bounds
@@ -26,12 +28,11 @@ add dpad option for spell swapping
 add joypad mouse functionality in menus
 add saving and loading
 fix frame drops for unknown reason
-create default topic response classes, like farmer = tree, wheat, animal ,tools etc + responses
 allow player to change buttons for actions
 create final boss arena
+create the rest of the NPCs
 
 [boss arena] add final boss
-[default topics] create the rest of the NPCs
 [save + controls]  add esc / tab menu with settings
 
         Entity)

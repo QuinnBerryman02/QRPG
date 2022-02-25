@@ -57,7 +57,6 @@ public class MainWindow {
 	private final static int W = Toolkit.getDefaultToolkit().getScreenSize().width;
 	private final static int H = Toolkit.getDefaultToolkit().getScreenSize().height;
 	private static int averageFPS = targetFPS;
-	private static boolean gameStarted = false;
 	private static AudioManager audioManager;
 	  
 	public MainWindow() {
@@ -122,8 +121,7 @@ public class MainWindow {
 	}
 
 	private static void gameloop() { 
-		if(gameStarted)
-			gameworld.gamelogic();
+		gameworld.gamelogic();
 		canvas.updateview();  
 		if(menu != null) {
 			menu.update();
@@ -192,13 +190,14 @@ public class MainWindow {
 			canvas.setCameraOffset(new Point3f(81,114,0));
 			canvas.setGoingToPoint(new Point3f(73,109,0));
 			canvas.setListener(() -> {
+				NPC john = NPCLoader.getNPCByName("John");
+				john.move(new Point3f(111.5f,120,0).minusPoint(john.getCentre()));
 				canvas.setCameraOffset(new Point3f(105,107,0));
 				canvas.setGoingToPoint(gameworld.getPlayer().getCentre());
 				canvas.setListener(() -> {
 					canvas.setInCameraMode(false);
 					canvas.setGoingToPoint(null);
 					canvas.setListener(null);
-					gameStarted = true;
 					gameworld.setStage(Model.STAGE.BEGINING);
 					PlayerController pc = (PlayerController)gameworld.getPlayer().getController();
 					canvas.addKeyListener(pc); 
@@ -228,5 +227,9 @@ public class MainWindow {
 
 	public static AudioManager getAudioManager() {
 		return audioManager;
+	}
+
+	public static Viewer getCanvas() {
+		return canvas;
 	}
 }

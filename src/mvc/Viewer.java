@@ -104,21 +104,16 @@ public class Viewer extends JPanel {
 
 			chunksOnScreen = 0;
 			chunksLoaded = map.findClosestChunks(inCameraMode ? cameraOffset : gameWorld.getPlayer().getCentre());
-			if(!inCameraMode) {
-				entitiesLoaded = gameWorld.getEntitiesLoaded();
-				gameWorld.sortEntities(entitiesLoaded);
-			}
-			
+			entitiesLoaded = gameWorld.getEntitiesLoaded();
+			gameWorld.sortEntities(entitiesLoaded);
 			g.setColor(Color.BLACK);
 			g.fillRect(0, 0, MainWindow.getW(), MainWindow.getH());
 
 			drawBackground(g);
 
-			drawPlayer(g);
+			drawEntities(g);
 			
 			if(!inCameraMode) {
-				drawEntities(g);
-
 				drawProjectiles(g);
 			}
 				
@@ -247,6 +242,7 @@ public class Viewer extends JPanel {
 	public void drawEntities(Graphics g) {
 		for (Entity e : entitiesLoaded) {
 			if (e instanceof Player) {
+				drawPlayer(g);
 				continue;
 			}
 			File TextureToLoad = new File(e.getCurrentTexture());
@@ -420,20 +416,13 @@ public class Viewer extends JPanel {
 		}
 	}
 
-	public static boolean isObjectOnScreen(GameObject go, Point3f playerCentre) {
-		Point3f relativePoint = worldSpaceToScreen(go.getCentre(), playerCentre);
+	public boolean isObjectOnScreen(GameObject go) {
+		Point3f relativePoint = worldSpaceToScreen(go.getCentre());
 		int x = (int)relativePoint.getX();
 		int y = (int)relativePoint.getY();
 		int w = (int)go.getWidth();
 		int h = (int)go.getHeight();
 		return !(x + w*UNIT_DEF <= 0 || y + h*UNIT_DEF <= 0 || x > MainWindow.getW() || y > MainWindow.getH());
-	}
-
-	public boolean isEntityOnscreen(Entity e) {
-		Point3f relativePoint = worldSpaceToScreen(e.getCentre());
-		int x = (int)relativePoint.getX();
-		int y = (int)relativePoint.getY();
-		return !(x + UNIT_DEF <= 0 || y + UNIT_DEF <= 0 || x > MainWindow.getW() || y > MainWindow.getH());
 	}
 
 	public Point3f worldSpaceToScreen(Point3f p) {
@@ -478,5 +467,9 @@ public class Viewer extends JPanel {
 
 	public void setCameraOffset(Point3f cameraOffset) {
 		this.cameraOffset = cameraOffset;
+	}
+
+	public boolean isInCameraMode() {
+		return inCameraMode;
 	}
 }

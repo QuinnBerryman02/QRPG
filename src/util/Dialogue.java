@@ -13,6 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.ScrollPaneLayout;
 import javax.swing.border.EmptyBorder;
 
@@ -46,11 +47,9 @@ public class Dialogue extends Menu {
         this.player = player;
         player.getController().clear();
         this.npc = npc;
-        Topic t = Topic.getTopic("Introduction");
-        topics.add(new TopicResponse(t, npc.getResponse(t)));
-        Topic q = Topic.getTopic("Quest");
+        
         availableTopics = player.findCommonTopics(npc);
-        availableTopics.add(q);
+        availableTopics.add(Topic.getTopic("Quest"));
 
         CustomBorder customBorder = new CustomBorder();
         
@@ -72,6 +71,8 @@ public class Dialogue extends Menu {
         pack();
         setVisible(true);
         repaint();
+
+        overview.triggerButton(Topic.getTopic("Introduction"));
     }
 
     public void update() {
@@ -164,6 +165,7 @@ public class Dialogue extends Menu {
             sp.setBackground(new Color(1f,1f,1f,0f));
             sp.getViewport().setBackground(new Color(1f,1f,1f,0f));
             sp.setBorder(new EmptyBorder(10, 0, 20, 0));
+            sp.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
             add(sp);
         }
         public void paintComponent(Graphics g) {
@@ -173,11 +175,13 @@ public class Dialogue extends Menu {
 
         public void addTopicResponse(TopicResponse tr) {
             String s = tr.getTopic().getName() + "<br/>" + tr.getResponse().getText(npc.getKnownTopics());
-            JLabel label = new JLabel("<html>" + s + "</html>");
+            System.out.println(w);
+            JLabel label = new JLabel("<html><body style='width:" + (w-200)  +"px'>" + s + "</body></html>");
             labelPanel.add(label);
             labels.add(label);
             label.setAlignmentX(Component.LEFT_ALIGNMENT);
-            label.setBorder(new EmptyBorder(0, 10, 0, 0));
+            label.setBorder(new EmptyBorder(0, 12, 0, 0));
+            label.setPreferredSize(new Dimension((w-200),label.getPreferredSize().height));
         }
 
         public void bottomScroll() {
@@ -224,10 +228,23 @@ public class Dialogue extends Menu {
             tb.setBackground(new Color(1f,1f,1f,0f));
             tb.setBorder(new EmptyBorder(0,0,0,0));
         }
+
+        public void triggerButton(Topic t) {
+            for (int i=0;i<buttons.size();i++) {
+                if(buttons.get(i).getTopic().equals(t)) {
+                    buttons.get(i).doClick();
+                    return;
+                }
+            }
+        }
     }
 
     class TopicButton extends JButton {
         private Topic topic;
+
+        public Topic getTopic() {
+            return topic;
+        }
         public TopicButton(Topic topic) {
             this.topic = topic;
             setText(topic.getName());
@@ -275,7 +292,7 @@ public class Dialogue extends Menu {
                 newTopics.forEach(t -> {
                     if(!availableTopics.contains(t)) {
                         player.getKnownTopics().add(t);
-                        if(npc.getKnownTopics().contains(t)) {
+                        if(npc.hasResponse(t)) {
                             availableTopics.add(t);
                             getOverview().addTopic(t);
                         }

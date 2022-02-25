@@ -8,11 +8,10 @@ import javax.xml.parsers.DocumentBuilder;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
-import mvc.AIController;
-
 import org.w3c.dom.Element;
 
 public class TopicLoader {
+    private static ArrayList<TopicResponse> commonKnowledge = new ArrayList<TopicResponse>();
     private DocumentBuilderFactory factory;
     private DocumentBuilder builder;
     private Document document;
@@ -26,17 +25,21 @@ public class TopicLoader {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+        loadCommonKnowledge();
     }
 
-    public Response getDefaultResponse(Topic t) {
+    public static ArrayList<TopicResponse> getCommonKnowledge() {
+        return commonKnowledge;
+    }
+
+    public void loadCommonKnowledge() {
         NodeList topics = document.getElementsByTagName("topic");
         for (int j=0;j<topics.getLength();j++) {
             Element e = (Element)topics.item(j);
-            if(e.getAttribute("name").equals(t.getName())) {
-                return new Response(e.getTextContent());
-            }
+            Topic t = Topic.getTopic(e.getAttribute("name"));
+            Response r = new Response(e.getTextContent());
+            TopicResponse tr = new TopicResponse(t, r);
+            commonKnowledge.add(tr);
         }
-        return null;
     }
 }

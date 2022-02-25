@@ -212,7 +212,7 @@ public class AudioManager {
             try {
                 Clip soundClip = AudioSystem.getClip();
                 AudioInputStream as = AudioSystem.getAudioInputStream(chooseRandom());
-                System.out.println("Playing sound: " + chooseRandom().getName());
+                //System.out.println("Playing sound: " + chooseRandom().getName());
                 try {
                     soundClip.open(as);
                     soundClip.start();

@@ -71,8 +71,9 @@ public class Model {
 	
 	public void gamelogic() { 
 		synchronized(this) {
+			boolean cameraMode = MainWindow.getCanvas().isInCameraMode();
 			entitiesLoaded.clear();
-			if(inADungeon()) {
+			if(inADungeon() && !cameraMode) {
 				Dungeon.CTYPE chunkType = getCurrentDungeon().getChunkByCoords(player.getCentre());
 				if(chunkType.ordinal() -8 <= 2 && chunkType.ordinal() -8  >= 0) {
 					Enemy[] enemies = getCurrentDungeon().generateEnemies(player.getCentre());
@@ -80,50 +81,57 @@ public class Model {
 				}
 			}
 			entities.forEach(e -> {
-				if(Viewer.isObjectOnScreen(e, player.getCentre())) {
+				if(MainWindow.getCanvas().isObjectOnScreen(e)) {
 					if(!e.isDead()) entitiesLoaded.add(e);
 					if(e instanceof Enemy && !e.isDead()) {
 						e.setHostile(true);
 						e.commenceCombat(player);
 					}
 				} else {
-					e.setHostile(false);
+					if(!(e instanceof Player))
+						e.setHostile(false);
 				}
 			});
 			player.updateCombat();
+			
 			AudioManager am = MainWindow.getAudioManager();
-			int id = map.getIdAudioLayer(player.getCentre());
-			if(player.isInCombat()) {
-				am.playSongByTileId(666);
-			} else {
-				if(inADungeon()) {
-					if(getCurrentDungeon().getType().equals(Dungeon.DType.CAVE)) {
-						am.playSongByTileId(639 + 36);
-					} else {
-						am.playSongByTileId(3424 + 81);
-					}
+			if(!cameraMode) {
+				int id = map.getIdAudioLayer(player.getCentre());
+				if(player.isInCombat()) {
+					am.playSongByTileId(666);
 				} else {
-					am.playSongByTileId(id);
+					if(inADungeon()) {
+						if(getCurrentDungeon().getType().equals(Dungeon.DType.CAVE)) {
+							am.playSongByTileId(639 + 36);
+						} else {
+							am.playSongByTileId(3424 + 81);
+						}
+					} else {
+						am.playSongByTileId(id);
+					}
 				}
 			}
 			for (Entity e : entitiesLoaded) {
 				if(e instanceof Player) {
-					playerLogic(); 
+					if(!cameraMode)
+						playerLogic(); 
 				} else {
 					entityLogic(e); 
 				}
 			}
-			for (int i=0;i<projectiles.size();i++) {
-				if(Viewer.isObjectOnScreen(projectiles.get(i), player.getCentre())) {
-					boolean hit = projectileLogic(projectiles.get(i));
-					if(hit) {
+			if(!cameraMode){
+				for (int i=0;i<projectiles.size();i++) {
+					if(MainWindow.getCanvas().isObjectOnScreen(projectiles.get(i))) {
+						boolean hit = projectileLogic(projectiles.get(i));
+						if(hit) {
+							projectiles.remove(i);
+							i--;
+						}
+					} else {
 						projectiles.remove(i);
 						i--;
 					}
-				} else {
-					projectiles.remove(i);
-					i--;
-				}
+				}	
 			}
 		}
 	}

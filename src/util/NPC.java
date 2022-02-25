@@ -23,6 +23,9 @@ public class NPC extends Entity {
         for (TopicResponse topicResponse : topicResponses) {
             known.add(topicResponse.getTopic());
         }
+        for (TopicResponse defaults : TopicLoader.getCommonKnowledge()) {
+            known.add(defaults.getTopic());
+        }
         return known;
     }
 
@@ -30,10 +33,29 @@ public class NPC extends Entity {
         this.topicResponses = topicResponses;
     }
 
+    public boolean hasResponse(Topic topic) {
+        for (TopicResponse topicResponse : topicResponses) {
+            if(topicResponse.getTopic().equals(topic)) {
+                return true;
+            }
+        }
+        for (TopicResponse defaults : TopicLoader.getCommonKnowledge()) {
+            if(defaults.getTopic().equals(topic)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Response getResponse(Topic topic) {
         for (TopicResponse topicResponse : topicResponses) {
             if(topicResponse.getTopic().equals(topic)) {
                 return topicResponse.getResponse();
+            }
+        }
+        for (TopicResponse defaults : TopicLoader.getCommonKnowledge()) {
+            if(defaults.getTopic().equals(topic)) {
+                return defaults.getResponse();
             }
         }
         return null;
