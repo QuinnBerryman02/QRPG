@@ -218,7 +218,16 @@ public class MainWindow {
 
 	public static void closeMenu() {
 		if(menu!=null) menu.dispatchEvent(new WindowEvent(menu, WindowEvent.WINDOW_CLOSING));
+		menu = null;
 		System.gc();
+	}
+
+	public static Menu getMenu() {
+		return menu;
+	}
+
+	public static boolean inAMenu() {
+		return menu!=null;
 	}
 
 	public static Model getModel() {

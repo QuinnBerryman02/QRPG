@@ -24,16 +24,16 @@
     <fix keyboard not releasing again>
     <>add tutorial 
     <>improve camera bounds
+    <>add joypad mouse functionality in menus
 fix menu glitching
 fix enemy hitboxes
 add dpad option for spell swapping
-add joypad mouse functionality in menus
 add saving and loading
 fix frame drops for unknown reason
 allow player to change buttons for actions
 create final boss arena
 create the rest of the NPCs
-
+hide the mouse when not in a menu && in controller mode
 [boss arena] add final boss
 [save + controls]  add esc / tab menu with settings
 

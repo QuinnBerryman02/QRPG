@@ -17,7 +17,9 @@ import util.Vector3f;
 import net.java.games.input.Component;
 
 public class PlayerController extends mvc.Controller implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener{
-	private static final String myController = "Wireless Gamepad";
+	private static final String MY_CONTROLLER_NAME = "Wireless Gamepad";
+	public static final float MOUSE_MENU_SPEED = 30;
+	private boolean pressedOnMenu = false;
 	private static final float PRECISION = 0.3f;
 	private net.java.games.input.Controller gameController = null;
 	private boolean controllerMode = false;
@@ -27,7 +29,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 	public PlayerController() {
 		ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment();
 		for (net.java.games.input.Controller controller : ce.getControllers()) {
-			if(controller.getName().equals(myController)) {
+			if(controller.getName().equals(MY_CONTROLLER_NAME)) {
 				gameController = controller;
 			}
 		}
@@ -42,6 +44,10 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		initializeDefaultControls();
 	}
 
+	public boolean isControllerMode() {
+		return controllerMode;
+	}
+
 	public static void main(String[] args) {
 		PlayerController p = new PlayerController();
 		for(Component c : p.getGameController().getComponents()) {
@@ -51,6 +57,14 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 
 	public net.java.games.input.Controller getGameController() {
 		return gameController;
+	}
+
+	public boolean isPressedOnMenu() {
+		return pressedOnMenu;
+	}
+
+	public void setPressedOnMenu(boolean pressedOnMenu) {
+		this.pressedOnMenu = pressedOnMenu;
 	}
 
 	@Override

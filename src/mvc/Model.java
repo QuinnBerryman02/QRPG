@@ -3,6 +3,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
+import java.awt.MouseInfo;
+import java.awt.Point;
+import java.awt.Robot;
+import java.awt.event.InputEvent;
 
 import main.MainWindow;
 import util.*;
@@ -81,7 +85,7 @@ public class Model {
 				}
 			}
 			entities.forEach(e -> {
-				if(MainWindow.getCanvas().isObjectOnScreen(e)) {
+				if(MainWindow.getCanvas().isObjectOnScreen(e) || e instanceof Player) {
 					if(!e.isDead()) entitiesLoaded.add(e);
 					if(e instanceof Enemy && !e.isDead()) {
 						e.setHostile(true);
@@ -113,8 +117,7 @@ public class Model {
 			}
 			for (Entity e : entitiesLoaded) {
 				if(e instanceof Player) {
-					if(!cameraMode)
-						playerLogic(); 
+					playerLogic(); 
 				} else {
 					entityLogic(e); 
 				}
@@ -137,35 +140,65 @@ public class Model {
 	}
 
 	private void playerLogic() {
-		player.regenMana();
-		Controller controller = player.getController();
-		((PlayerController)controller).update();
-		if(controller.isChangeSkinPressed()) {
-			player.setSkin(Skin.getSkins()[(player.getSkin().getIndex()+1)%Skin.getSkins().length]);
-			controller.setChangeSkinPressed(false);
+		PlayerController controller = (PlayerController)player.getController();
+		controller.update();
+		if(!MainWindow.getCanvas().isInCameraMode()) {
+			player.regenMana();
+			if(controller.isChangeSkinPressed()) {
+				player.setSkin(Skin.getSkins()[(player.getSkin().getIndex()+1)%Skin.getSkins().length]);
+				controller.setChangeSkinPressed(false);
+			}
+			if(controller.isSpellPressed()) {
+				MainWindow.openSpellMenu(player);
+				controller.setSpellPressed(false);
+			}
+			if(controller.isQuestPressed()) {
+				MainWindow.openQuestMenu(player);
+				controller.setQuestPressed(false);
+			}
+			if(controller.isEscapePressed()) {
+				MainWindow.closeMenu();
+				controller.setEscapePressed(false);
+			}
+			Integer moved = (int)controller.getMouseWheelMoved();
+			if(moved != 0) {
+				int index = player.getSpells().indexOf(player.getCurrentSpell());
+				int newIndex = index + moved;
+				if(newIndex > player.getSpells().size()-1) newIndex = 0;
+				if(newIndex < 0) newIndex = player.getSpells().size()-1;
+				player.setCurrentSpell(player.getSpells().get(newIndex));
+				controller.setMouseWheelMoved(0.0);
+			}
+			if(!MainWindow.inAMenu()) {
+				animationLogic(player);
+			}
 		}
-		if(controller.isSpellPressed()) {
-			MainWindow.openSpellMenu(player);
-			controller.setSpellPressed(false);
+		if(MainWindow.inAMenu()) {
+			if(controller.isControllerMode()) {
+				try {
+					Robot robot = new Robot();
+					Point p = MouseInfo.getPointerInfo().getLocation();
+					Point3f p2 = new Point3f((float)p.getX(),(float)p.getY(),0);
+					Vector3f dir = player.getController().getMoveDirection();
+					Vector3f dir2 = dir.byScalar(PlayerController.MOUSE_MENU_SPEED);
+					Point3f newPoint = p2.plusVector(dir2);
+					robot.mouseMove((int)newPoint.getX(), (int)newPoint.getY());
+					if(controller.isTalkPressed()) {
+						if(!controller.isPressedOnMenu()) {
+							robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
+							controller.setPressedOnMenu(true);
+						}
+					} else {
+						if(controller.isPressedOnMenu()) {
+							robot.mouseRelease(InputEvent.BUTTON1_DOWN_MASK);
+							controller.setPressedOnMenu(false);
+						}
+					}
+				} catch(Exception e) {
+					e.printStackTrace();
+				}
+			}
 		}
-		if(controller.isQuestPressed()) {
-			MainWindow.openQuestMenu(player);
-			controller.setQuestPressed(false);
-		}
-		if(controller.isEscapePressed()) {
-			MainWindow.closeMenu();
-			controller.setEscapePressed(false);
-		}
-		Integer moved = (int)controller.getMouseWheelMoved();
-		if(moved != 0) {
-			int index = player.getSpells().indexOf(player.getCurrentSpell());
-			int newIndex = index + moved;
-			if(newIndex > player.getSpells().size()-1) newIndex = 0;
-			if(newIndex < 0) newIndex = player.getSpells().size()-1;
-			player.setCurrentSpell(player.getSpells().get(newIndex));
-			controller.setMouseWheelMoved(0.0);
-		}
-		animationLogic(player);
 	}
 
 	private void entityLogic(Entity e) {
