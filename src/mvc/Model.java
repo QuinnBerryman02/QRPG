@@ -56,7 +56,7 @@ public class Model {
 		dungeons.add(new Dungeon(Dungeon.DType.CAVE, 5));
 		dungeons.add(new Dungeon(Dungeon.DType.SEWER, 5));
 		//Player 
-		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(-67,70,0),100,10,100);
+		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(111,118,0),100,10,100);
 		NPCLoader npcLoader = new NPCLoader(new File("res/npc.xml"));
 		npcLoader.createAllNpcs().forEach(npc -> entities.add(npc));
 		entities.add(player);

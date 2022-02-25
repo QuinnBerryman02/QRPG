@@ -187,7 +187,28 @@ public class MainWindow {
 	public static void newGame() {
 		closeMenu();
 		menu = null;
-		canvas.setGoingToPlayer(true);
+		canvas.setGoingToPoint(new Point3f(-66,67,0));
+		canvas.setListener(() -> {
+			canvas.setCameraOffset(new Point3f(81,114,0));
+			canvas.setGoingToPoint(new Point3f(73,109,0));
+			canvas.setListener(() -> {
+				canvas.setCameraOffset(new Point3f(105,107,0));
+				canvas.setGoingToPoint(gameworld.getPlayer().getCentre());
+				canvas.setListener(() -> {
+					canvas.setInCameraMode(false);
+					canvas.setGoingToPoint(null);
+					canvas.setListener(null);
+					gameStarted = true;
+					gameworld.setStage(Model.STAGE.BEGINING);
+					PlayerController pc = (PlayerController)gameworld.getPlayer().getController();
+					canvas.addKeyListener(pc); 
+					canvas.addMouseListener(pc);  
+					canvas.addMouseMotionListener(pc);
+					canvas.addMouseWheelListener(pc);
+					canvas.requestFocusInWindow(); 
+				});
+			});
+		});
 	}
 
 	public static boolean eligibleToOpenMenu(Class<?> newMenu) {
@@ -199,31 +220,6 @@ public class MainWindow {
 	public static void closeMenu() {
 		if(menu!=null) menu.dispatchEvent(new WindowEvent(menu, WindowEvent.WINDOW_CLOSING));
 		System.gc();
-	}
-
-	public static void ready() {
-		canvas.setInCameraMode(false);
-		canvas.setGoingToPlayer(false);
-		gameStarted = true;
-		gameworld.setStage(Model.STAGE.MIDGAME);
-		PlayerController pc = (PlayerController)gameworld.getPlayer().getController();
-		canvas.addKeyListener(pc); 
-		canvas.addMouseListener(pc);  
-		canvas.addMouseMotionListener(pc);
-		canvas.addMouseWheelListener(pc);
-		canvas.requestFocusInWindow(); 
-		
-		// int[] entry = gameworld.getDungeon().getEntries().get(0);
-		// gameworld.getDungeon().setCurrentLayer(0);
-		// int[] c = gameworld.getDungeon().dungeonSpaceToWorldSpace(entry);
-		// System.out.println(c[0] + " " + c[1]);
-		// int x = c[0] + 8;
-		// int y = c[1] + 10;
-
-		// float dx = x - gameworld.getPlayer().getCentre().getX();
-		// float dy = y - gameworld.getPlayer().getCentre().getY();
-		// gameworld.getPlayer().move(new Vector3f(dx,dy,0));
-		
 	}
 
 	public static Model getModel() {

@@ -17,7 +17,8 @@
     <>create more variants of dungeon, both in type and chunk
     <>add quest chooser ui in the guild
     <>properly check sewer dungeon for bugs
-add tutorial / start area
+    <>add camera scripting
+add tutorial 
 fix enemy hitboxes
 improve camera bounds
 add dpad option for spell swapping

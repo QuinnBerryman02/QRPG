@@ -57,7 +57,8 @@ public class Viewer extends JPanel {
 	private Vector3f cameraVector;
 	private Point3f cameraOffset;
 	private boolean inCameraMode = true;
-	private boolean goingToPlayer = false;
+	private ReadyListener cameraListener;
+	private Point3f goingToPoint = null;
 	private boolean inDebugMode = true;
 	private Model gameWorld; 
 	private ArrayList<Chunk> chunksLoaded = new ArrayList<Chunk>();
@@ -77,18 +78,17 @@ public class Viewer extends JPanel {
 	}
 
 	public void moveCamera() {
-		if(!goingToPlayer) {
+		if(goingToPoint == null) {
 			Vector3f realSpeed = cameraVector.byScalar(1f / (float)MainWindow.getTargetFPS());
 			realSpeed = cameraOffset.bounce(realSpeed, CAMERA_BOUND_TL, CAMERA_BOUND_BR);
 			cameraOffset.applyVector(realSpeed);
 			cameraVector = realSpeed.byScalar((float)MainWindow.getTargetFPS());
 		} else {
-			Point3f p = gameWorld.getPlayer().getCentre();
-			Vector3f v = p.minusPoint(cameraOffset);
+			Vector3f v = goingToPoint.minusPoint(cameraOffset);
 			float vx = v.getX();
 			float vy = v.getY();
 			if(Math.round(vx)==0 && Math.round(vy) == 0) {
-				MainWindow.ready();
+				cameraListener.ready();
 				return;
 			}
 			cameraVector = v.relativeMax(CAMERA_HOMING_SPEED);
@@ -462,7 +462,19 @@ public class Viewer extends JPanel {
 		this.inDebugMode = inDebugMode;
 	}
 
-	public void setGoingToPlayer(boolean goingToPlayer) {
-		this.goingToPlayer = goingToPlayer;
+	public void setGoingToPoint(Point3f goingToPoint) {
+		this.goingToPoint = goingToPoint;
+	}
+
+	public interface ReadyListener {
+		void ready();
+	}
+
+	public void setListener(ReadyListener cameraListener) {
+		this.cameraListener = cameraListener;
+	}
+
+	public void setCameraOffset(Point3f cameraOffset) {
+		this.cameraOffset = cameraOffset;
 	}
 }
