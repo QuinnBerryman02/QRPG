@@ -22,10 +22,10 @@
     <>create default topic response classes. implemented differently but same outcome
     <>mute sounds until player can move
     <fix keyboard not releasing again>
+    <>add tutorial 
+    <>improve camera bounds
 fix menu glitching
-add tutorial 
 fix enemy hitboxes
-improve camera bounds
 add dpad option for spell swapping
 add joypad mouse functionality in menus
 add saving and loading

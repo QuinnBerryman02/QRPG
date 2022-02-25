@@ -268,7 +268,7 @@ public class Dungeon {
             case CENTER_A:
                 return new int[][]{{6,2}, {6,6}, {6,10}, {6,14}, {0,11}, {14,4},{14,8},{14,12}}; 
             case CENTER_B:
-                return new int[][]{{8,1},{8,5},{8,9},{0,5},{0,10},{15,5},{15,10},{7,14}};
+                return new int[][]{{8,1},{8,5},{8,9},{0,5},{0,10},{16,5},{16,10},{7,10}};
             case CENTER_C:
                 return new int[][]{{0,0},{0,15},{15,15},{15,0},{7,0},{7,15},{0,7},{15,7}};
             default:
@@ -287,6 +287,10 @@ public class Dungeon {
         int cx = c[0];
         int cy = c[1];
         int[][] spawns = getSpawnLocations(d);
+        for (int[] is : spawns) {
+            is[0]+=0.5;
+            is[1]+=0.5;
+        }
         Enemy[] enemies = new Enemy[spawns.length];
         for(int i=0;i<enemies.length;i++) {
             double isEnemy = r.nextDouble();
@@ -478,7 +482,7 @@ public class Dungeon {
     }
 
     public int[] getChunkCoords(CTYPE c) {
-        if(c==null) return new int[]{-80, 208};
+        if(c==null) return getChunkCoords(CTYPE.EMPTY);
         switch(type) {
             case CAVE:
                 return getChunkCoordsHelper(c);

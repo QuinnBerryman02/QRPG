@@ -36,6 +36,14 @@ public class Player extends Entity {
 		});
 	}
 
+	public int numberOfQuestsCompleted() {
+		int i=0;
+		for (Quest quest : quests) {
+			if(quest.getQuestRelevancy()%2==1) i++;
+		}
+		return i;
+	}
+
 	public Quest findFirstQuestByPredicate(Predicate<Quest> p) {
 		for (Quest quest : quests) {
 			if(p.test(quest)) return quest;

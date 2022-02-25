@@ -216,7 +216,6 @@ public class AudioManager {
                 try {
                     soundClip.open(as);
                     soundClip.start();
-                    
                     soundClip.addLineListener(e -> {
                         if(e.getType().equals(LineEvent.Type.STOP)) {
                             soundClip.close();

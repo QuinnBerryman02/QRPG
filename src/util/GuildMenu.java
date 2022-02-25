@@ -100,8 +100,8 @@ public class GuildMenu extends Menu{
                     }
                     NPC giver = NPCLoader.getAliveNpcs().get(r.nextInt(NPCLoader.getAliveNpcs().size()));
                     Quest quest;
-                    if(which<0.98) {
-                        int amount = r.nextInt(20);
+                    if(which<0.999) {
+                        int amount = r.nextInt(20) + 5;
                         Enemy.Type type;
                         boolean alreadyHave = false;
                         int attempts = 0;

@@ -10,10 +10,18 @@
         <topic name="Guide me?"> Now that you have been released and (don't have anywhere else to go=Home?), you will be needing something to do, and we have no job openings. So I have decided your (new profession=New Profession) for you. </topic>
         <topic name="Home?"> After (what you did=What crimes?) I wouldn't be thinking of home... </topic>
         <topic name="New Profession"> Your going to be an (Adventurer=Adventurer) ( =What next?) ( =Why an Adventurer?)!</topic>
-        <topic name="What next?"> Well to start with, you can practice your adventuring on some slimes in the sewers. First go to the guild hall and accept my quest.</topic>
-        <topic name="Why an Adventurer?"> Lately a lot of dungeons have been popping up around the town. </topic>
-
+        <topic name="What next?"> Well to start with, you can practice your adventuring on some (slimes=Slime) in the (sewers=Sewers). First go to the (guild hall=Guild) and accept my (quest=Quests).</topic>
+        <topic name="Why an Adventurer?"> Lately a lot of (dungeons=Dungeon) have been popping up around the (town=Town). </topic>
+        <topic name="Sewers"> One of the (dungeons=Dungeon) that popped up recently. You can find it in front of the (town hall=Town Hall). </topic>
+        <topic name="Dungeon"> Massive structures that seem to go on forever. They were all deep underground until recently... Very Strange... </topic>
         <topic name="Mage"> Mage? Why I am a mage! Would you like to be one? </topic>
+        <topic name="Slime"> Be careful with them, they may be slow but their slime will disolve you like butter. </topic>
+        <topic name="Reward"> Helping out the villagers is an honourable and profitable way to live </topic>
+        <topic name="Professional Adveturer!"> Very well, first go and talk to all the villagers to get aquainted with the (community=Town). Talk to me at (my house=Your house?) when you feel like you are welcome(=Welcomed). </topic>
+        <topic name="Welcomed"> To spread your (notoriety=Notoriety) you need to do (quests=Quests) for everyone. Talk to me when you have done at least 10. </topic>
+        <topic name="The Room"> The Room lies behind the big locked door in the (Guild=Guild) Hall. </topic>
+        <topic name="Notoriety"></topic>
+        <topic name="Your house?"> My house is northeast of the (town=Town), take the bridge east by the beach, and head north along the river road until you see a house with a pond, that's mine </topic>
     </npc>
     <npc name="Jane" x="-9" y="5" skin="Magician_F">
         <topic name="Introduction"> Hello my name is Jane, nice to meet you. </topic>

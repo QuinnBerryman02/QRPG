@@ -46,8 +46,8 @@ SOFTWARE.
  * Credits: Kelly Charles (2020)
  */ 
 public class Viewer extends JPanel {
-	public static final Point3f CAMERA_BOUND_TL = new Point3f(-92f,-38f,0f);
-	public static final Point3f CAMERA_BOUND_BR = new Point3f(1f, 133f, 0f);
+	public static final Point3f CAMERA_BOUND_TL = new Point3f(-109f,-60f,0f);
+	public static final Point3f CAMERA_BOUND_BR = new Point3f(14f, 145, 0f);
 	private final float CAMERA_HOMING_SPEED = 64f;
 	private static final int CHUNK_SIZE = 16;
 	private static final int TILE_SIZE_DEF = 16;
@@ -59,7 +59,7 @@ public class Viewer extends JPanel {
 	private boolean inCameraMode = true;
 	private ReadyListener cameraListener;
 	private Point3f goingToPoint = null;
-	private boolean inDebugMode = true;
+	private boolean inDebugMode = false;
 	private Model gameWorld; 
 	private ArrayList<Chunk> chunksLoaded = new ArrayList<Chunk>();
 	private ArrayList<Entity> entitiesLoaded = new ArrayList<Entity>();

@@ -25,6 +25,7 @@ import java.awt.event.AdjustmentListener;
 import java.awt.event.AdjustmentEvent;
 
 import main.MainWindow;
+import mvc.Model;
 import mvc.PlayerController;
 
 import java.awt.Color;
@@ -175,7 +176,6 @@ public class Dialogue extends Menu {
 
         public void addTopicResponse(TopicResponse tr) {
             String s = tr.getTopic().getName() + "<br/>" + tr.getResponse().getText(npc.getKnownTopics());
-            System.out.println(w);
             JLabel label = new JLabel("<html><body style='width:" + (w-200)  +"px'>" + s + "</body></html>");
             labelPanel.add(label);
             labels.add(label);
@@ -249,7 +249,6 @@ public class Dialogue extends Menu {
             this.topic = topic;
             setText(topic.getName());
             addActionListener((event -> {
-                System.out.println("clicked on: " + getText());
                 Response response;
                 if(topic.getName().equals("Quest")) {
                     player.sortQuests();
@@ -265,15 +264,27 @@ public class Dialogue extends Menu {
                     String questResponse = "";
                     switch (relevancy) {
                         case 1:
-                            questResponse = "Thanks for completing the quest, I'll pay you your reward now. What was it again? Ah yes... " + q1.getReward() + "gold.";
+                            if(isFirstQuest(q1)) {
+                                questResponse = "Splendid you actually made it back! Here's your first (reward=Reward). So are you excited at the prospects of this job(=Professional Adveturer!)?";
+                            } else {
+                                questResponse = "Thanks for completing the quest, I'll pay you your reward now. What was it again? Ah yes... " + q1.getReward() + "gold.";
+                            }
                             player.setGold(q1.getReward() + player.getGold());
                             q1.setRewardCollected(true);
                             break;
                         case 2:
-                            questResponse = "Thanks for taking on the quest, I hope you can complete it.";
+                            if(isFirstQuest(q1)) {
+                                questResponse = "Good luck with the (slimes=Slime)! Remember, they can be dangerous.";
+                            }else {
+                                questResponse = "Thanks for taking on the quest, I hope you can complete it.";
+                            }
                             break;
                         case 3:
-                            questResponse = "I've already paid you for that quest...";
+                            if(isFirstQuest(q1)) {
+                                questResponse = "Don't worry there are much more grander (quests=Quests) to do than that one. Why don't you go have a look in the (guild=Guild)?";
+                            } else {
+                                questResponse = "I've already paid you for that quest...";
+                            }
                             break;
                         case 4:
                             questResponse = "Worthless Adventurer... Can't even complete a simple quest like that.";
@@ -283,6 +294,27 @@ public class Dialogue extends Menu {
                             break;
                     }
                     response = new Response(questResponse);
+                } else if(topic.getName().equals("Professional Adveturer!")) {
+                    MainWindow.getModel().setStage(Model.STAGE.MIDGAME);
+                    response = npc.getResponse(topic);
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            try {
+                                Thread.sleep(100000);
+                                NPC npc = NPCLoader.getNPCByName("John");
+                                npc.move(new Point3f(56,-95,0).minusPoint(npc.getCentre()));
+                            } catch(InterruptedException e) {}
+                        };
+                    }.start();
+                } else if(topic.getName().equals("Notoriety")) {
+                    int done = player.numberOfQuestsCompleted();
+                    String s = "You have done " + done + " (quest" + (done==1? "" : "s") + "=Quests) so far.";
+                    if(done >= 10) {
+                        s += " Well done for doing so many. I have one final quest to give you. Pick it up at the (guild=Guild) and meet me downstairs, in (the room=The Room).";
+                        MainWindow.getModel().setStage(Model.STAGE.ENDGAME);
+                    }
+                    response = new Response(s);
                 } else {
                     response = npc.getResponse(topic);
                 }
@@ -320,6 +352,10 @@ public class Dialogue extends Menu {
 
     public NPC getNpc() {
         return npc;
+    }
+
+    public boolean isFirstQuest(Quest q) {
+        return MainWindow.getModel().getStage().equals(Model.STAGE.BEGINING);
     }
 
     public DetailPanel getDetails() {
