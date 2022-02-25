@@ -34,7 +34,7 @@ SOFTWARE.
    (MIT LICENSE ) e.g do what you want with this :-) 
  */ 
 public class Model {
-	private Dungeon dungeon;
+	private ArrayList<Dungeon> dungeons = new ArrayList<Dungeon>();
 	private Player player;
 	private Map map;
 	private ArrayList<Entity> entities = new ArrayList<Entity>();
@@ -46,7 +46,8 @@ public class Model {
 		//World
 		map = new Map(new File("res/map.tmx"));
 		map.loadTilesets();
-		dungeon = new Dungeon(Dungeon.DType.CAVE, 5);
+		dungeons.add(new Dungeon(Dungeon.DType.CAVE, 5));
+		dungeons.add(new Dungeon(Dungeon.DType.SEWER, 5));
 		//Player 
 		Enemy e1 = new Enemy(Type.WIND_ELEMENTAL, 0.5f, 0.5f, new Point3f(-12f,-10f,0f), 100, 10, 100);
 		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(0,0,0),100,10,100);
@@ -68,10 +69,10 @@ public class Model {
 	public void gamelogic() { 
 		synchronized(this) {
 			entitiesLoaded.clear();
-			if(dungeon.isInThis()!=null) {
-				Dungeon.CTYPE chunkType = dungeon.getChunkByCoords(player.getCentre());
+			if(inADungeon()) {
+				Dungeon.CTYPE chunkType = getCurrentDungeon().getChunkByCoords(player.getCentre());
 				if(chunkType.ordinal() -8 <= 2 && chunkType.ordinal() -8  >= 0) {
-					Enemy[] enemies = dungeon.generateEnemies(player.getCentre());
+					Enemy[] enemies = getCurrentDungeon().generateEnemies(player.getCentre());
 					if(enemies!=null) for(Enemy e : enemies) if(e!=null) entities.add(e);
 				}
 			}
@@ -88,13 +89,15 @@ public class Model {
 			});
 			player.updateCombat();
 			AudioManager am = MainWindow.getAudioManager();
-			int id = map.getIdAudioLayer(player.getCentre(), dungeon.isInThis());
+			int id = map.getIdAudioLayer(player.getCentre());
 			if(player.isInCombat()) {
 				am.playSongByTileId(666);
 			} else {
-				if(dungeon.isInThis()!=null) {
-					if(dungeon.getType().equals(Dungeon.DType.CAVE)) {
+				if(inADungeon()) {
+					if(getCurrentDungeon().getType().equals(Dungeon.DType.CAVE)) {
 						am.playSongByTileId(639 + 36);
+					} else {
+						am.playSongByTileId(3424 + 81);
 					}
 				} else {
 					am.playSongByTileId(id);
@@ -214,7 +217,7 @@ public class Model {
 				}
 				if(dir!=-1 && e.getProgress()==1) {
 					if(player.isIndoors()) {
-						if(dungeon.isInThis()!=null) {
+						if(inADungeon()) {
 							MainWindow.getAudioManager().playSoundByName("cave_steps");
 						} else {
 							MainWindow.getAudioManager().playSoundByName("wood_steps");
@@ -328,7 +331,7 @@ public class Model {
 	}
 
 	public Vector3f wallCollisionHandler(GameObject go, Vector3f v) {
-		int[][] collisions = map.findCollisionTilesNearbyAPoint(go.getCentre(), SCAN_RANGE, dungeon.isInThis());
+		int[][] collisions = map.findCollisionTilesNearbyAPoint(go.getCentre(), SCAN_RANGE);
 		int[] tile = Map.findTile(go.getCentre());
         int px = tile[0];
         int py = tile[1];
@@ -359,8 +362,8 @@ public class Model {
 								Player p = (Player)go;
 								//if(p.getController().isDoorPressed()) {
 									Point3f portalPoint = new Point3f(px - SCAN_RANGE + j, py - SCAN_RANGE + i, 0f);
-									String teleport = map.findTeleportTypeByPoint(portalPoint, dungeon);
-									Point3f destinationPoint = map.findTeleportPointByOther(teleport, portalPoint, dungeon); 
+									String teleport = map.findTeleportTypeByPoint(portalPoint);
+									Point3f destinationPoint = map.findTeleportPointByOther(teleport, portalPoint); 
 									System.out.println("Teleporting from " + portalPoint + " to " + destinationPoint + " via " + teleport);
 									p.move(new Point3f(destinationPoint.getX()+0.5f,destinationPoint.getY()+0.5f,0f).minusPoint(p.getCentre()));
 									return new Vector3f();
@@ -444,11 +447,18 @@ public class Model {
 		return entitiesLoaded;
 	}
 
-	public Dungeon getDungeon() {
-		return dungeon;
+	public ArrayList<Dungeon> getDungeons() {
+		return dungeons;
 	}
 
-	public void setDungeon(Dungeon dungeon) {
-		this.dungeon = dungeon;
+	public Dungeon getCurrentDungeon() {
+		for (Dungeon dungeon : dungeons) {
+			if(dungeon.isInThis()) return dungeon;
+		}
+		return null;
+	}
+
+	public boolean inADungeon() {
+		return (getCurrentDungeon()!=null);
 	}
 }

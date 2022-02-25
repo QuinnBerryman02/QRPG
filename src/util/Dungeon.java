@@ -9,7 +9,6 @@ public class Dungeon {
     public static final int MAX_SIZE = 9;
     private static final int MAX_STEP_AMOUNT = MAX_SIZE * MAX_SIZE;
     private static final float SINUOSITY_FACTOR = 0.5f;
-    private static final int[][] SPAWN_LOCATIONS = {{6,1}, {11,1}, {14,4}, {14,9}, {11,12}, {6,12}, {3,9}, {3,4}};
     private ArrayList<boolean[][]> cleared = new ArrayList<boolean[][]>();
     private int currentLayer = -1; 
     private DType type;
@@ -51,7 +50,8 @@ public class Dungeon {
     }
 
     public static void main(String[] args) {
-        Dungeon d = new Dungeon(DType.SEWER,10);
+        Dungeon d = new Dungeon(DType.SEWER,5);
+        Dungeon d2 = new Dungeon(DType.CAVE,5);
     }
 
     public void generateNewLayer() {
@@ -241,20 +241,39 @@ public class Dungeon {
     }
 
     public int[] dungeonSpaceToWorldSpace(int[] d) {
-        int cx = d[0] * 16 + (Map.DUNGEON_START_CHUNK[0] * (currentLayer+1));
-        int cy = d[1] * 16 + (Map.DUNGEON_START_CHUNK[1] * (currentLayer+1));
+        int offset[] = type.equals(DType.CAVE) ? Map.CAVE_START_CHUNK : Map.SEWER_START_CHUNK;
+        int cx = d[0] * 16 + (offset[0] * (currentLayer+1));
+        int cy = d[1] * 16 + (offset[1] * (currentLayer+1));
         return new int[] {cx, cy};
     }
 
     public int[] worldSpaceToDungeonSpace(Point3f p) {
+        int offset[] = type.equals(DType.CAVE) ? Map.CAVE_START_CHUNK : Map.SEWER_START_CHUNK;
         int[] tile = Map.findTile(p);
         int x = tile[0];
         int y = tile[1];
         int cx = x - (x % 16 + 16) % 16;
         int cy = y - (y % 16 + 16) % 16;
-        int dx = (cx - Map.DUNGEON_START_CHUNK[0] * (currentLayer+1)) / 16;
-        int dy = (cy - Map.DUNGEON_START_CHUNK[1] * (currentLayer+1)) / 16;
+        int dx = (cx - offset[0] * (currentLayer+1)) / 16;
+        int dy = (cy - offset[1] * (currentLayer+1)) / 16;
         return new int[] {dx, dy};
+    }
+
+    public int[][] getSpawnLocations(int[] room) {
+        if(type.equals(DType.CAVE)) {
+            return new int[][] {{6,1}, {11,1}, {14,4}, {14,9}, {11,12}, {6,12}, {3,9}, {3,4}};
+        }
+        CTYPE c = layers.get(currentLayer)[room[1]][room[0]];
+        switch(c) {
+            case CENTER_A:
+                return new int[][]{{6,2}, {6,6}, {6,10}, {6,14}, {0,11}, {14,4},{14,8},{14,12}}; 
+            case CENTER_B:
+                return new int[][]{{8,1},{8,5},{8,9},{0,5},{0,10},{15,5},{15,10},{7,14}};
+            case CENTER_C:
+                return new int[][]{{0,0},{0,15},{15,15},{15,0},{7,0},{7,15},{0,7},{15,7}};
+            default:
+                return new int[][]{{}}; 
+        }
     }
 
     public Enemy[] generateEnemies(Point3f p) {
@@ -267,12 +286,13 @@ public class Dungeon {
         int[] c = dungeonSpaceToWorldSpace(d);
         int cx = c[0];
         int cy = c[1];
-        Enemy[] enemies = new Enemy[8];
+        int[][] spawns = getSpawnLocations(d);
+        Enemy[] enemies = new Enemy[spawns.length];
         for(int i=0;i<enemies.length;i++) {
             double isEnemy = r.nextDouble();
             if(isEnemy < 0.5) {
-                int px = SPAWN_LOCATIONS[i][0];
-                int py = SPAWN_LOCATIONS[i][1];
+                int px = spawns[i][0];
+                int py = spawns[i][1];
                 Enemy.Type t = Enemy.Type.values()[r.nextInt(Enemy.Type.values().length)];
                 Enemy e = new Enemy(t, 0.5f, 0.5f, new Point3f(cx+px,cy+py,0), 100 * (currentLayer/5+1), 10 * (currentLayer/5+1), 100 * (currentLayer/5+1));
                 enemies[i] = e;
@@ -388,50 +408,56 @@ public class Dungeon {
         return type;
     }
 
+    public int[] getChunkCoordsHelper(CTYPE c) {
+        switch(c) {
+            case CENTER_A:
+                return new int[]{-112, 208};
+            case CENTER_B:
+                return new int[]{-48, 208};
+            case CENTER_C:
+                return new int[]{-16, 208};
+            case CLOSED_DOWN:
+                return new int[]{-112, 224};
+            case CLOSED_LEFT:
+                return new int[]{-128, 208};
+            case CLOSED_RIGHT:
+                return new int[]{-96, 208};
+            case CLOSED_UP:
+                return new int[]{-112, 192};
+            case CORNER_TL:
+                return new int[]{-96, 192};
+            case CORNER_TL_TR:
+                return new int[]{-80, 192};
+            case CORNER_TR:
+                return new int[]{-128, 192};
+            case EMPTY:
+                return new int[]{-80, 208};
+            case FLOOR_ENTRANCE:
+                return new int[]{-32, 224};
+            case FLOOR_ENTRANCE_CLOSED:
+                return new int[]{-96, 224};
+            case OPEN_LEFT_RIGHT:
+                return new int[]{-64, 208};
+            case OPEN_UP_DOWN:
+                return new int[]{-48, 192};
+            case WORLD_ENTRANCE:
+                return new int[]{-64, 224};
+            case WORLD_ENTRANCE_CLOSED:
+                return new int[]{-80, 224};
+            default:
+                return new int[]{-80, 208};
+        }
+    }
+
     public int[] getChunkCoords(CTYPE c) {
         if(c==null) return new int[]{-80, 208};
         switch(type) {
             case CAVE:
-                switch(c) {
-                    case CENTER_A:
-                        return new int[]{-112, 208};
-                    case CENTER_B:
-                        return new int[]{-48, 208};
-                    case CENTER_C:
-                        return new int[]{-16, 208};
-                    case CLOSED_DOWN:
-                        return new int[]{-112, 224};
-                    case CLOSED_LEFT:
-                        return new int[]{-128, 208};
-                    case CLOSED_RIGHT:
-                        return new int[]{-96, 208};
-                    case CLOSED_UP:
-                        return new int[]{-112, 192};
-                    case CORNER_TL:
-                        return new int[]{-96, 192};
-                    case CORNER_TL_TR:
-                        return new int[]{-80, 192};
-                    case CORNER_TR:
-                        return new int[]{-128, 192};
-                    case EMPTY:
-                        return new int[]{-80, 208};
-                    case FLOOR_ENTRANCE:
-                        return new int[]{-32, 224};
-                    case FLOOR_ENTRANCE_CLOSED:
-                        return new int[]{-96, 224};
-                    case OPEN_LEFT_RIGHT:
-                        return new int[]{-64, 208};
-                    case OPEN_UP_DOWN:
-                        return new int[]{-48, 192};
-                    case WORLD_ENTRANCE:
-                        return new int[]{-64, 224};
-                    case WORLD_ENTRANCE_CLOSED:
-                        return new int[]{-80, 224};
-                    default:
-                        return new int[]{-80, 208};
-                }
+                return getChunkCoordsHelper(c);
             case SEWER:
-                //
+                int[] arr = getChunkCoordsHelper(c);
+                arr[0] += 8*16;
+                return arr;
             default:
                 return null;
         }
@@ -445,11 +471,20 @@ public class Dungeon {
         this.currentLayer = currentLayer;
     }
 
-    public Dungeon isInThis() {
-        return currentLayer==-1 ? null : this;
+    public boolean isInThis() {
+        return currentLayer==-1 ? false : true;
     }
 
-    public int[] getDoorCoords(int which) {
-        return new int[]{7+which, 9};
+    public int[] getDoorCoords(int which, boolean world) {
+        if(type.equals(DType.CAVE)) {
+            return new int[]{7+which, 9};
+        } else {
+            if(world) {
+                return new int[]{7,8};
+            } else {
+                return new int[]{5+which,10};
+            }
+        } 
+        
     }
 }

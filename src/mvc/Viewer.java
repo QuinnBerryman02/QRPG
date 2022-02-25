@@ -103,7 +103,7 @@ public class Viewer extends JPanel {
 				moveCamera();
 
 			chunksOnScreen = 0;
-			chunksLoaded = map.findClosestChunks(inCameraMode ? cameraOffset : gameWorld.getPlayer().getCentre(), gameWorld.getDungeon().isInThis());
+			chunksLoaded = map.findClosestChunks(inCameraMode ? cameraOffset : gameWorld.getPlayer().getCentre());
 			if(!inCameraMode) {
 				entitiesLoaded = gameWorld.getEntitiesLoaded();
 				gameWorld.sortEntities(entitiesLoaded);
@@ -331,7 +331,7 @@ public class Viewer extends JPanel {
 		g.drawChars(chunksInfo, 0, chunksInfo.length, 10, 15);
 		g.drawChars(averageFPS, 0, averageFPS.length, 10, 30);
 		g.drawChars(playerInfo, 0, playerInfo.length, 10, 45);
-		Dungeon d = gameWorld.getDungeon().isInThis();
+		Dungeon d = gameWorld.getCurrentDungeon();
 		if(d!=null) {
 			char[] dungeonInfo = ("Current Dungeon: " + String.valueOf(d.getType())).toCharArray();
 			char[] dungeonLevelInfo = ("Current Floor: " + String.valueOf(d.getCurrentLayer())).toCharArray();
@@ -342,8 +342,8 @@ public class Viewer extends JPanel {
 
 	public void drawCollisionsNearby(Graphics g) {
 		int SCAN_RANGE = Model.getScanRange();
-		int[][] collisions = map.findCollisionTilesNearbyAPoint(gameWorld.getPlayer().getCentre(), SCAN_RANGE, gameWorld.getDungeon().isInThis());
-		int[] tile = map.findTile(gameWorld.getPlayer().getCentre());
+		int[][] collisions = map.findCollisionTilesNearbyAPoint(gameWorld.getPlayer().getCentre(), SCAN_RANGE);
+		int[] tile = Map.findTile(gameWorld.getPlayer().getCentre());
         int px = tile[0];
         int py = tile[1];
 		for (int i=0; i<collisions.length;i++) {

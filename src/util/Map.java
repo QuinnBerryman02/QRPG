@@ -15,7 +15,8 @@ import main.MainWindow;
 import org.w3c.dom.Element;
 
 public class Map {
-    public static final int[] DUNGEON_START_CHUNK = {Dungeon.MAX_SIZE*16+96,0};
+    public static final int[] CAVE_START_CHUNK = {Dungeon.MAX_SIZE*16+96,0};
+    public static final int[] SEWER_START_CHUNK = {Dungeon.MAX_SIZE*16+96,960};
     private DocumentBuilderFactory factory;
     private DocumentBuilder builder;
     private Document document;
@@ -40,7 +41,7 @@ public class Map {
     public static void main(String[] args) {
         File file = new File("res/map.tmx");
         Map mapLoader = new Map(file);
-        ArrayList<Chunk> chunks = mapLoader.getChunksByCoordinate(-32, -64,null);
+        ArrayList<Chunk> chunks = mapLoader.getChunksByCoordinate(-32, -64);
         chunks.forEach((c) -> System.out.println(((Chunk)c).getData().getTextContent()));
         mapLoader.printChunksByCoordinate(-32, -64);
         System.out.println(chunks.get(3).getTile(15, 15));
@@ -67,7 +68,8 @@ public class Map {
         }
     }
 
-    public ArrayList<Chunk> getChunksByCoordinate(int x, int y, Dungeon dungeon) {
+    public ArrayList<Chunk> getChunksByCoordinate(int x, int y) {
+        Dungeon dungeon = MainWindow.getModel().getCurrentDungeon();
         ArrayList<Chunk> chunksAtPosition = new ArrayList<Chunk>();
         if(dungeon!=null) {
             Dungeon.CTYPE c =  dungeon.getChunkByCoords(new Point3f(x,y,0));
@@ -111,14 +113,14 @@ public class Map {
         return new int[][] {chunkColumms, chunkRows};
     }
 
-    public ArrayList<Chunk> findClosestChunks(Point3f p, Dungeon dungeon) {
+    public ArrayList<Chunk> findClosestChunks(Point3f p) {
         ArrayList<Chunk> nearestChunks = new ArrayList<Chunk>();
         int[][] coords = findClosestChunkCoords(p);
         int[] chunkRows = coords[1];
         int[] chunkColumms = coords[0];
         for (int i : chunkRows) {
             for (int j : chunkColumms) {
-                ArrayList<Chunk> foundChunks = getChunksByCoordinate(j, i, dungeon);
+                ArrayList<Chunk> foundChunks = getChunksByCoordinate(j, i);
                 foundChunks.forEach((c) -> {
                     nearestChunks.add(c);
                     c.setTrueCoords(new int[] {j,i});
@@ -143,10 +145,10 @@ public class Map {
         return new int[]{(int)Math.floor((double)p.getX()), (int)Math.floor((double)p.getY())};
     }
 
-    public int getIdAudioLayer(Point3f p, Dungeon dungeon) {
+    public int getIdAudioLayer(Point3f p) {
         int[] tile = findTile(p);
         int x = tile[0], y = tile[1];
-        ArrayList<Chunk> foundChunks = getChunksByCoordinate(x - (x % 16 + 16) % 16,y - (y % 16 + 16) % 16, dungeon);
+        ArrayList<Chunk> foundChunks = getChunksByCoordinate(x - (x % 16 + 16) % 16,y - (y % 16 + 16) % 16);
         for (Chunk chunk : foundChunks) {
             if(chunk.getLayer().getAttribute("name").equals("audio")) {
                 return chunk.getTile((y % 16 + 16) % 16, (x % 16 + 16) % 16);
@@ -155,7 +157,7 @@ public class Map {
         return 0;
     }
 
-    public int[][] findCollisionTilesNearbyAPoint(Point3f p, int radius, Dungeon dungeon) {
+    public int[][] findCollisionTilesNearbyAPoint(Point3f p, int radius) {
         int[][] collisions = new int[2 * radius + 1][2 * radius + 1];
         int[] tile = findTile(p);
         int x = tile[0];
@@ -172,7 +174,7 @@ public class Map {
                 if(collisions[i].length - j - 1 < positionInChunkX - (15 - radius)) chunkX += 16;
                 if(i < radius - positionInChunkY)                                   chunkY -= 16;
                 if(collisions.length - i - 1 < positionInChunkY - (15 - radius))    chunkY += 16;
-                ArrayList<Chunk> allLayers = getChunksByCoordinate(chunkX, chunkY, dungeon);
+                ArrayList<Chunk> allLayers = getChunksByCoordinate(chunkX, chunkY);
                 allLayers.removeIf((c) -> !c.getLayer().getAttribute("name").equals("collisions"));
                 if(allLayers.isEmpty()) {
                     collisions[i][j] = 0;
@@ -221,18 +223,39 @@ public class Map {
         return Arrays.asList(layerOrder).indexOf(layer);
     }
 
-    public Point3f findTeleportPointByOther(String type, Point3f p, Dungeon dungeon) {
-        if(type.equals("caves")) {
-            if(dungeon.isInThis()==null) {
+    public Point3f findTeleportPointByOther(String type, Point3f p) {
+        Dungeon dungeon = MainWindow.getModel().getCurrentDungeon();
+        if(type.equals("caves") || type.equals("sewer")) {
+            if(dungeon == null) {
+                outer:
+                for(Dungeon d : MainWindow.getModel().getDungeons()) {
+                    System.out.println(d.getType() + " " + type);
+                    switch(d.getType()) {
+                        case CAVE:
+                            if(type.equals("caves")) {
+                                dungeon = d;
+                                break outer;
+                            }
+                            break;
+                        case SEWER:
+                            if(type.equals("sewer")) {
+                                dungeon = d;
+                                break outer;
+                            }
+                            break;
+                        default:
+                            throw new IllegalArgumentException("Unknown dungeon type");
+                    }
+                }
                 dungeon.setCurrentLayer(0);
                 int[] startCoords = dungeon.getEntries().get(0);
-                int[] getDoorCoords = dungeon.getDoorCoords(1);
+                int[] getDoorCoords = dungeon.getDoorCoords(1, true);
                 int[] dst = dungeon.dungeonSpaceToWorldSpace(startCoords);
                 int x = dst[0] + getDoorCoords[0];
 		        int y = dst[1] + getDoorCoords[1];
                 return new Point3f(x,y,0);
             } else {
-                System.out.println("Inner cave door (layer " + dungeon.getCurrentLayer() + ")");
+                System.out.println("Inner " + dungeon.getType().name() + " door (layer " + dungeon.getCurrentLayer() + ")");
                 int layer = dungeon.getCurrentLayer();
                 int[] loc = dungeon.worldSpaceToDungeonSpace(p);
                 boolean entry = false;
@@ -247,11 +270,11 @@ public class Map {
                 }
                 layer += entry ? -1 : 1;
                 int px = (findTile(p)[0] % 16 + 16) % 16;
-                int[] doorCoords = dungeon.getDoorCoords(px - 7);
+                int[] doorCoords = dungeon.getDoorCoords(px - (type.equals("sewer") ? 5 : 7), false);//we dont use door coords on a world tele anyway
                 int[] newCoords;
                 dungeon.setCurrentLayer(layer);
                 if(layer<0) {
-                    System.out.println("Leaving Caves (layer " + layer + ")");
+                    System.out.println("Leaving " + dungeon.getType().name() + " (layer " + layer + ")");
                     return doorLoader.findTeleportPointByOther(type, p);
                 } else if(layer>=dungeon.getLayers().size()) {
                     System.out.println("Going deeper than ever before (layer " + layer + ")");
@@ -272,9 +295,11 @@ public class Map {
         }
     }
     
-    public String findTeleportTypeByPoint(Point3f p, Dungeon dungeon) {
-        if(dungeon.isInThis()!=null) {
-            return "caves";
+    public String findTeleportTypeByPoint(Point3f p) {
+        Dungeon d = MainWindow.getModel().getCurrentDungeon();
+        if(d!=null) {
+            if(d.getType().equals(Dungeon.DType.CAVE)) return "caves";
+            else return "sewer";
         } else {
             return doorLoader.findTeleportTypeByPoint(p);
         }
