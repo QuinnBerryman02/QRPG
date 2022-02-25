@@ -18,6 +18,7 @@
     <>add quest chooser ui in the guild
     <>properly check sewer dungeon for bugs
     <>add camera scripting
+    <>make the player always be shown, but include the camera offset to allow cutscenes(?)
 add tutorial 
 fix enemy hitboxes
 improve camera bounds
