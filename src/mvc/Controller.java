@@ -36,7 +36,6 @@ public class Controller {
 	protected boolean castPressed = false;
 	protected boolean talkPressed = false;
 	protected boolean changeSkinPressed = false;
-	protected boolean guildPressed = false;
 	protected boolean questPressed = false;
 	protected boolean spellPressed = false;
 
@@ -57,9 +56,6 @@ public class Controller {
 	public boolean isChangeSkinPressed() {
 		return changeSkinPressed;
 	}
-	public boolean isGuildPressed() {
-		return guildPressed;
-	}
 	public boolean isQuestPressed() {
 		return questPressed;
 	}
@@ -78,9 +74,6 @@ public class Controller {
 	public void setChangeSkinPressed(boolean changeSkinPressed) {
 		this.changeSkinPressed = changeSkinPressed;
 	}
-	public void setGuildPressed(boolean guildPressed) {
-		this.guildPressed = guildPressed;
-	}
 	public void setQuestPressed(boolean questPressed) {
 		this.questPressed = questPressed;
 	}
@@ -98,7 +91,6 @@ public class Controller {
 		talkPressed = false; 
 		castPressed = false; 
 		changeSkinPressed = false; 
-		guildPressed = false; 
 		questPressed = false; 
 		spellPressed = false; 
 	}

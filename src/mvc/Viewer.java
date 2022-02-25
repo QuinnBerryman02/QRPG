@@ -418,11 +418,13 @@ public class Viewer extends JPanel {
 		}
 	}
 
-	public static boolean isEntityOnscreen(Entity e, Point3f playerCentre) {
-		Point3f relativePoint = worldSpaceToScreen(e.getCentre(), playerCentre);
+	public static boolean isObjectOnScreen(GameObject go, Point3f playerCentre) {
+		Point3f relativePoint = worldSpaceToScreen(go.getCentre(), playerCentre);
 		int x = (int)relativePoint.getX();
 		int y = (int)relativePoint.getY();
-		return !(x + UNIT_DEF <= 0 || y + UNIT_DEF <= 0 || x > MainWindow.getW() || y > MainWindow.getH());
+		int w = (int)go.getWidth();
+		int h = (int)go.getHeight();
+		return !(x + w*UNIT_DEF <= 0 || y + h*UNIT_DEF <= 0 || x > MainWindow.getW() || y > MainWindow.getH());
 	}
 
 	public boolean isEntityOnscreen(Entity e) {

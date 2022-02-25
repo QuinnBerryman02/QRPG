@@ -68,6 +68,10 @@ public abstract class Entity extends GameObject {
         return speed;
     }
 
+    public void setHostileSpeed(float hostileSpeed) {
+        this.hostileSpeed = hostileSpeed;
+    }
+
     public void incrementProgress() {
         progress++;
         if(progress==0) {

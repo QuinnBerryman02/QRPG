@@ -41,6 +41,13 @@ public class Model {
 	private ArrayList<Entity> entitiesLoaded = new ArrayList<Entity>();
 	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	private final static int SCAN_RANGE = 1;
+	private STAGE stage;
+
+	public enum STAGE {
+		BEGINING,
+		MIDGAME,
+		ENDGAME
+	}
 
 	public Model() {
 		//World
@@ -49,12 +56,10 @@ public class Model {
 		dungeons.add(new Dungeon(Dungeon.DType.CAVE, 5));
 		dungeons.add(new Dungeon(Dungeon.DType.SEWER, 5));
 		//Player 
-		Enemy e1 = new Enemy(Type.WIND_ELEMENTAL, 0.5f, 0.5f, new Point3f(-12f,-10f,0f), 100, 10, 100);
-		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(0,0,0),100,10,100);
+		player = new Player(Skin.getSkins()[0], 0.5f, 0.5f, new Point3f(-67,70,0),100,10,100);
 		NPCLoader npcLoader = new NPCLoader(new File("res/npc.xml"));
 		npcLoader.createAllNpcs().forEach(npc -> entities.add(npc));
 		entities.add(player);
-		entities.add(e1);
 		Spell s2 = new Spell();
 		s2.setElement(Projectile.Type.FIRE);
 		s2.setDamage(50);
@@ -62,8 +67,6 @@ public class Model {
 		s2.setAim(Spell.Aim.AIM_BY_MOUSE);
 		player.getSpells().add(s2);
 		player.setCurrentSpell(s2);
-		player.getQuests().add(new SlayerQuest((NPC)entities.get(0), 200, 10, Enemy.Type.SLIME));
-		player.getQuests().add(new AssassinationQuest((NPC)entities.get(1), 500, (NPC)entities.get(0)));
 	}
 	
 	public void gamelogic() { 
@@ -77,7 +80,7 @@ public class Model {
 				}
 			}
 			entities.forEach(e -> {
-				if(Viewer.isEntityOnscreen(e, player.getCentre())) {
+				if(Viewer.isObjectOnScreen(e, player.getCentre())) {
 					if(!e.isDead()) entitiesLoaded.add(e);
 					if(e instanceof Enemy && !e.isDead()) {
 						e.setHostile(true);
@@ -111,8 +114,13 @@ public class Model {
 				}
 			}
 			for (int i=0;i<projectiles.size();i++) {
-				boolean hit = projectileLogic(projectiles.get(i));
-				if(hit) {
+				if(Viewer.isObjectOnScreen(projectiles.get(i), player.getCentre())) {
+					boolean hit = projectileLogic(projectiles.get(i));
+					if(hit) {
+						projectiles.remove(i);
+						i--;
+					}
+				} else {
 					projectiles.remove(i);
 					i--;
 				}
@@ -378,9 +386,10 @@ public class Model {
 						if(v2 != null) {
 							if(go instanceof Player) {
 								Player p = (Player)go;
-								if(p.getController().isGuildPressed()) {
+								if(p.getController().isTalkPressed()) {
 									System.out.println("Opening guild quest board");
-									p.getController().setGuildPressed(false);
+									MainWindow.openGuildMenu(p);
+									p.getController().setTalkPressed(false);
 								}
 							}
 							return v2;
@@ -460,5 +469,13 @@ public class Model {
 
 	public boolean inADungeon() {
 		return (getCurrentDungeon()!=null);
+	}
+
+	public STAGE getStage() {
+		return stage;
+	}
+
+	public void setStage(STAGE stage) {
+		this.stage = stage;
 	}
 }

@@ -31,6 +31,7 @@ public class Enemy extends Entity{
         ((AIController)getController()).setEntity(this);
         this.type = type;
         generateSpell(type);
+        setHostileSpeed(getHostileSpeed());
 	}
     @Override
     public ArrayList<Topic> getKnownTopics() {
@@ -65,6 +66,30 @@ public class Enemy extends Entity{
                 return -1;
         }   
     }
+    public float getHostileSpeed(){
+        switch(type) {
+            case BLACK_KNIGHT:
+            case CULTIST:
+            case DARK_ELEMENTAL:
+            case EARTH_ELEMENTAL:
+            case VAMPIRE:
+            case WATER_ELEMENTAL:
+            case WIND_ELEMENTAL:
+            case FIRE_ELEMENTAL:
+            case LIGHT_ELEMENTAL:
+            case ELDER_WITCH:
+            case YOUNG_WITCH:
+                return 3.9f;
+            case BAT:
+            case GHOST:
+            case SLIME:
+            case SPIDER:
+            return 2.5f;
+            default:
+                return -1;
+        }   
+    }
+    
 
     public int progressWave() {
         int max = progressMax(); 

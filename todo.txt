@@ -15,23 +15,24 @@
     <>fix spell casting sound
     <>fix enemy / all? sprite glitching when casting
     <>create more variants of dungeon, both in type and chunk
-properly check sewer dungeon for bugs
+    <>add quest chooser ui in the guild
+    <>properly check sewer dungeon for bugs
+add tutorial / start area
+fix enemy hitboxes
 improve camera bounds
 add dpad option for spell swapping
-add tutorial / start area
+add joypad mouse functionality in menus
 add saving and loading
 fix frame drops for unknown reason
 create default topic response classes, like farmer = tree, wheat, animal ,tools etc + responses
 allow player to change buttons for actions
 create final boss arena
-    
+
 [boss arena] add final boss
 [default topics] create the rest of the NPCs
-[more npcs] add quest chooser ui in the guild
 [save + controls]  add esc / tab menu with settings
 
         Entity)
-(minor) fix enemy hitboxes
 (minor) add attack damage popups
     <>create enemy class
     <>get enemy sprites and animations

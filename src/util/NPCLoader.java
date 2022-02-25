@@ -17,6 +17,7 @@ public class NPCLoader {
     private DocumentBuilder builder;
     private Document document;
     private TopicLoader topicLoader;
+    private static ArrayList<NPC> npcs;
 
     public NPCLoader(File file) {
         topicLoader = new TopicLoader(new File("res/topic.xml"));
@@ -31,6 +32,22 @@ public class NPCLoader {
         
     }
 
+    public static ArrayList<NPC> getNpcs() {
+        return npcs;
+    }
+    public static ArrayList<NPC> getAliveNpcs() {
+        ArrayList<NPC> alive = new ArrayList<NPC>();
+        npcs.forEach(npc -> {if(!npc.isDead()) alive.add(npc);});
+        return alive;
+    }
+
+    public static NPC getNPCByName(String name) {
+        for (NPC npc : npcs) {
+            if(npc.getName().equals(name)) return npc;
+        }
+        return null;
+    }
+
     public ArrayList<NPC> createAllNpcs() {
         NodeList npcNodes = document.getElementsByTagName("npc");
         ArrayList<NPC> npcs = new ArrayList<NPC>();
@@ -38,6 +55,7 @@ public class NPCLoader {
             Element e = (Element)npcNodes.item(i);
             npcs.add(createNPC(e));
         }
+        NPCLoader.npcs = npcs;
         return npcs;
     }
 

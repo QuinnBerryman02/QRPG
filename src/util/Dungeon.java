@@ -293,12 +293,40 @@ public class Dungeon {
             if(isEnemy < 0.5) {
                 int px = spawns[i][0];
                 int py = spawns[i][1];
-                Enemy.Type t = Enemy.Type.values()[r.nextInt(Enemy.Type.values().length)];
+                Enemy.Type t = generateApropriateEnemy();
                 Enemy e = new Enemy(t, 0.5f, 0.5f, new Point3f(cx+px,cy+py,0), 100 * (currentLayer/5+1), 10 * (currentLayer/5+1), 100 * (currentLayer/5+1));
                 enemies[i] = e;
             }
         }
         return enemies;
+    }
+
+    public Enemy.Type generateApropriateEnemy() {
+        ArrayList<Enemy.Type> validEnemies = new ArrayList<Enemy.Type>();
+        if(currentLayer>=0 && currentLayer < 5) {
+            validEnemies.add(Enemy.Type.BAT);
+            validEnemies.add(Enemy.Type.SLIME);
+            validEnemies.add(Enemy.Type.SPIDER);
+            validEnemies.add(Enemy.Type.GHOST);
+        }
+        if(currentLayer>=2 && currentLayer < 10) {
+            validEnemies.add(Enemy.Type.EARTH_ELEMENTAL);
+            validEnemies.add(Enemy.Type.FIRE_ELEMENTAL);
+            validEnemies.add(Enemy.Type.WATER_ELEMENTAL);
+            validEnemies.add(Enemy.Type.WIND_ELEMENTAL);
+            validEnemies.add(Enemy.Type.DARK_ELEMENTAL);
+            validEnemies.add(Enemy.Type.LIGHT_ELEMENTAL);
+            validEnemies.add(Enemy.Type.YOUNG_WITCH);
+        }
+        if(currentLayer>=6) {
+            validEnemies.add(Enemy.Type.CULTIST);
+            validEnemies.add(Enemy.Type.VAMPIRE);
+            validEnemies.add(Enemy.Type.ELDER_WITCH);
+        }
+        if(currentLayer>=10) {
+            validEnemies.add(Enemy.Type.BLACK_KNIGHT);
+        }
+        return validEnemies.get(new Random().nextInt(validEnemies.size()));
     }
 
     public void printLayer(int index) {

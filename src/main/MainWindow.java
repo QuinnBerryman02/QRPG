@@ -177,6 +177,13 @@ public class MainWindow {
 		}
 	}
 
+	public static void openGuildMenu(Player p) {
+		if(eligibleToOpenMenu(GuildMenu.class)) {
+			closeMenu();
+			menu = new GuildMenu(p);
+		}
+	}
+
 	public static void newGame() {
 		closeMenu();
 		menu = null;
@@ -198,6 +205,7 @@ public class MainWindow {
 		canvas.setInCameraMode(false);
 		canvas.setGoingToPlayer(false);
 		gameStarted = true;
+		gameworld.setStage(Model.STAGE.MIDGAME);
 		PlayerController pc = (PlayerController)gameworld.getPlayer().getController();
 		canvas.addKeyListener(pc); 
 		canvas.addMouseListener(pc);  

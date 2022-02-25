@@ -20,4 +20,8 @@ public class AssassinationQuest extends Quest {
     public boolean isComplete() {
         return target.isDead();
     }
+
+    public NPC getTarget() {
+        return target;
+    }
 }
