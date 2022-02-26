@@ -4,8 +4,10 @@ import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
+import java.awt.Cursor;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -58,6 +60,8 @@ public class MainWindow {
 	private final static int H = Toolkit.getDefaultToolkit().getScreenSize().height;
 	private static int averageFPS = targetFPS;
 	private static AudioManager audioManager;
+	private static Cursor invisible;
+	private static Cursor visible;
 	  
 	public MainWindow() {
 	    frame.setPreferredSize(new Dimension( W, H));
@@ -71,7 +75,13 @@ public class MainWindow {
 		audioManager = new AudioManager();
 		beginGame();
 		frame.pack();
-		frame.setVisible(true);  
+		frame.setVisible(true); 
+		BufferedImage noImage = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+		invisible = Toolkit.getDefaultToolkit().createCustomCursor(noImage, new Point(), "invisible cursor");
+		try {
+			BufferedImage image = ImageIO.read(new File("res/pointer.png"));
+			visible = Toolkit.getDefaultToolkit().createCustomCursor(image, new Point(), "visible cursor");
+		} catch (IOException e) {} 
 		openMainMenu();    
 	}
 
@@ -123,8 +133,10 @@ public class MainWindow {
 	private static void gameloop() { 
 		gameworld.gamelogic();
 		canvas.updateview();  
+		refreshCursor(frame);
 		if(menu != null) {
 			menu.update();
+			refreshCursor(menu);
 		}
 	}
 
@@ -226,6 +238,10 @@ public class MainWindow {
 		return menu;
 	}
 
+	public static void setMenu(Menu menu) {
+		MainWindow.menu = menu;
+	}
+
 	public static boolean inAMenu() {
 		return menu!=null;
 	}
@@ -240,5 +256,18 @@ public class MainWindow {
 
 	public static Viewer getCanvas() {
 		return canvas;
+	}
+
+	public static JFrame getFrame() {
+		return frame;
+	}
+
+	public static void refreshCursor(JFrame frame) {
+		if(!inAMenu() && ((PlayerController)gameworld.getPlayer().getController()).isControllerMode()) {
+			frame.getContentPane().setCursor(invisible);
+		} else {
+			frame.getContentPane().setCursor(visible);
+		}
+		
 	}
 }

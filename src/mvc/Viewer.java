@@ -4,12 +4,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.awt.image.BufferedImage;
-
+import java.awt.Toolkit;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
@@ -54,6 +55,7 @@ public class Viewer extends JPanel {
 	private static final int SCALE = 3;
 	private static final int UNIT_DEF = SCALE * TILE_SIZE_DEF;
 
+	
 	private Vector3f cameraVector;
 	private Point3f cameraOffset;
 	private boolean inCameraMode = true;
@@ -72,7 +74,6 @@ public class Viewer extends JPanel {
 		cameraVector = new Vector3f(2f,2f,0f);
 		cameraOffset = Point3f.generateRandomPoint(CAMERA_BOUND_TL, CAMERA_BOUND_BR);
 	}
-
 	public void updateview() {
 		repaint();
 	}

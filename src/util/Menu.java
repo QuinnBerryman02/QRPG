@@ -9,7 +9,21 @@ import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.border.AbstractBorder;
 
+import main.MainWindow;
+
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+
 public abstract class Menu extends JFrame{
+    public Menu() {
+        addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                MainWindow.setMenu(null);
+                System.gc();
+            }
+        });
+    }
     public abstract void update();
 }
 

@@ -3,6 +3,11 @@ Art Credits
 [title art font] is from https://fontmeme.com/fonts/genkai-mincho-font/
 under Public domain, GPL, OFL
 
+[Pointer] is from https://opengameart.org/content/bw-ornamental-cursor-19x19
+by "Qubodup"
+under CC-BY 3.0
+
+
 [faces, casting, attack, walking] are from https://opengameart.org/users/charlesgabriel
 by either "Antifarea" or "CharlesGabriel" (The original walking ones are by Antifarea and the subsequent art by CharlesGabriel as far as I know)
 under CC-BY 3.0 (all)
