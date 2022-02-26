@@ -436,6 +436,21 @@ public class Model {
 							return v2;
 						}
 						break;
+					case 1558:
+						c = new Hitbox(new Point3f(px - SCAN_RANGE + .5f + j,py - SCAN_RANGE + .5f + i,0),1,1);
+						v2 = hb.intersection(c, v);
+						if(v2 != null) {
+							if(go instanceof Player) {
+								Player p = (Player)go;
+								if(p.getController().isTalkPressed()) {
+									System.out.println("Opening Statue Menu");
+									MainWindow.openStatueMenu(p);
+									p.getController().setTalkPressed(false);
+								}
+							}
+							return v2;
+						}
+						break;
 					default:
 						break;
 				}

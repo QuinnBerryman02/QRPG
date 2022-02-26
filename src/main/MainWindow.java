@@ -194,6 +194,13 @@ public class MainWindow {
 		}
 	}
 
+	public static void openStatueMenu(Player p) {
+		if(eligibleToOpenMenu(StatueMenu.class)) {
+			closeMenu();
+			menu = new StatueMenu(p);
+		}
+	}
+
 	public static void newGame() {
 		closeMenu();
 		menu = null;
@@ -203,7 +210,7 @@ public class MainWindow {
 			canvas.setGoingToPoint(new Point3f(73,109,0));
 			canvas.setListener(() -> {
 				NPC john = NPCLoader.getNPCByName("John");
-				john.move(new Point3f(111.5f,120,0).minusPoint(john.getCentre()));
+				john.move(new Point3f(111.5f,121.5f,0).minusPoint(john.getCentre()));
 				canvas.setCameraOffset(new Point3f(105,107,0));
 				canvas.setGoingToPoint(gameworld.getPlayer().getCentre());
 				canvas.setListener(() -> {

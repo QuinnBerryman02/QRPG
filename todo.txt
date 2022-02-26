@@ -28,19 +28,23 @@
     <>add dpad option for spell swapping
     <>hide the mouse when not in a menu && in controller mode
     <>add a custom cursor
-    
+    <>add healing at statue
+    <>add stat upgrades for gold
+
 fix menu glitching
 fix enemy hitboxes
-add saving and loading
 fix frame drops for unknown reason
-allow player to change buttons for actions
-create final boss arena
+
+add saving and loading
 create the rest of the NPCs
-[boss arena] add final boss
+allow player to change buttons for actions
 [save + controls]  add esc / tab menu with settings
+create final boss arena
+[boss arena] add final boss
 
         Entity)
 (minor) add attack damage popups
+(minor) increase quest rewards for harder enemies
     <>create enemy class
     <>get enemy sprites and animations
     <>fix elder witch down direction
@@ -49,7 +53,7 @@ create the rest of the NPCs
     <>make npc non hostile after not on screen
 
         Collisions)
-(minor) add special collision types, half blocks, custom collisions for chests etc
+(parking lot) add special collision types, half blocks, custom collisions for chests etc
     <>fix projectile collisions
     <>allow projectiles to fly over water / low things
 
@@ -68,6 +72,8 @@ create the rest of the NPCs
         Spells / Projectiles)
 [shop]  lock progress of some elements / aims until unlocked / bought
 [shop]  add mutable maxes for radius and damage
+(minor) add pierce to projectiles
+(minor) replace circle with sprite in menu
     <>add projectile sprites
     <>add magic circle below feet when casting
     <>randomize variants per spell
@@ -75,6 +81,7 @@ create the rest of the NPCs
     <>fix weird spell bugs
 
         Quests)
+(minor) add more types of quest (layer reached, layer cleared etc)
     <>add quest class
     <>add ability to claim reward from questgiver using dialogue
 

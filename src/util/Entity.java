@@ -7,6 +7,7 @@ import mvc.Controller;
 
 public abstract class Entity extends GameObject {
     private ArrayList<Entity> inCombatWith = new ArrayList<Entity>();
+    private Stat[] stats; 
     private AnimationPhase phase = AnimationPhase.NEUTRAL;
     private Direction direction = Direction.UP;
     private boolean verticalMovement = false;
@@ -17,10 +18,7 @@ public abstract class Entity extends GameObject {
     private Spell currentSpell;
 
     private boolean hostile;
-    private float damage;
-    private float maxHealth;
     private float health;
-    private float maxMana;
     private float mana;
     private float speed;
     private Skin skin;
@@ -31,11 +29,12 @@ public abstract class Entity extends GameObject {
     	super(width, height, centre);
         this.skin = s;
         this.controller = controller;
-        this.maxHealth = maxHealth;
+        stats = new Stat[3];
+        stats[0] = new Stat("Max Health", maxHealth, 10, true);
+        stats[1] = new Stat("Max Mana", maxMana, 10, true);
+        stats[2] = new Stat("Damage", damage, 10, true);
         this.health = maxHealth;
-        this.maxMana = maxMana;
         this.mana = maxMana;
-        this.damage = damage;
         setHostile(false);
 	}
 
@@ -192,7 +191,7 @@ public abstract class Entity extends GameObject {
     }
 
     public float getMaxHealth() {
-        return maxHealth;
+        return stats[0].getValue();
     }
 
     public float getHealth() {
@@ -203,16 +202,8 @@ public abstract class Entity extends GameObject {
         this.health = health;
     }
 
-    public void setMaxHealth(float maxHealth) {
-        this.maxHealth = maxHealth;
-    }
-
-    public void setDamage(float damage) {
-        this.damage = damage;
-    }
-
     public float getDamage() {
-        return damage;
+        return stats[2].getValue();
     }
 
     public float getMana() {
@@ -220,21 +211,17 @@ public abstract class Entity extends GameObject {
     }
 
     public float getMaxMana() {
-        return maxMana;
+        return stats[1].getValue();
     }
 
     public void setMana(float mana) {
         this.mana = mana;
     }
 
-    public void setMaxMana(float maxMana) {
-        this.maxMana = maxMana;
-    }
-
     public void regenMana() {
-        float amount = maxMana / 20f / MainWindow.getTargetFPS();
-        if(mana + amount >= maxMana) {
-            mana = maxMana;
+        float amount = getMaxMana() / 20f / MainWindow.getTargetFPS();
+        if(mana + amount >= getMaxMana()) {
+            mana = getMaxMana();
         } else {
             mana += amount;
         }
@@ -294,7 +281,7 @@ public abstract class Entity extends GameObject {
     }
 
     public boolean healthBarVisible() {
-        return (health <= 0.33f * maxHealth) || isHostile();
+        return (health <= 0.33f * getMaxHealth()) || isHostile();
     }
 
     public boolean isInCombat() {
@@ -355,6 +342,9 @@ public abstract class Entity extends GameObject {
         }
     }
     
+    public Stat[] getStats() {
+        return stats;
+    }
 
     @Override
     public String toString() {
@@ -366,9 +356,11 @@ public abstract class Entity extends GameObject {
             "[hostile= " + hostile + "]," +
             "[hostileSpeed= " + hostileSpeed + "]," +
             "[progress= " + progress + "]," +
-            "[damage= " + damage + "]," +
-            "[maxHealth= " + maxHealth + "]," +
+            "[damage= " + getDamage() + "]," +
+            "[maxHealth= " + getMaxHealth() + "]," +
             "[health= " + health + "]," +
+            "[maxMana= " + getMaxMana() + "]," +
+            "[mana= " + mana + "]," +
             "[speed= " + speed + "]," +
             "[skin= " + skin + "]," +
             "[controller= " + controller + "]"

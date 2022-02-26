@@ -60,8 +60,11 @@ public class Player extends Entity {
 		return gold;
 	}
 
-	public void setGold(int gold) {
-		this.gold = gold;
+	public void earnGold(int gold) {
+		this.gold += gold;
+	}
+	public void spendGold(int gold) {
+		this.gold -= gold;
 	}
 }
 

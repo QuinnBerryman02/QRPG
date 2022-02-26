@@ -269,7 +269,7 @@ public class Dialogue extends Menu {
                             } else {
                                 questResponse = "Thanks for completing the quest, I'll pay you your reward now. What was it again? Ah yes... " + q1.getReward() + "gold.";
                             }
-                            player.setGold(q1.getReward() + player.getGold());
+                            player.earnGold(q1.getReward());
                             q1.setRewardCollected(true);
                             break;
                         case 2:
