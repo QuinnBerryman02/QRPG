@@ -30,12 +30,14 @@
     <>add a custom cursor
     <>add healing at statue
     <>add stat upgrades for gold
+    <>add saving and loading
 
 fix menu glitching
 fix enemy hitboxes
 fix frame drops for unknown reason
+fix open menu bug
+fix npc amnesia
 
-add saving and loading
 create the rest of the NPCs
 allow player to change buttons for actions
 [save + controls]  add esc / tab menu with settings

@@ -1,12 +1,14 @@
 package util;
 
-public class Skin {
+import java.io.Serializable;
+
+public class Skin implements Serializable{
     private String name;
     private Type type;
     private int id;
 
-    private static int idCount = 0;
-    public final static Skin[] skins = {
+    transient private static int idCount = 0;
+    transient public final static Skin[] skins = {
         new Skin("Warrior_M"),
         new Skin("Magician_M"),
         new Skin("Healer_M"),
@@ -73,6 +75,10 @@ public class Skin {
         DEFAULT,
         ANGEL,
         BUNNY
+    }
+
+    protected Skin() {
+        
     }
 
     private Skin(String name) {

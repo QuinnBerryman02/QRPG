@@ -4,10 +4,18 @@ import java.util.ArrayList;
 
 import mvc.AIController;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 public class NPC extends Entity {
     private String name;
     private ArrayList<TopicResponse> topicResponses = new ArrayList<TopicResponse>(); 
     //private Face face;
+
+    protected NPC() {
+        
+    }
 
     public NPC(float w, float h, Point3f c, Skin skin, String name, int maxHealth, int damage, int maxMana) {
         super(skin, w, h, c, new AIController(),maxHealth,damage,maxMana);
@@ -61,5 +69,14 @@ public class NPC extends Entity {
         return null;
     }
 
-    
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+    }
+
+    private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
+        in.defaultReadObject();
+        AIController ac = new AIController();
+        ac.setEntity(this);
+        setController(ac);
+    }
 }

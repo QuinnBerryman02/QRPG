@@ -1,5 +1,9 @@
 package mvc;
 import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -37,14 +41,14 @@ SOFTWARE.
    
    (MIT LICENSE ) e.g do what you want with this :-) 
  */ 
-public class Model {
+public class Model implements Serializable{
 	private ArrayList<Dungeon> dungeons = new ArrayList<Dungeon>();
-	private Player player;
-	private Map map;
-	private ArrayList<Entity> entities = new ArrayList<Entity>();
-	private ArrayList<Entity> entitiesLoaded = new ArrayList<Entity>();
-	private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
-	private final static int SCAN_RANGE = 1;
+	transient private Player player;
+	transient private Map map = MainWindow.getMap();
+	transient private ArrayList<Entity> entities = new ArrayList<Entity>();
+	transient private ArrayList<Entity> entitiesLoaded = new ArrayList<Entity>();
+	transient private ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
+	transient private final static int SCAN_RANGE = 1;
 	private STAGE stage;
 
 	public enum STAGE {
@@ -54,9 +58,11 @@ public class Model {
 	}
 
 	public Model() {
+		
+	}
+
+	public void initialiseNewModel() {
 		//World
-		map = new Map(new File("res/map.tmx"));
-		map.loadTilesets();
 		dungeons.add(new Dungeon(Dungeon.DType.CAVE, 5));
 		dungeons.add(new Dungeon(Dungeon.DType.SEWER, 5));
 		//Player 
@@ -144,6 +150,14 @@ public class Model {
 		controller.update();
 		if(!MainWindow.getCanvas().isInCameraMode()) {
 			player.regenMana();
+			if(controller.isMinusPressed()) {
+				MainWindow.saveGame();
+				controller.setMinusPressed(false);
+			}
+			if(controller.isPlusPressed()) {
+				MainWindow.loadGame();
+				controller.setPlusPressed(false);
+			}
 			if(controller.isChangeSkinPressed()) {
 				player.setSkin(Skin.getSkins()[(player.getSkin().getIndex()+1)%Skin.getSkins().length]);
 				controller.setChangeSkinPressed(false);
@@ -512,6 +526,16 @@ public class Model {
 		return entitiesLoaded;
 	}
 
+	public ArrayList<Entity> getNonPlayerEntities() {
+		ArrayList<Entity> newList = new ArrayList<Entity>();
+		for (Entity e : entities) {
+			if((e instanceof NPC) || (e instanceof Enemy && !e.isDead())) {
+				newList.add(e);
+			}
+		}
+		return newList;
+	}
+
 	public ArrayList<Dungeon> getDungeons() {
 		return dungeons;
 	}
@@ -533,5 +557,51 @@ public class Model {
 
 	public void setStage(STAGE stage) {
 		this.stage = stage;
+	}
+
+	private void writeObject(ObjectOutputStream out) throws IOException{
+		out.defaultWriteObject();
+		out.writeObject(getNonPlayerEntities());
+		out.writeObject(player);
+		AudioManager am =  MainWindow.getAudioManager();
+		out.writeObject(am.getLastCombatPlayedSong());
+		out.writeObject(am.getLastNonCombatSong());
+		out.writeObject(am.getLastOverworldPlayedSong());
+		out.writeObject(am.getLastPlayedSong());
+		out.writeObject(am.getLastTownPlayedSong());
+		System.out.println(this.toString());
+	}
+
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+		in.defaultReadObject();
+		entities = (ArrayList<Entity>)in.readObject();
+		NPCLoader.getNpcs().clear();
+		for(Entity e : entities) {
+			if(e instanceof Enemy) continue;
+			NPCLoader.getNpcs().add((NPC)e);
+		}
+		player = (Player)in.readObject();
+		AudioManager am = MainWindow.getAudioManager();
+		am.setLastCombatPlayedSong(am.getSongByFile((File)in.readObject()));
+		am.setLastNonCombatSong(am.getSongByFile((File)in.readObject()));
+		am.setLastOverworldPlayedSong(am.getSongByFile((File)in.readObject()));
+		am.setLastPlayedSong(am.getSongByFile((File)in.readObject()));
+		am.setLastTownPlayedSong(am.getSongByFile((File)in.readObject()));
+		am.playLastPlayed();
+		entities.add(player);
+		map = MainWindow.getMap();
+		entitiesLoaded = new ArrayList<Entity>();
+		projectiles = new ArrayList<Projectile>();
+		System.out.println(this.toString());
+	}
+	
+	@Override
+	public String toString() {
+		String s = "";
+		s+=stage.name() + "\n";
+		for (Entity e : entities) {
+			s+=e.toString() + "\n\n";
+		}
+		return s;
 	}
 }

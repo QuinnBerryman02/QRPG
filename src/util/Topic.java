@@ -1,10 +1,11 @@
 package util;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Topic {
+public class Topic implements Serializable {
     private String name;
-    public static ArrayList<Topic> allTopics = new ArrayList<Topic>();
+    transient public static ArrayList<Topic> allTopics = new ArrayList<Topic>();
 
     public static Topic getTopic(String name) {
         for (Topic topic : allTopics) {
@@ -26,11 +27,11 @@ public class Topic {
     }
 }
 
-class Response {
+class Response implements Serializable {
     private String answer;
-    private final String HAS_TOPIC = "<font color=blue><b>";
-    private final String DOESNT_HAVE_TOPIC = "<font color=green><b>";
-    private final String CLOSE_TAGS = "<b/><font color=black>"; 
+    transient private static final String HAS_TOPIC = "<font color=blue><b>";
+    transient private static final String DOESNT_HAVE_TOPIC = "<font color=green><b>";
+    transient private static final String CLOSE_TAGS = "<b/><font color=black>"; 
     public Response(String answer) {
         this.answer = answer;
     }
@@ -67,7 +68,7 @@ class Response {
     }
 }
 
-class TopicResponse {
+class TopicResponse implements Serializable {
     private Topic topic;
     private Response response;
     

@@ -38,6 +38,8 @@ public class Controller {
 	protected boolean changeSkinPressed = false;
 	protected boolean questPressed = false;
 	protected boolean spellPressed = false;
+	protected boolean minusPressed = false;
+	protected boolean plusPressed = false;
 	protected boolean nextSpellPressed = false;
 	protected boolean prevSpellPressed = false;
 
@@ -68,6 +70,12 @@ public class Controller {
 	public boolean isSpellPressed() {
 		return spellPressed;
 	}
+	public boolean isMinusPressed() {
+		return minusPressed;
+	}
+	public boolean isPlusPressed() {
+		return plusPressed;
+	}
 	public boolean isTalkPressed() {
 		return talkPressed;
 	}
@@ -95,6 +103,12 @@ public class Controller {
 	public void setTalkPressed(boolean talkPressed) {
 		this.talkPressed = talkPressed;
 	}
+	public void setMinusPressed(boolean minusPressed) {
+		this.minusPressed = minusPressed;
+	}
+	public void setPlusPressed(boolean plusPressed) {
+		this.plusPressed = plusPressed;
+	}
 
 	public void clear() {
 		moveDirection = new Vector3f();
@@ -105,6 +119,8 @@ public class Controller {
 		changeSkinPressed = false; 
 		questPressed = false; 
 		spellPressed = false; 
+		minusPressed = false; 
+		plusPressed = false; 
 		nextSpellPressed = false;
 		prevSpellPressed = false;
 	}

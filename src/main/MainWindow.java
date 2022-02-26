@@ -6,12 +6,17 @@ import java.awt.image.BufferedImage;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.awt.Cursor;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.event.WindowEvent;
@@ -52,18 +57,23 @@ SOFTWARE.
 
 public class MainWindow {
 	private static JFrame frame = new JFrame("Quinn's Game");   // Change to the name of your game 
-	private static Model gameworld = new Model();
-	private static Viewer canvas = new Viewer(gameworld);
+	private static Model gameworld;
+	private static Viewer canvas;
 	private static Menu menu;
 	private final static int targetFPS = 15;
 	private final static int W = Toolkit.getDefaultToolkit().getScreenSize().width;
 	private final static int H = Toolkit.getDefaultToolkit().getScreenSize().height;
 	private static int averageFPS = targetFPS;
 	private static AudioManager audioManager;
+	private static Map map;
 	private static Cursor invisible;
 	private static Cursor visible;
 	  
 	public MainWindow() {
+		map = new Map(new File("res/map.tmx"));
+		map.loadTilesets();
+		gameworld = new Model();
+		canvas = new Viewer();
 	    frame.setPreferredSize(new Dimension( W, H));
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); 
 	    frame.setLayout(null);
@@ -73,6 +83,7 @@ public class MainWindow {
 		canvas.setBackground(new Color(255,255,255));
 		canvas.setVisible(true);   
 		audioManager = new AudioManager();
+		gameworld.initialiseNewModel();
 		beginGame();
 		frame.pack();
 		frame.setVisible(true); 
@@ -88,6 +99,15 @@ public class MainWindow {
 	public static void main(String[] args) {
 		new MainWindow();  
 	} 
+
+	public static void establishListeners() {
+		PlayerController pc = (PlayerController)gameworld.getPlayer().getController();
+		canvas.addKeyListener(pc); 
+		canvas.addMouseListener(pc);  
+		canvas.addMouseMotionListener(pc);
+		canvas.addMouseWheelListener(pc);
+		canvas.requestFocusInWindow(); 
+	}
 
 	private static void beginGame() {
 		Thread thread = new Thread() {
@@ -132,6 +152,7 @@ public class MainWindow {
 
 	private static void gameloop() { 
 		gameworld.gamelogic();
+		if(canvas.getGameWorld() != gameworld) canvas.setGameWorld(gameworld);
 		canvas.updateview();  
 		refreshCursor(frame);
 		if(menu != null) {
@@ -203,7 +224,6 @@ public class MainWindow {
 
 	public static void newGame() {
 		closeMenu();
-		menu = null;
 		canvas.setGoingToPoint(new Point3f(-66,67,0));
 		canvas.setListener(() -> {
 			canvas.setCameraOffset(new Point3f(81,114,0));
@@ -218,15 +238,66 @@ public class MainWindow {
 					canvas.setGoingToPoint(null);
 					canvas.setListener(null);
 					gameworld.setStage(Model.STAGE.BEGINING);
-					PlayerController pc = (PlayerController)gameworld.getPlayer().getController();
-					canvas.addKeyListener(pc); 
-					canvas.addMouseListener(pc);  
-					canvas.addMouseMotionListener(pc);
-					canvas.addMouseWheelListener(pc);
-					canvas.requestFocusInWindow(); 
+					establishListeners();
 				});
 			});
 		});
+	}
+
+	public static void saveGame() {
+		try {
+			File file = new File("saves/save.txt");
+			FileOutputStream fos = new FileOutputStream(file);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			System.out.println("____________________________________________");
+			oos.writeObject(gameworld);
+			oos.close();
+			fos.close();
+			System.out.println("Game saved SuccessFully");
+			System.out.println("____________________________________________");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void loadGame() {
+		JFileChooser chooser = new JFileChooser("saves");
+		chooser.setBounds(200, 200, W-400,H-400);
+		chooser.setVisible(true);
+		int option = chooser.showOpenDialog(frame);
+		if(option==JFileChooser.APPROVE_OPTION) {    
+			try {
+				File file = chooser.getSelectedFile();
+				FileInputStream fis = new FileInputStream(file);   
+				ObjectInputStream ois = new ObjectInputStream(fis);
+				System.out.println("____________________________________________");
+				Model loadedGame = (Model)ois.readObject();
+				gameworld = loadedGame;
+				closeMenu();
+				ois.close();
+				fis.close();
+				if(gameworld.getPlayer().isIndoors()) {
+					canvas.setCameraOffset(gameworld.getPlayer().getCentre());
+					canvas.setInCameraMode(false);
+					canvas.setGoingToPoint(null);
+					canvas.setListener(null);
+					establishListeners();
+				} else {
+					canvas.setGoingToPoint(gameworld.getPlayer().getCentre());
+					canvas.setListener(() -> {
+						canvas.setInCameraMode(false);
+						canvas.setGoingToPoint(null);
+						canvas.setListener(null);
+						establishListeners();
+					});
+				}
+				System.out.println("Game loaded SuccessFully");
+			} catch (Exception e) {
+				e.printStackTrace();
+				System.out.println("Couldn't load save file");
+			}        
+			System.out.println("____________________________________________");
+		}  
 	}
 
 	public static boolean eligibleToOpenMenu(Class<?> newMenu) {
@@ -275,6 +346,9 @@ public class MainWindow {
 		} else {
 			frame.getContentPane().setCursor(visible);
 		}
-		
+	}
+
+	public static Map getMap() {
+		return map;
 	}
 }

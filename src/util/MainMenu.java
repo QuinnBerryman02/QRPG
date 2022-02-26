@@ -55,7 +55,7 @@ public class MainMenu extends Menu{
             MainWindow.newGame();
         });
         loadGame.addActionListener(e -> {
-            //TODO
+            MainWindow.loadGame();
         });
         settings.addActionListener(e -> {
             //TODO

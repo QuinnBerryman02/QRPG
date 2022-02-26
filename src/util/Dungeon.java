@@ -1,14 +1,18 @@
 package util;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Random;
 
-public class Dungeon {
-    public static final int MAX_SIZE = 9;
-    private static final int MAX_STEP_AMOUNT = MAX_SIZE * MAX_SIZE;
-    private static final float SINUOSITY_FACTOR = 0.5f;
+public class Dungeon implements Serializable{
+    transient public static final int MAX_SIZE = 9;
+    transient private static final int MAX_STEP_AMOUNT = MAX_SIZE * MAX_SIZE;
+    transient private static final float SINUOSITY_FACTOR = 0.5f;
     private ArrayList<boolean[][]> cleared = new ArrayList<boolean[][]>();
     private int currentLayer = -1; 
     private DType type;
@@ -38,6 +42,10 @@ public class Dungeon {
         CLOSED_DOWN,
         OPEN_LEFT_RIGHT,
         OPEN_UP_DOWN,
+    }
+
+    protected Dungeon() {
+        
     }
 
     public Dungeon(DType type, int numLayers) {
@@ -519,4 +527,22 @@ public class Dungeon {
         } 
         
     }
+
+    private void writeObject(ObjectOutputStream out) throws IOException{
+        out.writeObject(cleared);
+        out.writeInt(currentLayer);
+        out.writeObject(type);
+        out.writeObject(layers);
+        out.writeObject(entries);
+        out.writeObject(exits);
+	}
+
+	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
+        cleared = (ArrayList<boolean[][]>)in.readObject();
+        currentLayer = in.readInt();
+        type = (DType)in.readObject();
+        layers = (ArrayList<CTYPE[][]>)in.readObject();
+        entries = (ArrayList<int[]>)in.readObject();
+        exits = (ArrayList<int[]>)in.readObject();
+	}
 }

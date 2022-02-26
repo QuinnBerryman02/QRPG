@@ -7,6 +7,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import main.MainWindow;
@@ -16,17 +17,23 @@ import util.Point3f;
 import util.Vector3f;
 import net.java.games.input.Component;
 
-public class PlayerController extends mvc.Controller implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener{
-	private static final String MY_CONTROLLER_NAME = "Wireless Gamepad";
-	public static final float MOUSE_MENU_SPEED = 30;
-	private boolean pressedOnMenu = false;
-	private static final float PRECISION = 0.3f;
-	private net.java.games.input.Controller gameController = null;
-	private boolean controllerMode = false;
+public class PlayerController extends mvc.Controller implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener, Serializable{
+	transient public static final String MY_CONTROLLER_NAME = "Wireless Gamepad";
+	transient public static final float MOUSE_MENU_SPEED = 30;
+	transient private boolean pressedOnMenu = false;
+	transient private static final float PRECISION = 0.3f;
+	transient private net.java.games.input.Controller gameController = null;
+	transient private boolean controllerMode = false;
 	private ArrayList<Button> buttonSet = new ArrayList<Button>();
 	private ArrayList<Toggle> toggleSet = new ArrayList<Toggle>();
 
 	public PlayerController() {
+		loadController(MY_CONTROLLER_NAME);
+		initializeDefaultControls();
+	}
+
+	public void loadController(String name) {
+		pressedOnMenu = false;
 		ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment();
 		for (net.java.games.input.Controller controller : ce.getControllers()) {
 			if(controller.getName().equals(MY_CONTROLLER_NAME)) {
@@ -39,9 +46,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		} else {
 			System.out.println("Found Controller");
 			controllerMode = true;
-			
 		}
-		initializeDefaultControls();
 	}
 
 	public boolean isControllerMode() {
@@ -136,6 +141,15 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		return null;
 	}
 
+	public void reEstablishComponents() {
+		for (Button button : buttonSet) {
+			button.setButton(findComponentByName(button.getKey()==-1 ? "Hat Switch" : button.getButtonName()));
+		}
+		for (Toggle toggle : toggleSet) {
+			toggle.setToggles(findComponentsByName(toggle.getToggleNames()));
+		}
+	}
+
 	public void initializeDefaultControls() {
 		buttonSet.add(makeButton("skin", KeyEvent.VK_H, "Button 0"));		//B
 		buttonSet.add(makeButton("talk", KeyEvent.VK_T, "Button 1"));		//A
@@ -144,6 +158,8 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		buttonSet.add(makeButton("attack", KeyEvent.VK_Q, "Button 4"));		//L
 		buttonSet.add(makeButton("cast", KeyEvent.VK_E, "Button 5"));		//R
 		buttonSet.add(makeButton("escape", KeyEvent.VK_ESCAPE,"Button 7")); //ZR
+		buttonSet.add(makeButton("minus", KeyEvent.VK_O,"Button 8")); 		//-
+		buttonSet.add(makeButton("plus", KeyEvent.VK_P,"Button 9")); 		//+
 		buttonSet.add(makeButton("nextSpell", "Hat Switch", "UP"));
 		buttonSet.add(makeButton("prevSpell", "Hat Switch", "DOWN"));
 		toggleSet.add(makeToggle("move", new int[] {KeyEvent.VK_W,KeyEvent.VK_D,KeyEvent.VK_S,KeyEvent.VK_A}, new String[]{"X Axis","Y Axis"}));
@@ -154,7 +170,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		Button c = new Button(name);
 		c.setKey(-1);
 		c.setButton(findComponentByName(componentName));
-		c.setDpadVal(buttonName);
+		c.setButtonName(buttonName);
 		c.setType(Button.Type.DPAD);
 		return c;
 	}
@@ -164,6 +180,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		c.setKey(key);
 		c.setButton(findComponentByName(buttonName));
 		c.setType(Button.Type.NORMAL);
+		c.setButtonName(buttonName);
 		return c;
 	}
 
@@ -171,6 +188,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		Toggle t = new Toggle(name);
 		t.setKeys(keys);
 		t.setToggles(findComponentsByName(toggleNames));
+		t.setToggleNames(toggleNames);
 		return t;
 	}
 
@@ -190,6 +208,8 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 			case "quest": questPressed = value; break;
 			case "spell": spellPressed = value; break;
 			case "escape": escapePressed = value; break;
+			case "minus": minusPressed = value; break;
+			case "plus": plusPressed = value; break;
 			case "nextSpell": nextSpellPressed = value; break;
 			case "prevSpell": prevSpellPressed = value; break;
 			default: break;
@@ -241,7 +261,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 			for (Button button : buttonSet) {
 				if(button.getType().equals(Button.Type.DPAD)) {
 					try {
-						float check = (float)Component.POV.class.getDeclaredField(button.getDpadVal()).get(null);
+						float check = (float)Component.POV.class.getDeclaredField(button.getButtonName()).get(null);
 						if(button.getButton().getPollData()==check) {
 							pressByName(button.getName(),true);
 						} else {
@@ -306,16 +326,19 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 	}
 }
 
-class Button {
+class Button implements Serializable{
 	private Type type;
 	private String name;
 	private int key;
-	private Component button;
-	private String dpadVal;
+	transient private Component button;
+	private String buttonName;
 
 	public enum Type {
 		DPAD,
 		NORMAL
+	}
+	protected Button() {
+
 	}
 	public Button(String name) {
 		this.name = name;
@@ -323,11 +346,11 @@ class Button {
 	public String getName() {
 		return name;
 	}
-	public String getDpadVal() {
-		return dpadVal;
+	public String getButtonName() {
+		return buttonName;
 	}
-	public void setDpadVal(String dpadVal) {
-		this.dpadVal = dpadVal;
+	public void setButtonName(String buttonName) {
+		this.buttonName = buttonName;
 	}
 	public void setName(String name) {
 		this.name = name;
@@ -355,11 +378,16 @@ class Button {
 	
 }
 
-class Toggle {
+class Toggle implements Serializable{
 	private String name;
 	private int[] keys;
-	private boolean[] values = {false,false,false,false};
-	private Component[] toggles;
+	transient private boolean[] values = {false,false,false,false};
+	transient private Component[] toggles;
+	private String[] toggleNames;
+
+	protected Toggle() {
+
+	}
 	public Toggle(String name) {
 		this.name = name;
 	}
@@ -384,5 +412,10 @@ class Toggle {
 	public void setValues(boolean[] values) {
 		this.values = values;
 	}
-	
+	public String[] getToggleNames() {
+		return toggleNames;
+	}
+	public void setToggleNames(String[] toggleNames) {
+		this.toggleNames = toggleNames;
+	}
 }

@@ -1,10 +1,16 @@
 package util;
 
-public class Hitbox {
+import java.io.Serializable;
+
+public class Hitbox implements Serializable{
     private Point3f topLeft;
     private Point3f topRight;
     private Point3f botLeft;
     private Point3f botRight;
+
+    protected Hitbox() {
+        
+    }
 
     public Hitbox(Point3f tl, Point3f tr, Point3f bl, Point3f br) {
         topLeft = tl;

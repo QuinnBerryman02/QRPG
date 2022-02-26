@@ -1,9 +1,14 @@
 package util;
 
 public class SlayerQuest extends Quest {
-    private final int numberToKill;
+    private int numberToKill;
     private int progress = 0;
-    private final Enemy.Type typeOfEnemy;
+    private Enemy.Type typeOfEnemy;
+
+    protected SlayerQuest() {
+
+    }
+
     public SlayerQuest (NPC questGiver, int reward, int numberToKill, Enemy.Type type) {
         super(questGiver, reward);
         this.numberToKill = numberToKill;

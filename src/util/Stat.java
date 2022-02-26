@@ -1,12 +1,18 @@
 package util;
 
-public class Stat {
+import java.io.Serializable;
+
+public class Stat implements Serializable {
     private String name;
     private float baseValue;
     private float currentValue;
     private int baseCost;
     private int currentCost;
     private boolean incremental;
+
+    protected Stat() {
+        
+    }
 
     public Stat(String name, float value, int cost, boolean incremental) {
         this.name = name;

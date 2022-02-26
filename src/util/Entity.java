@@ -1,19 +1,24 @@
 package util;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import main.MainWindow;
+import mvc.AIController;
 import mvc.Controller;
+import mvc.PlayerController;
 
-public abstract class Entity extends GameObject {
-    private ArrayList<Entity> inCombatWith = new ArrayList<Entity>();
+public abstract class Entity extends GameObject{
+    transient private ArrayList<Entity> inCombatWith = new ArrayList<Entity>();
     private Stat[] stats; 
-    private AnimationPhase phase = AnimationPhase.NEUTRAL;
-    private Direction direction = Direction.UP;
-    private boolean verticalMovement = false;
+    transient private AnimationPhase phase = AnimationPhase.NEUTRAL;
+    transient private Direction direction = Direction.DOWN;
     private boolean dead = false;
     private float hostileSpeed = 4;
-    private int progress = 0;
+    transient private int progress = 0;
     private ArrayList<Spell> spells = new ArrayList<Spell>();
     private Spell currentSpell;
 
@@ -22,8 +27,11 @@ public abstract class Entity extends GameObject {
     private float mana;
     private float speed;
     private Skin skin;
-    private Controller controller;
+    transient private Controller controller;
     
+    protected Entity() {
+        
+    }
 
     public Entity(Skin s, float width, float height, Point3f centre, Controller controller, float maxHealth, float damage, float maxMana) { 
     	super(width, height, centre);
@@ -80,7 +88,6 @@ public abstract class Entity extends GameObject {
         progress = progress % modulo;
         if(progress==0) {
             phase = AnimationPhase.NEUTRAL;
-            verticalMovement = false;
         }
     }
 
@@ -159,14 +166,6 @@ public abstract class Entity extends GameObject {
 
     public void setProgress(int progress) {
         this.progress = progress;
-    }
-
-    public void setVerticalMovement(boolean b) {
-        verticalMovement = b;
-    }
-
-    public boolean getVerticalMovement() {
-        return verticalMovement;
     }
 
     public void setSkin(Skin skin) {
@@ -349,10 +348,11 @@ public abstract class Entity extends GameObject {
     @Override
     public String toString() {
         return (
+            "[class= " + getClass() + "]," +
+            "[alive= " + !isDead() + "]," + 
             super.toString() + "," +
             "[phase= " + phase + "]," +
             "[direction= " + direction + "]," +
-            "[verticalMovement= " + verticalMovement + "]," +
             "[hostile= " + hostile + "]," +
             "[hostileSpeed= " + hostileSpeed + "]," +
             "[progress= " + progress + "]," +
@@ -369,6 +369,22 @@ public abstract class Entity extends GameObject {
 
     public boolean isDead() {
         return dead;
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException{
+        out.defaultWriteObject();
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
+
+    private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
+        in.defaultReadObject();
+        inCombatWith = new ArrayList<Entity>();
+        progress = 0;
+        phase = AnimationPhase.NEUTRAL;
+        direction = Direction.DOWN;
     }
 }
 

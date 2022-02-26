@@ -25,9 +25,10 @@ SOFTWARE.
  */ 
 //Modified from Graphics 3033J course point class  by Abey Campbell 
 
+import java.io.Serializable;
 import java.util.Random;
 
-public class Point3f {
+public class Point3f implements Serializable{
 	private float x;
 	private float y;
 	private float z;

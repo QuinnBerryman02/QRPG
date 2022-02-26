@@ -1,5 +1,8 @@
 package util;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -26,10 +29,15 @@ public class Enemy extends Entity{
         LIGHT_ELEMENTAL,
         DARK_ELEMENTAL
     }
+
+    protected Enemy() {
+    
+    }
+    
     public Enemy(Type type, float width, float height, Point3f centre, float maxHealth, float damage, float maxMana) { 
-        super(getSkin(type), width, height, centre, generateController(type), maxHealth, damage, maxMana);
-        ((AIController)getController()).setEntity(this);
+        super(getSkin(type), width, height, centre, null, maxHealth, damage, maxMana);
         this.type = type;
+        setController(generateController(this));
         generateSpell(type);
         setHostileSpeed(getHostileSpeed());
 	}
@@ -254,8 +262,8 @@ public class Enemy extends Entity{
         setCurrentSpell(s);
     }
 
-    public static Controller generateController(Type t) {
-        switch(t) {
+    public static Controller generateController(Enemy e) {
+        switch(e.getType()) {
             case CULTIST:
             case DARK_ELEMENTAL:
             case EARTH_ELEMENTAL:
@@ -266,15 +274,28 @@ public class Enemy extends Entity{
             case LIGHT_ELEMENTAL:
             case ELDER_WITCH:
             case YOUNG_WITCH:
-                return new MageController();
+                MageController mc = new MageController();
+                mc.setEntity(e);
+                return mc;
             case BLACK_KNIGHT:
             case BAT:
             case GHOST:
             case SLIME:
             case SPIDER:
-                return new AIController();
+                AIController ac = new AIController();
+                ac.setEntity(e);
+                return ac;
             default:
                 return null;
         }
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+    }
+
+    private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
+        in.defaultReadObject();
+        setController(generateController(this));
     }
 }

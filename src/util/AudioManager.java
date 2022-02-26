@@ -85,6 +85,13 @@ public class AudioManager {
             e.printStackTrace();
         }
     }
+
+    public Song getSongByFile(File f) {
+        for (Song song : songs) {
+            if(song.getFile().equals(f)) return song;
+        }
+        return null;
+    }
     class SongButton extends JButton {
         private Song song;
         public SongButton(Song s) {
@@ -305,6 +312,46 @@ public class AudioManager {
         });
         Random r = new Random();
         availableSongs.get(r.nextInt(availableSongs.size())).play();
+    }
+
+    public File getLastCombatPlayedSong() {
+        return lastCombatPlayedSong==null? null : lastCombatPlayedSong.getFile();
+    }
+
+    public File getLastNonCombatSong() {
+        return lastNonCombatSong==null? null : lastNonCombatSong.getFile();
+    }
+
+    public File getLastPlayedSong() {
+        return lastPlayedSong==null? null : lastPlayedSong.getFile();
+    }
+
+    public File getLastOverworldPlayedSong() {
+        return lastOverworldPlayedSong==null? null : lastOverworldPlayedSong.getFile();
+    }
+
+    public File getLastTownPlayedSong() {
+        return lastTownPlayedSong==null? null : lastTownPlayedSong.getFile();
+    }
+
+    public void setLastCombatPlayedSong(Song lastCombatPlayedSong) {
+        this.lastCombatPlayedSong = lastCombatPlayedSong;
+    }
+
+    public void setLastNonCombatSong(Song lastNonCombatSong) {
+        this.lastNonCombatSong = lastNonCombatSong;
+    }
+    public void setLastOverworldPlayedSong(Song lastOverworldPlayedSong) {
+        this.lastOverworldPlayedSong = lastOverworldPlayedSong;
+    }
+    public void setLastPlayedSong(Song lastPlayedSong) {
+        this.lastPlayedSong = lastPlayedSong;
+    }
+    public void setLastTownPlayedSong(Song lastTownPlayedSong) {
+        this.lastTownPlayedSong = lastTownPlayedSong;
+    }
+    public void playLastPlayed() {
+        playSongByType(lastPlayedSong.getType());
     }
 }
 

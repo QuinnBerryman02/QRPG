@@ -7,10 +7,19 @@ import java.util.function.Predicate;
 import mvc.PlayerController;
 import mvc.Viewer;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 public class Player extends Entity {
 	private ArrayList<Topic> topics = new ArrayList<Topic>();
 	private ArrayList<Quest> quests = new ArrayList<Quest>();
 	private int gold = 0;
+
+	protected Player() {
+
+	}
+
     public Player(Skin s, float width, float height, Point3f centre, int maxHealth, int damage, int maxMana) { 
     	super(s, width, height, centre, new PlayerController(), maxHealth, damage, maxMana);
 		topics.add(Topic.getTopic("Introduction"));
@@ -66,5 +75,18 @@ public class Player extends Entity {
 	public void spendGold(int gold) {
 		this.gold -= gold;
 	}
+
+	private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+        out.writeObject((PlayerController)getController());
+    }
+
+    private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
+        in.defaultReadObject();
+		PlayerController pc = (PlayerController)in.readObject();
+        pc.loadController(PlayerController.MY_CONTROLLER_NAME);
+        pc.reEstablishComponents();
+        setController(pc);
+    }
 }
 

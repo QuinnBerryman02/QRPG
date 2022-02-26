@@ -5,6 +5,10 @@ import mvc.Viewer;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 import java.awt.image.BufferedImage;
@@ -12,17 +16,17 @@ import java.awt.image.BufferedImage;
 import javax.imageio.ImageIO;
 
 
-public class Spell {
-    private final static float MAX_VELOCITY = 4f;
+public class Spell implements Serializable{
+    transient private final static float MAX_VELOCITY = 4f;
 
-    private ArrayList<BufferedImage> frames = new ArrayList<BufferedImage>();
-    private int manaCost;
+    transient private ArrayList<BufferedImage> frames = new ArrayList<BufferedImage>();
+    transient private int manaCost;
 
     private Aim aim;
     private int damage;
     private float radius;
     private Projectile.Type element;
-    private String name = "";
+    private String name;
 
     public enum Aim {
         AIM_BY_MOUSE,
@@ -32,10 +36,11 @@ public class Spell {
     }
 
     public Spell() {
-        aim = Aim.AIM_BY_MOUSE;
+        name = "";
+        element = Projectile.Type.FIRE;
         damage = 5;
         radius = 0.25f;
-        element = Projectile.Type.FIRE;
+        aim = Aim.AIM_BY_MOUSE;
         updateFrames();
         calculateCost();
     }
@@ -314,5 +319,16 @@ public class Spell {
                 e.printStackTrace();
             }
         }
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+    }
+
+    private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
+        in.defaultReadObject();
+        frames = new ArrayList<BufferedImage>();
+        calculateCost();
+        updateFrames();
     }
 }

@@ -55,7 +55,6 @@ public class Viewer extends JPanel {
 	private static final int SCALE = 3;
 	private static final int UNIT_DEF = SCALE * TILE_SIZE_DEF;
 
-	
 	private Vector3f cameraVector;
 	private Point3f cameraOffset;
 	private boolean inCameraMode = true;
@@ -68,14 +67,22 @@ public class Viewer extends JPanel {
 	private Map map;
 	private int chunksOnScreen = 0;
 
-	public Viewer(Model world) {
-		this.gameWorld = world;
-		this.map = gameWorld.getMap();
+	public Viewer() {
+		this.gameWorld = MainWindow.getModel();
+		this.map = MainWindow.getMap();
 		cameraVector = new Vector3f(2f,2f,0f);
 		cameraOffset = Point3f.generateRandomPoint(CAMERA_BOUND_TL, CAMERA_BOUND_BR);
 	}
 	public void updateview() {
 		repaint();
+	}
+
+	public Model getGameWorld() {
+		return gameWorld;
+	}
+
+	public void setGameWorld(Model gameWorld) {
+		this.gameWorld = gameWorld;
 	}
 
 	public void moveCamera() {

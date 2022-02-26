@@ -1,4 +1,7 @@
 package util;
+
+import java.io.Serializable;
+
 /*
  * Created by Abraham Campbell on 15/01/2020.
  *   Copyright (c) 2020  Abraham Campbell
@@ -23,11 +26,15 @@ SOFTWARE.
    
    (MIT LICENSE ) e.g do what you want with this :-) 
  */ 
-public class GameObject {
+public class GameObject implements Serializable {
 	private Hitbox hitbox;
 	protected Point3f centre= new Point3f(0,0,0);			// Centre of object, using 3D as objects may be scaled  
 	protected float width = 10;
 	protected float height = 10;
+
+	protected GameObject() {
+
+	}
 	
     public GameObject(float width, float height, Point3f centre) { 
 		hitbox = new Hitbox(centre.plusVector(new Vector3f()), width, height);
