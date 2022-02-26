@@ -144,14 +144,26 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		buttonSet.add(makeButton("attack", KeyEvent.VK_Q, "Button 4"));		//L
 		buttonSet.add(makeButton("cast", KeyEvent.VK_E, "Button 5"));		//R
 		buttonSet.add(makeButton("escape", KeyEvent.VK_ESCAPE,"Button 7")); //ZR
+		buttonSet.add(makeButton("nextSpell", "Hat Switch", "UP"));
+		buttonSet.add(makeButton("prevSpell", "Hat Switch", "DOWN"));
 		toggleSet.add(makeToggle("move", new int[] {KeyEvent.VK_W,KeyEvent.VK_D,KeyEvent.VK_S,KeyEvent.VK_A}, new String[]{"X Axis","Y Axis"}));
 		toggleSet.add(makeToggle("aim", new int[] {-1,-1,-1,-1}, new String[]{"X Rotation","Y Rotation"}));
+	}
+
+	public Button makeButton(String name, String componentName, String buttonName) {
+		Button c = new Button(name);
+		c.setKey(-1);
+		c.setButton(findComponentByName(componentName));
+		c.setDpadVal(buttonName);
+		c.setType(Button.Type.DPAD);
+		return c;
 	}
 
 	public Button makeButton(String name, int key, String buttonName) {
 		Button c = new Button(name);
 		c.setKey(key);
 		c.setButton(findComponentByName(buttonName));
+		c.setType(Button.Type.NORMAL);
 		return c;
 	}
 
@@ -178,6 +190,8 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 			case "quest": questPressed = value; break;
 			case "spell": spellPressed = value; break;
 			case "escape": escapePressed = value; break;
+			case "nextSpell": nextSpellPressed = value; break;
+			case "prevSpell": prevSpellPressed = value; break;
 			default: break;
 		}  
 	}
@@ -205,7 +219,14 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		mouseWheelMoved = e.getPreciseWheelRotation();
+		if(!controllerMode) {
+			double mouseWheelMoved = e.getPreciseWheelRotation();
+			nextSpellPressed = false;
+			prevSpellPressed = false;
+			if(mouseWheelMoved>0.0) nextSpellPressed = true;
+			if(mouseWheelMoved<0.0) prevSpellPressed = true;
+		}
+		
 	}
 
 	public void poll() {
@@ -218,7 +239,19 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		if(controllerMode) {
 			poll();
 			for (Button button : buttonSet) {
-				if(button.getButton().getPollData()==1f) {
+				if(button.getType().equals(Button.Type.DPAD)) {
+					try {
+						float check = (float)Component.POV.class.getDeclaredField(button.getDpadVal()).get(null);
+						if(button.getButton().getPollData()==check) {
+							pressByName(button.getName(),true);
+						} else {
+							pressByName(button.getName(),false);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
+				} else if(button.getButton().getPollData()==1f) {
 					pressByName(button.getName(), true);
 				} else {
 					pressByName(button.getName(), false);
@@ -274,14 +307,30 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 }
 
 class Button {
+	private Type type;
 	private String name;
 	private int key;
 	private Component button;
+	private String dpadVal;
+
+	public enum Type {
+		DPAD,
+		NORMAL
+	}
 	public Button(String name) {
 		this.name = name;
 	}
 	public String getName() {
 		return name;
+	}
+	public String getDpadVal() {
+		return dpadVal;
+	}
+	public void setDpadVal(String dpadVal) {
+		this.dpadVal = dpadVal;
+	}
+	public void setName(String name) {
+		this.name = name;
 	}
 	public void setButton(Component button) {
 		this.button = button;
@@ -294,6 +343,14 @@ class Button {
 	}
 	public int getKey() {
 		return key;
+	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public void setType(Type type) {
+		this.type = type;
 	}
 	
 }

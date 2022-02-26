@@ -160,14 +160,14 @@ public class Model {
 				MainWindow.closeMenu();
 				controller.setEscapePressed(false);
 			}
-			Integer moved = (int)controller.getMouseWheelMoved();
-			if(moved != 0) {
+			if(controller.isNextSpell() || controller.isPrevSpell()) {
 				int index = player.getSpells().indexOf(player.getCurrentSpell());
-				int newIndex = index + moved;
+				int newIndex = index + (controller.isNextSpell() ? 1 : -1);
 				if(newIndex > player.getSpells().size()-1) newIndex = 0;
 				if(newIndex < 0) newIndex = player.getSpells().size()-1;
 				player.setCurrentSpell(player.getSpells().get(newIndex));
-				controller.setMouseWheelMoved(0.0);
+				controller.setNextSpellPressed(false);
+				controller.setPrevSpellPressed(false);
 			}
 			if(!MainWindow.inAMenu()) {
 				animationLogic(player);

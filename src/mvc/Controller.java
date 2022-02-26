@@ -38,8 +38,8 @@ public class Controller {
 	protected boolean changeSkinPressed = false;
 	protected boolean questPressed = false;
 	protected boolean spellPressed = false;
-
-	protected double mouseWheelMoved;
+	protected boolean nextSpellPressed = false;
+	protected boolean prevSpellPressed = false;
 
 	public boolean isEscapePressed() {
 		return escapePressed;
@@ -56,6 +56,12 @@ public class Controller {
 	public boolean isChangeSkinPressed() {
 		return changeSkinPressed;
 	}
+	public boolean isNextSpell() {
+		return nextSpellPressed;
+	}
+	public boolean isPrevSpell() {
+		return prevSpellPressed;
+	}
 	public boolean isQuestPressed() {
 		return questPressed;
 	}
@@ -70,6 +76,12 @@ public class Controller {
 	}
 	public void setCastPressed(boolean castPressed) {
 		this.castPressed = castPressed;
+	}
+	public void setNextSpellPressed(boolean nextSpellPressed) {
+		this.nextSpellPressed = nextSpellPressed;
+	}
+	public void setPrevSpellPressed(boolean prevSpellPressed) {
+		this.prevSpellPressed = prevSpellPressed;
 	}
 	public void setChangeSkinPressed(boolean changeSkinPressed) {
 		this.changeSkinPressed = changeSkinPressed;
@@ -93,6 +105,8 @@ public class Controller {
 		changeSkinPressed = false; 
 		questPressed = false; 
 		spellPressed = false; 
+		nextSpellPressed = false;
+		prevSpellPressed = false;
 	}
 
 	public Vector3f getAimDirection() {
@@ -101,14 +115,5 @@ public class Controller {
 
 	public Vector3f getMoveDirection() {
 		return moveDirection;
-	}
-
-	//TODO make it work with controller
-	public double getMouseWheelMoved() {
-		return mouseWheelMoved;
-	}
-
-	public void setMouseWheelMoved(double mouseWheelMoved) {
-		this.mouseWheelMoved = mouseWheelMoved;
 	}
 }

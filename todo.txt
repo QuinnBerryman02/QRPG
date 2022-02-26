@@ -25,9 +25,9 @@
     <>add tutorial 
     <>improve camera bounds
     <>add joypad mouse functionality in menus
+    <>add dpad option for spell swapping
 fix menu glitching
 fix enemy hitboxes
-add dpad option for spell swapping
 add saving and loading
 fix frame drops for unknown reason
 allow player to change buttons for actions
@@ -56,7 +56,7 @@ hide the mouse when not in a menu && in controller mode
     <>make music correspond to each area
 
         UI)
-[quest chooser] add shop ui
+(parking lot) add shop ui
     <>add main menu ui
     <>add camera mode
     <>fixed bug with directions being odd
