@@ -1,9 +1,12 @@
 package util;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Topic implements Serializable {
+public class Topic {
     private String name;
     transient public static ArrayList<Topic> allTopics = new ArrayList<Topic>();
 
@@ -83,5 +86,15 @@ class TopicResponse implements Serializable {
 
     public Topic getTopic() {
         return topic;
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.writeObject(response);
+        out.writeObject(topic.getName());
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        response = (Response)in.readObject();
+        topic = Topic.getTopic((String)in.readObject());
     }
 }

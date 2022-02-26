@@ -31,16 +31,16 @@
     <>add healing at statue
     <>add stat upgrades for gold
     <>add saving and loading
+    <>fix npc amnesia
 
 fix menu glitching
 fix enemy hitboxes
 fix frame drops for unknown reason
-fix open menu bug
-fix npc amnesia
+fix open menu bug ? does it exist ?
 
 create the rest of the NPCs
 allow player to change buttons for actions
-[save + controls]  add esc / tab menu with settings
+[controls changing]  add esc / tab menu with settings
 create final boss arena
 [boss arena] add final boss
 
@@ -72,9 +72,9 @@ create final boss arena
 
 
         Spells / Projectiles)
+    <>make spell damage proportional to entity damage 
 [shop]  lock progress of some elements / aims until unlocked / bought
-[shop]  add mutable maxes for radius and damage
-(minor) add pierce to projectiles
+add pierce to projectiles
 (minor) replace circle with sprite in menu
     <>add projectile sprites
     <>add magic circle below feet when casting

@@ -385,7 +385,7 @@ public class SpellMenu extends Menu{
             setPreferredSize(new Dimension(w,h));
             setBackground(new Color(1f,1f,1f,0f));
             setBorder(cb);
-            slider = new JSlider(JSlider.VERTICAL ,1,50,(int)currentSpell.getDamage());
+            slider = new JSlider(JSlider.VERTICAL ,1,25,(int)currentSpell.getDamage());
             slider.setMajorTickSpacing(10);
             slider.setMinorTickSpacing(1);
             slider.setPaintTicks(true);

@@ -12,7 +12,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 public class Player extends Entity {
-	private ArrayList<Topic> topics = new ArrayList<Topic>();
+	transient private ArrayList<Topic> topics = new ArrayList<Topic>();
 	private ArrayList<Quest> quests = new ArrayList<Quest>();
 	private int gold = 0;
 
@@ -79,6 +79,11 @@ public class Player extends Entity {
 	private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
         out.writeObject((PlayerController)getController());
+		ArrayList<String> topicNames = new ArrayList<String>();
+		for (Topic t : topics) {
+			topicNames.add(t.getName());
+		}
+		out.writeObject(topicNames);
     }
 
     private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
@@ -87,6 +92,11 @@ public class Player extends Entity {
         pc.loadController(PlayerController.MY_CONTROLLER_NAME);
         pc.reEstablishComponents();
         setController(pc);
+		topics = new ArrayList<Topic>();
+		ArrayList<String> topicNames = (ArrayList<String>)in.readObject();
+		for (String s : topicNames) {
+			topics.add(Topic.getTopic(s));
+		}
     }
 }
 

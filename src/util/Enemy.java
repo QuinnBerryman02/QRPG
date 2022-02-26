@@ -229,8 +229,8 @@ public class Enemy extends Entity{
     public void generateSpell(Type t){
         Spell s = new Spell();
         s.setAim(Spell.Aim.values()[(new Random()).nextInt((int)getMaxMana()/100)]);
-        s.setDamage((new Random()).nextInt((int)getDamage()) + 5);
-        s.setRadius((new Random()).nextFloat() / 2f + 0.25f);
+        s.setDamage((new Random()).nextInt(25));
+        s.setRadius((new Random()).nextFloat() + 0.25f);
         switch(type) {
             case CULTIST:
                 s.setElement(Projectile.Type.ARCANE);break;

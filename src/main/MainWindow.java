@@ -224,6 +224,8 @@ public class MainWindow {
 
 	public static void newGame() {
 		closeMenu();
+		gameworld = new Model();
+		gameworld.initialiseNewModel();
 		canvas.setGoingToPoint(new Point3f(-66,67,0));
 		canvas.setListener(() -> {
 			canvas.setCameraOffset(new Point3f(81,114,0));
@@ -254,10 +256,12 @@ public class MainWindow {
 			oos.close();
 			fos.close();
 			System.out.println("Game saved SuccessFully");
-			System.out.println("____________________________________________");
+			
 		} catch (Exception e) {
 			e.printStackTrace();
+			System.out.println("Couldn't save properly");
 		}
+		System.out.println("____________________________________________");
 	}
 
 	public static void loadGame() {
@@ -291,6 +295,7 @@ public class MainWindow {
 						establishListeners();
 					});
 				}
+				audioManager.playLastPlayed();
 				System.out.println("Game loaded SuccessFully");
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -341,6 +346,7 @@ public class MainWindow {
 	}
 
 	public static void refreshCursor(JFrame frame) {
+		if(gameworld.getPlayer()==null) return;
 		if(!inAMenu() && ((PlayerController)gameworld.getPlayer().getController()).isControllerMode()) {
 			frame.getContentPane().setCursor(invisible);
 		} else {

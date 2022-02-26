@@ -72,7 +72,7 @@ public class Model implements Serializable{
 		entities.add(player);
 		Spell s2 = new Spell();
 		s2.setElement(Projectile.Type.FIRE);
-		s2.setDamage(50);
+		s2.setDamage(25);
 		s2.setRadius(0.25f);
 		s2.setAim(Spell.Aim.AIM_BY_MOUSE);
 		player.getSpells().add(s2);
@@ -569,7 +569,6 @@ public class Model implements Serializable{
 		out.writeObject(am.getLastOverworldPlayedSong());
 		out.writeObject(am.getLastPlayedSong());
 		out.writeObject(am.getLastTownPlayedSong());
-		System.out.println(this.toString());
 	}
 
 	private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException{
@@ -587,21 +586,16 @@ public class Model implements Serializable{
 		am.setLastOverworldPlayedSong(am.getSongByFile((File)in.readObject()));
 		am.setLastPlayedSong(am.getSongByFile((File)in.readObject()));
 		am.setLastTownPlayedSong(am.getSongByFile((File)in.readObject()));
-		am.playLastPlayed();
 		entities.add(player);
 		map = MainWindow.getMap();
 		entitiesLoaded = new ArrayList<Entity>();
 		projectiles = new ArrayList<Projectile>();
-		System.out.println(this.toString());
 	}
 	
 	@Override
 	public String toString() {
 		String s = "";
 		s+=stage.name() + "\n";
-		for (Entity e : entities) {
-			s+=e.toString() + "\n\n";
-		}
 		return s;
 	}
 }

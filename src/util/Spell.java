@@ -63,7 +63,7 @@ public class Spell implements Serializable{
                             sleep(delayOfElement());
                         } catch (Exception e) {}
                         for (Vector3f dir : directions) {
-                            Projectile p = new Projectile(radius*2, radius*2, e.getCentre(), dir, damage, e, element, Spell.this);
+                            Projectile p = new Projectile(radius*2, radius*2, e.getCentre(), dir, damage * e.getDamage() / 10, e, element, Spell.this);
                             MainWindow.getModel().getProjectiles().add(p);
                         }
                     };
