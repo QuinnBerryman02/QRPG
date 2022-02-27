@@ -23,6 +23,9 @@ public abstract class Menu extends JFrame{
             }
         });
     }
+    public CustomBorder makeNewBorder() {
+        return new CustomBorder();
+    }
     public abstract void update();
 }
 

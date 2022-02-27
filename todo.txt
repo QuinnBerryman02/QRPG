@@ -43,8 +43,14 @@ fix enemy hitboxes ? kinda okay at the moment
 fix frame drops for unknown reason
 fix open menu bug ? does it exist ? havent seen it since hmm ?
 
+add quote to statue
+add gold counter to statue
+add boss roar sound effect
+add sewers footstep sound effect
 create the rest of the NPCs
 allow player to change buttons for actions
+create the manual save menu
+create the settings menu
 [controls changing]  add esc / tab menu with button settings / saving / loading / spell menu / quest menu etc
 
 

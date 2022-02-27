@@ -38,6 +38,7 @@ public class Controller {
 	protected boolean changeSkinPressed = false;
 	protected boolean questPressed = false;
 	protected boolean spellPressed = false;
+	protected boolean controllerPressed = false;
 	protected boolean minusPressed = false;
 	protected boolean plusPressed = false;
 	protected boolean nextSpellPressed = false;
@@ -79,6 +80,9 @@ public class Controller {
 	public boolean isTalkPressed() {
 		return talkPressed;
 	}
+	public boolean isControllerPressed() {
+		return controllerPressed;
+	}
 	public void setAttackPressed(boolean attackPressed) {
 		this.attackPressed = attackPressed;
 	}
@@ -100,6 +104,9 @@ public class Controller {
 	public void setSpellPressed(boolean spellPressed) {
 		this.spellPressed = spellPressed;
 	}
+	public void setControllerPressed(boolean controllerPressed) {
+		this.controllerPressed = controllerPressed;
+	}
 	public void setTalkPressed(boolean talkPressed) {
 		this.talkPressed = talkPressed;
 	}
@@ -119,6 +126,7 @@ public class Controller {
 		changeSkinPressed = false; 
 		questPressed = false; 
 		spellPressed = false; 
+		controllerPressed = false;
 		minusPressed = false; 
 		plusPressed = false; 
 		nextSpellPressed = false;

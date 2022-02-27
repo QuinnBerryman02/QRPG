@@ -10,10 +10,12 @@ import java.awt.event.MouseWheelListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 
 import main.MainWindow;
 import net.java.games.input.ControllerEnvironment;
+import net.java.games.input.Component.POV;
 import util.Player;
 import util.Point3f;
 import util.Vector3f;
@@ -21,6 +23,7 @@ import net.java.games.input.Component;
 
 public class PlayerController extends mvc.Controller implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener, Serializable{
 	transient public static final String MY_CONTROLLER_NAME = "Wireless Gamepad";
+	private String controllerName = MY_CONTROLLER_NAME;
 	transient public static final float MOUSE_MENU_SPEED = 30;
 	transient private boolean pressedOnMenu = false;
 	transient private static final float PRECISION = 0.3f;
@@ -28,17 +31,19 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 	transient private boolean controllerMode = false;
 	private ArrayList<Button> buttonSet = new ArrayList<Button>();
 	private ArrayList<Toggle> toggleSet = new ArrayList<Toggle>();
+	transient private Button listening = null;
 
 	public PlayerController() {
-		loadController(MY_CONTROLLER_NAME);
+		loadController();
 		initializeDefaultControls();
 	}
 
-	public void loadController(String name) {
+	public void loadController() {
 		pressedOnMenu = false;
+		gameController = null;
 		ControllerEnvironment ce = ControllerEnvironment.getDefaultEnvironment();
 		for (net.java.games.input.Controller controller : ce.getControllers()) {
-			if(controller.getName().equals(MY_CONTROLLER_NAME)) {
+			if(controller.getName().equals(controllerName)) {
 				gameController = controller;
 			}
 		}
@@ -51,8 +56,53 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		}
 	}
 
+	public void listenKeyboard(Button b) {
+		this.listening = b;
+		while(!listening.equals(null));
+		return;
+	}
+
+	public void listenController(Button b) {
+		for(;;) {
+			poll();
+			for (Component c : gameController.getComponents()) {
+				float check = c.getPollData();
+				if(c.isAnalog()) continue;
+				if(check==0f) continue;
+				if(c.getName().equals("Hat Switch")) {
+					Field[] dpads = Component.POV.class.getDeclaredFields();
+					for(Field f : dpads) {
+						try {
+							if (((float)f.get(null))==check) {
+								b.setButtonName(f.getName());
+								b.setButton(c);
+								b.setType(Button.Type.DPAD);
+								return;
+							}
+						} catch (IllegalArgumentException | IllegalAccessException e) {
+							e.printStackTrace();
+						}
+					}
+				} else {
+					b.setButtonName(c.getName());
+					b.setButton(c);
+					b.setType(Button.Type.NORMAL);
+					return;
+				}
+			}
+		}
+	}
+
 	public boolean isControllerMode() {
 		return controllerMode;
+	}
+
+	public String getControllerName() {
+		return controllerName;
+	}
+
+	public void setControllerName(String controllerName) {
+		this.controllerName = controllerName;
 	}
 
 	public static void main(String[] args) {
@@ -80,6 +130,10 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if(!controllerMode) {
+			if(listening!=null) {
+				listening.setKey(e.getKeyCode());
+				return;
+			}
 			for (Button control : buttonSet) {
 				if(control.getKey()==e.getKeyCode()) {
 					pressByName(control.getName(), true);
@@ -152,6 +206,10 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		}
 	}
 
+	public String getModeInfo() {
+		return "Currently using " + (controllerMode ? controllerName : "Keyboard and Mouse");
+	}
+
 	public void initializeDefaultControls() {
 		buttonSet.add(makeButton("skin", KeyEvent.VK_H, "Button 0"));		//B
 		buttonSet.add(makeButton("talk", KeyEvent.VK_T, "Button 1"));		//A
@@ -159,6 +217,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		buttonSet.add(makeButton("spell", KeyEvent.VK_U, "Button 3"));		//X
 		buttonSet.add(makeButton("attack", KeyEvent.VK_Q, "Button 4"));		//L
 		buttonSet.add(makeButton("cast", KeyEvent.VK_E, "Button 5"));		//R
+		buttonSet.add(makeButton("controller", KeyEvent.VK_K,"Button 6")); //ZL
 		buttonSet.add(makeButton("escape", KeyEvent.VK_ESCAPE,"Button 7")); //ZR
 		buttonSet.add(makeButton("minus", KeyEvent.VK_O,"Button 8")); 		//-
 		buttonSet.add(makeButton("plus", KeyEvent.VK_P,"Button 9")); 		//+
@@ -209,6 +268,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 			case "skin": changeSkinPressed = value; break; 
 			case "quest": questPressed = value; break;
 			case "spell": spellPressed = value; break;
+			case "controller": controllerPressed = value; break;
 			case "escape": escapePressed = value; break;
 			case "minus": minusPressed = value; break;
 			case "plus": plusPressed = value; break;
@@ -255,6 +315,14 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		if(gameController!=null) {
 			gameController.poll();
 		}
+	}
+	
+	public ArrayList<Button> getButtonSet() {
+		return buttonSet;
+	}
+
+	public ArrayList<Toggle> getToggleSet() {
+		return toggleSet;
 	}
 
 	public void update() {

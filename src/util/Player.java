@@ -102,7 +102,7 @@ public class Player extends Entity {
     private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
         in.defaultReadObject();
 		PlayerController pc = (PlayerController)in.readObject();
-        pc.loadController(PlayerController.MY_CONTROLLER_NAME);
+        pc.loadController();
         pc.reEstablishComponents();
         setController(pc);
 		topics = new ArrayList<Topic>();

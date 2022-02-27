@@ -175,6 +175,10 @@ public class Model implements Serializable{
 				MainWindow.openQuestMenu(player);
 				controller.setQuestPressed(false);
 			}
+			if(controller.isControllerPressed()) {
+				MainWindow.openControllerMenu(player);
+				controller.setControllerPressed(false);
+			}
 			if(controller.isEscapePressed()) {
 				MainWindow.closeMenu();
 				controller.setEscapePressed(false);

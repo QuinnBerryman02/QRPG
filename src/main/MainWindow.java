@@ -21,6 +21,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import java.awt.event.WindowEvent;
 
+import mvc.ControllerMenu;
 import mvc.Model;
 import mvc.PlayerController;
 import mvc.Viewer;
@@ -212,6 +213,13 @@ public class MainWindow {
 		if(eligibleToOpenMenu(GuildMenu.class)) {
 			closeMenu();
 			menu = new GuildMenu(p);
+		}
+	}
+
+	public static void openControllerMenu(Player p) {
+		if(eligibleToOpenMenu(ControllerMenu.class)) {
+			closeMenu();
+			menu = new ControllerMenu(p);
 		}
 	}
 
