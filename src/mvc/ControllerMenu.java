@@ -34,10 +34,13 @@ import java.awt.Component;
 import java.awt.Adjustable;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 
 import main.MainWindow;
 import util.Menu;
@@ -206,7 +209,7 @@ public class ControllerMenu extends Menu{
                 add(l);
             });
             name.setText(button.getName());
-            keyboard.setText(KeyEvent.getKeyText(button.getKey()));
+            keyboard.setText(controller.getKeyInfo(button.getKey()));
             gameController.setText(button.getButtonName());
             keyboard.addMouseListener(new MouseListener() {
                 @Override
@@ -214,12 +217,26 @@ public class ControllerMenu extends Menu{
                     if(controller.isControllerMode()) return;
                     keyboard.setText("PRESS A KEY");
                     keyboard.requestFocusInWindow();
-                    new Thread() {
-                        public void run() {
-                            controller.listenKeyboard(b);
+                    keyboard.addKeyListener(new KeyListener() {
+                        @Override
+                        public void keyPressed(KeyEvent e) {
+                            button.setKey(e.getKeyCode());
                             refresh();
-                        };
-                    }.start();
+                            keyboard.removeKeyListener(this);
+                        }
+                        @Override
+                        public void keyReleased(KeyEvent e) {}
+                        @Override
+                        public void keyTyped(KeyEvent e) {}
+                    });
+                    keyboard.addMouseWheelListener(new MouseWheelListener() {
+                        @Override
+                        public void mouseWheelMoved(MouseWheelEvent e) {
+                            button.setKey(e.getPreciseWheelRotation() > 0 ? -3 : -4);
+                            refresh();
+                            keyboard.removeMouseWheelListener(this);
+                        }
+                    });
                 }
                 @Override
                 public void mousePressed(MouseEvent e) {}
@@ -258,7 +275,7 @@ public class ControllerMenu extends Menu{
 
         public void refresh() {
             name.setText(button.getName());
-            keyboard.setText(KeyEvent.getKeyText(button.getKey()));
+            keyboard.setText(controller.getKeyInfo(button.getKey()));
             gameController.setText(button.getButtonName());
         }
     }

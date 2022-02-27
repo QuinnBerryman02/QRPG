@@ -31,7 +31,6 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 	transient private boolean controllerMode = false;
 	private ArrayList<Button> buttonSet = new ArrayList<Button>();
 	private ArrayList<Toggle> toggleSet = new ArrayList<Toggle>();
-	transient private Button listening = null;
 
 	public PlayerController() {
 		loadController();
@@ -54,12 +53,6 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 			System.out.println("Found Controller");
 			controllerMode = true;
 		}
-	}
-
-	public void listenKeyboard(Button b) {
-		this.listening = b;
-		while(!listening.equals(null));
-		return;
 	}
 
 	public void listenController(Button b) {
@@ -130,10 +123,6 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if(!controllerMode) {
-			if(listening!=null) {
-				listening.setKey(e.getKeyCode());
-				return;
-			}
 			for (Button control : buttonSet) {
 				if(control.getKey()==e.getKeyCode()) {
 					pressByName(control.getName(), true);
@@ -210,6 +199,17 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		return "Currently using " + (controllerMode ? controllerName : "Keyboard and Mouse");
 	}
 
+	public String getKeyInfo(int key) {
+		switch(key) {
+			case -3:
+				return "M_WHEEL_DOWN";
+			case -4:
+				return "M_WHEEL_UP";
+			default:
+				return KeyEvent.getKeyText(key);
+		}
+	}
+
 	public void initializeDefaultControls() {
 		buttonSet.add(makeButton("skin", KeyEvent.VK_H, "Button 0"));		//B
 		buttonSet.add(makeButton("talk", KeyEvent.VK_T, "Button 1"));		//A
@@ -221,15 +221,15 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		buttonSet.add(makeButton("escape", KeyEvent.VK_ESCAPE,"Button 7")); //ZR
 		buttonSet.add(makeButton("minus", KeyEvent.VK_O,"Button 8")); 		//-
 		buttonSet.add(makeButton("plus", KeyEvent.VK_P,"Button 9")); 		//+
-		buttonSet.add(makeButton("nextSpell", "Hat Switch", "UP"));
-		buttonSet.add(makeButton("prevSpell", "Hat Switch", "DOWN"));
+		buttonSet.add(makeButton("nextSpell", -4,"Hat Switch", "UP"));
+		buttonSet.add(makeButton("prevSpell", -3,"Hat Switch", "DOWN"));
 		toggleSet.add(makeToggle("move", new int[] {KeyEvent.VK_W,KeyEvent.VK_D,KeyEvent.VK_S,KeyEvent.VK_A}, new String[]{"X Axis","Y Axis"}));
 		toggleSet.add(makeToggle("aim", new int[] {-1,-1,-1,-1}, new String[]{"X Rotation","Y Rotation"}));
 	}
 
-	public Button makeButton(String name, String componentName, String buttonName) {
+	public Button makeButton(String name, int key, String componentName, String buttonName) {
 		Button c = new Button(name);
-		c.setKey(-1);
+		c.setKey(key);
 		c.setButton(findComponentByName(componentName));
 		c.setButtonName(buttonName);
 		c.setType(Button.Type.DPAD);
@@ -303,12 +303,14 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		if(!controllerMode) {
 			double mouseWheelMoved = e.getPreciseWheelRotation();
-			nextSpellPressed = false;
-			prevSpellPressed = false;
-			if(mouseWheelMoved>0.0) nextSpellPressed = true;
-			if(mouseWheelMoved<0.0) prevSpellPressed = true;
+			for (Button button : buttonSet) {
+				if(button.getKey()==-4)  {
+					pressByName(button.getName(), mouseWheelMoved<0.0);
+				} else if(button.getKey()==-3) {
+					pressByName(button.getName(), mouseWheelMoved>0.0);
+				}
+			}
 		}
-		
 	}
 
 	public void poll() {
