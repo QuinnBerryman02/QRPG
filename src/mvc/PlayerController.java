@@ -12,6 +12,9 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
+
+import javax.swing.SwingUtilities;
 
 import main.MainWindow;
 import net.java.games.input.ControllerEnvironment;
@@ -52,6 +55,31 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		} else {
 			System.out.println("Found Controller");
 			controllerMode = true;
+		}
+	}
+
+	public void listenController(Toggle t) {
+		for(;;) {
+			poll();
+			for (Component c : gameController.getComponents()) {
+				float check = c.getPollData();
+				if(c.isAnalog()) {
+					if(check >= PRECISION) {
+						switch(c.getName()) {
+							case "X Axis":
+							case "Y Axis":
+								t.setToggleNames(new String[] {"X Axis","Y Axis"});
+								t.setToggles(findComponentsByName(new String[] {"X Axis","Y Axis"}));
+								return;
+							case "X Rotation":
+							case "Y Rotation":
+								t.setToggleNames(new String[] {"X Rotation","Y Rotation"});
+								t.setToggles(findComponentsByName(new String[] {"X Rotation","Y Rotation"}));
+								return;
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -188,7 +216,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 
 	public void reEstablishComponents() {
 		for (Button button : buttonSet) {
-			button.setButton(findComponentByName(button.getKey()==-1 ? "Hat Switch" : button.getButtonName()));
+			button.setButton(findComponentByName(button.getType().equals(Button.Type.DPAD) ? "Hat Switch" : button.getButtonName()));
 		}
 		for (Toggle toggle : toggleSet) {
 			toggle.setToggles(findComponentsByName(toggle.getToggleNames()));
@@ -205,9 +233,28 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 				return "M_WHEEL_DOWN";
 			case -4:
 				return "M_WHEEL_UP";
+			case -5:
+				return "M_LEFT_CLICK";
+			case -6:
+				return "M_MIDDLE_CLICK";
+			case -7:
+				return "M_RIGHT_CLICK";
 			default:
 				return KeyEvent.getKeyText(key);
 		}
+	}
+
+	public String getKeyInfo(int[] keys) {
+		if(Arrays.equals(keys, new int[] {KeyEvent.VK_W,KeyEvent.VK_D,KeyEvent.VK_S,KeyEvent.VK_A})) {
+			return "WASD";
+		} else if(Arrays.equals(keys, new int[] {KeyEvent.VK_UP,KeyEvent.VK_RIGHT,KeyEvent.VK_DOWN,KeyEvent.VK_LEFT})) {
+			return "ARROWS";
+		} else if(Arrays.equals(keys, new int[] {-1,-1,-1,-1})) {
+			return "M_MOTION";
+		} else {
+			throw new IllegalArgumentException("Unknown Keys");
+		}
+		
 	}
 
 	public void initializeDefaultControls() {
@@ -287,15 +334,44 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		clear();
 	}
 	@Override
-	public void mousePressed(MouseEvent e) {}
+	public void mousePressed(MouseEvent e) {
+		if(!controllerMode) {
+			for (Button button : buttonSet) {
+				if(button.getKey()==-5 && SwingUtilities.isLeftMouseButton(e))  {
+					pressByName(button.getName(), true);
+				} else if(button.getKey()==-6 && SwingUtilities.isMiddleMouseButton(e)) {
+					pressByName(button.getName(), true);
+				} else if(button.getKey()==-7 && SwingUtilities.isRightMouseButton(e)) {
+					pressByName(button.getName(), true);
+				}
+			}
+		}
+	}
 	@Override
-	public void mouseReleased(MouseEvent e) {}
+	public void mouseReleased(MouseEvent e) {
+		if(!controllerMode) {
+			for (Button button : buttonSet) {
+				if(button.getKey()==-5 && SwingUtilities.isLeftMouseButton(e))  {
+					pressByName(button.getName(), false);
+				} else if(button.getKey()==-6 && SwingUtilities.isMiddleMouseButton(e)) {
+					pressByName(button.getName(), false);
+				} else if(button.getKey()==-7 && SwingUtilities.isRightMouseButton(e)) {
+					pressByName(button.getName(), false);
+				}
+			}
+		}
+	}
 	@Override
 	public void mouseDragged(MouseEvent e) {}
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		if(!controllerMode) {
-			aimDirection = new Vector3f(1,0,0).rotateCreate(Math.atan2(e.getY()-MainWindow.getH()/2, e.getX()-MainWindow.getW()/2));
+			for(Toggle t : toggleSet) {
+				if(Arrays.equals(t.getKeys(),new int[] {-1,-1,-1,-1})) {
+					Vector3f v = new Vector3f(1,0,0).rotateCreate(Math.atan2(e.getY()-MainWindow.getH()/2, e.getX()-MainWindow.getW()/2));
+					setDirectionByName(t.getName(), v);
+				}
+			}
 		}
 	}
 
@@ -363,7 +439,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 			}
 		} else {
 			for (Toggle t : toggleSet) {
-				if(t.getName().equals("move")) {
+				if(Arrays.equals(t.getKeys(), new int[] {KeyEvent.VK_W,KeyEvent.VK_D,KeyEvent.VK_S,KeyEvent.VK_A}) || Arrays.equals(t.getKeys(), new int[] {KeyEvent.VK_UP,KeyEvent.VK_RIGHT,KeyEvent.VK_DOWN,KeyEvent.VK_LEFT})) {
 					float x = 0;
 					float y = 0;
 					boolean[] vals = t.getValues();
@@ -376,7 +452,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 						y /= Math.sqrt(2);
 					}
 					setDirectionByName(t.getName(), new Vector3f(x, y, 0));
-				}
+				} 
 			}
 		}
 	}
@@ -489,6 +565,16 @@ class Toggle implements Serializable{
 	}
 	public void setToggleNames(String[] toggleNames) {
 		this.toggleNames = toggleNames;
+	}
+
+	public String getInfo() {
+		if(Arrays.equals(toggleNames,new String[]{"X Axis","Y Axis"})) {
+			return "LEFT_STICK";
+		} else if(Arrays.equals(toggleNames,new String[]{"X Rotation","Y Rotation"})) {
+			return "RIGHT_STICK";
+		} else {
+			throw new IllegalArgumentException("Unknown toggle");
+		}
 	}
 
 	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {

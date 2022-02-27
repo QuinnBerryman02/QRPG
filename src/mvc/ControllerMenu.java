@@ -21,6 +21,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.ScrollPaneLayout;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
@@ -81,8 +82,8 @@ public class ControllerMenu extends Menu{
         panel.setPreferredSize(getSize());
 
         modePanel = new ModePanel(getWidth(),getHeight()/10,customBorder);
-        buttonPanel = new ButtonPanel(getWidth(),getHeight()*7/10,customBorder);
-        togglePanel = new TogglePanel(getWidth(),getHeight()*2/10,customBorder);
+        buttonPanel = new ButtonPanel(getWidth(),getHeight()*6/10,customBorder);
+        togglePanel = new TogglePanel(getWidth(),getHeight()*3/10,customBorder);
 
         panel.add(modePanel);
         panel.add(buttonPanel);
@@ -222,7 +223,6 @@ public class ControllerMenu extends Menu{
                         public void keyPressed(KeyEvent e) {
                             button.setKey(e.getKeyCode());
                             refresh();
-                            keyboard.removeKeyListener(this);
                         }
                         @Override
                         public void keyReleased(KeyEvent e) {}
@@ -234,8 +234,22 @@ public class ControllerMenu extends Menu{
                         public void mouseWheelMoved(MouseWheelEvent e) {
                             button.setKey(e.getPreciseWheelRotation() > 0 ? -3 : -4);
                             refresh();
-                            keyboard.removeMouseWheelListener(this);
                         }
+                    });
+                    keyboard.addMouseListener(new MouseListener() {
+                        @Override
+                        public void mouseClicked(MouseEvent e) {
+                            button.setKey(SwingUtilities.isLeftMouseButton(e) ? -5 : SwingUtilities.isMiddleMouseButton(e) ? -6 : SwingUtilities.isRightMouseButton(e) ? -7 : -100);
+                            refresh();
+                        }
+                        @Override
+                        public void mousePressed(MouseEvent e) {}
+                        @Override
+                        public void mouseReleased(MouseEvent e) {}
+                        @Override
+                        public void mouseEntered(MouseEvent e) {}
+                        @Override
+                        public void mouseExited(MouseEvent e) {}
                     });
                 }
                 @Override
@@ -270,23 +284,153 @@ public class ControllerMenu extends Menu{
                 public void mouseExited(MouseEvent e) {}
 
             });
-            refresh();
         }
 
         public void refresh() {
             name.setText(button.getName());
             keyboard.setText(controller.getKeyInfo(button.getKey()));
             gameController.setText(button.getButtonName());
+
+            keyboard.removeKeyListener(keyboard.getKeyListeners()[0]);
+            keyboard.removeMouseWheelListener(keyboard.getMouseWheelListeners()[0]);
+            keyboard.removeMouseListener(keyboard.getMouseListeners()[0]);
         }
     }
 
     class TogglePanel extends JPanel {
+        private ArrayList<TogglePane> togglePanes = new ArrayList<TogglePane>();
+        private int w;
         public TogglePanel(int w, int h, Border cb) {
+            this.w = w;
+            setPreferredSize(new Dimension(w,h));
+            setBackground(new Color(1f,1f,1f,0f));
+            setBorder(cb);
+            setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+            for (Toggle t : controller.getToggleSet()) {
+                TogglePane togglePane = new TogglePane(t, w, h/2, cb);
+                add(togglePane);
+                togglePanes.add(togglePane);
+            }
+        }
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            //System.out.printf("Class:%s,x:%d y:%d w:%d h:%d\n",getClass().getName(),getX(), getY(), getWidth(), getHeight());
+        }
+    }
+
+    class TogglePane extends JPanel {
+        private Toggle toggle;
+        private JLabel name;
+        private JLabel keyboard;
+        private JLabel gameController;
+        private ArrayList<JLabel> labels = new ArrayList<JLabel>();
+        public TogglePane(Toggle t, int w, int h, Border cb) {
+            this.toggle = t;
             setMinimumSize(new Dimension(w,h));
             setPreferredSize(new Dimension(w,h));
             setMaximumSize(new Dimension(w,h));
             setBackground(new Color(1f,1f,1f,0f));
             setBorder(cb);
+            setLayout(new BoxLayout(this,BoxLayout.X_AXIS));
+            Dimension d = new Dimension(w/3,h);
+            name = new JLabel("NAME", SwingConstants.CENTER);
+            keyboard = new JLabel("KEYBOARD", SwingConstants.CENTER);
+            gameController = new JLabel("CONTROLLER", SwingConstants.CENTER);
+            labels.add(name);
+            labels.add(keyboard);
+            labels.add(gameController);
+            labels.forEach(l -> {
+                l.setBackground(new Color(1f,1f,0f,0f));
+                l.setMinimumSize(d);
+                l.setPreferredSize(d);
+                l.setMaximumSize(d);
+                add(l);
+            });
+            name.setText(toggle.getName());
+            keyboard.setText(controller.getKeyInfo(toggle.getKeys()));
+            gameController.setText(toggle.getInfo());
+            keyboard.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if(controller.isControllerMode()) return;
+                    keyboard.setText("PRESS A KEY");
+                    keyboard.requestFocusInWindow();
+                    keyboard.addKeyListener(new KeyListener() {
+                        @Override
+                        public void keyPressed(KeyEvent e) {
+                            switch(e.getKeyCode()) {
+                                case KeyEvent.VK_W:
+                                case KeyEvent.VK_D:
+                                case KeyEvent.VK_S:
+                                case KeyEvent.VK_A:
+                                    toggle.setKeys(new int[]{KeyEvent.VK_W,KeyEvent.VK_D,KeyEvent.VK_S,KeyEvent.VK_A});
+                                    refresh();
+                                    break;
+                                case KeyEvent.VK_UP:
+                                case KeyEvent.VK_RIGHT:
+                                case KeyEvent.VK_DOWN:
+                                case KeyEvent.VK_LEFT:
+                                    toggle.setKeys(new int[]{KeyEvent.VK_UP,KeyEvent.VK_RIGHT,KeyEvent.VK_DOWN,KeyEvent.VK_LEFT});
+                                    refresh();
+                                    break;
+                            }
+                        }
+                        @Override
+                        public void keyReleased(KeyEvent e) {}
+                        @Override
+                        public void keyTyped(KeyEvent e) {}
+                    });
+                    keyboard.addMouseMotionListener(new MouseMotionListener() {
+                        @Override
+                        public void mouseDragged(MouseEvent e) {}
+                        @Override
+                        public void mouseMoved(MouseEvent e) {
+                            toggle.setKeys(new int[]{-1,-1,-1,-1});
+                            refresh();
+                        }
+                    });
+                }
+                @Override
+                public void mousePressed(MouseEvent e) {}
+                @Override
+                public void mouseReleased(MouseEvent e) {}
+                @Override
+                public void mouseEntered(MouseEvent e) {}
+                @Override
+                public void mouseExited(MouseEvent e) {}
+            });
+            gameController.addMouseListener(new MouseListener() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if(!controller.isControllerMode()) return;
+                    gameController.setText("PRESS A BUTTON");
+                    gameController.requestFocusInWindow();
+                    new Thread() {
+                        public void run() {
+                            controller.listenController(toggle);
+                            refresh();
+                        };
+                    }.start();
+                }
+                @Override
+                public void mousePressed(MouseEvent e) {}
+                @Override
+                public void mouseReleased(MouseEvent e) {}
+                @Override
+                public void mouseEntered(MouseEvent e) {}
+                @Override
+                public void mouseExited(MouseEvent e) {}
+
+            });
+        }
+
+        public void refresh() {
+            name.setText(toggle.getName());
+            keyboard.setText(controller.getKeyInfo(toggle.getKeys()));
+            gameController.setText(toggle.getInfo());
+
+            keyboard.removeMouseMotionListener(keyboard.getMouseMotionListeners()[0]);
+            keyboard.removeKeyListener(keyboard.getKeyListeners()[0]);
         }
     }
 }
