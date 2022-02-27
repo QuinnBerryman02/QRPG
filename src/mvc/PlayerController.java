@@ -7,6 +7,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -417,5 +419,10 @@ class Toggle implements Serializable{
 	}
 	public void setToggleNames(String[] toggleNames) {
 		this.toggleNames = toggleNames;
+	}
+
+	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
+		in.defaultReadObject();
+		values = new boolean[]{false,false,false,false};
 	}
 }

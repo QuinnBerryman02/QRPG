@@ -12,6 +12,12 @@ public class MageController extends AIController{
         aimDirection = new Vector3f(1,0,0).rotateCreate(Math.atan2(MainWindow.getH()/2-p.getY(), MainWindow.getW()/2-p.getX()));
         if(entity.isHostile()) {
             if(m.inRangeOfPlayer(entity, RANGE)) {
+                double switchSpell = r.nextDouble();
+                if(switchSpell > 0.2) {
+                    setNextSpellPressed(true);
+                } else {
+                    setNextSpellPressed(false);
+                }
                 setCastPressed(true);
                 moveDirection = new Vector3f();
             } else {

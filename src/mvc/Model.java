@@ -104,12 +104,15 @@ public class Model implements Serializable{
 						e.setHostile(false);
 				}
 			});
-			player.updateCombat();
+			if(!cameraMode)
+				player.updateCombat();
 			
 			AudioManager am = MainWindow.getAudioManager();
 			if(!cameraMode) {
 				int id = map.getIdAudioLayer(player.getCentre());
-				if(player.isInCombat()) {
+				if (stage.equals(STAGE.BOSS_FIGHT)) {
+					am.playSongByTileId(4314 + 16);
+				} else if(player.isInCombat()) {
 					am.playSongByTileId(666);
 				} else {
 					if(inADungeon()) {
@@ -221,6 +224,15 @@ public class Model implements Serializable{
 		e.regenMana();
 		AIController controller = (AIController)e.getController();
 		controller.run(this);
+		if(controller.isNextSpell() || controller.isPrevSpell()) {
+			int index = e.getSpells().indexOf(e.getCurrentSpell());
+			int newIndex = index + (controller.isNextSpell() ? 1 : -1);
+			if(newIndex > e.getSpells().size()-1) newIndex = 0;
+			if(newIndex < 0) newIndex = e.getSpells().size()-1;
+			e.setCurrentSpell(e.getSpells().get(newIndex));
+			controller.setNextSpellPressed(false);
+			controller.setPrevSpellPressed(false);
+		}
 		animationLogic(e);
 	}
 
@@ -281,22 +293,35 @@ public class Model implements Serializable{
 						break;
 				}
 				if(dir!=-1 && e.getProgress()==1 && !MainWindow.getCanvas().isInCameraMode()) {
-					if(player.isIndoors()) {
-						if(inADungeon()) {
-							MainWindow.getAudioManager().playSoundByName("cave_steps");
-						} else {
-							MainWindow.getAudioManager().playSoundByName("wood_steps");
+					boolean footSteps = true;
+					if(e instanceof Enemy) {
+						switch(((Enemy)e).getType()) {
+							case BOSS:
+							case GHOST:
+							case BAT:
+								footSteps = false;
+								break;
+							default:
+								footSteps = true;
 						}
-					} else {
-						MainWindow.getAudioManager().playSoundByName("dirt_steps");
 					}
-					
+					if(footSteps) {
+						if(player.isIndoors()) {
+							if(inADungeon()) {
+								MainWindow.getAudioManager().playSoundByName("cave_steps");
+							} else {
+								MainWindow.getAudioManager().playSoundByName("wood_steps");
+							}
+						} else {
+							MainWindow.getAudioManager().playSoundByName("dirt_steps");
+						}
+					}
 				}
 				collisionHandler(e, new Vector3f(v.getX(),0,0));
 				collisionHandler(e, new Vector3f(0,v.getY(),0));
 				break;
             case ATTACKING:
-				if(e.getProgress()==e.progressMax() / 2) {
+				if(e.getProgress()*2 + (e.progressMax()%2)==e.progressMax()) {
 					MainWindow.getAudioManager().playSoundByName("punch");
 					Hitbox punch = getPunchHitbox(e);
 					for (Entity other : entitiesLoaded) {
@@ -312,7 +337,7 @@ public class Model implements Serializable{
 				}
 				break;
             case CASTING:
-				if(e.getProgress()==e.progressMax() / 2) {
+				if(e.getProgress()*2 + (e.progressMax()%2) == e.progressMax()) {
 					Spell s = e.getCurrentSpell();
 					if(s != null) {
 						s.cast(e);

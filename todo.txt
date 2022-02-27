@@ -35,16 +35,18 @@
     <>create final boss arena
     <>endgame -> bossfight scripting
     <>^ but playthrough tested
+    <>add final boss
+    <>complete game story wise
 
 fix menu glitching
-fix enemy hitboxes
+fix enemy hitboxes ? kinda okay at the moment
 fix frame drops for unknown reason
-fix open menu bug ? does it exist ?
+fix open menu bug ? does it exist ? havent seen it since hmm ?
 
 create the rest of the NPCs
 allow player to change buttons for actions
 [controls changing]  add esc / tab menu with button settings / saving / loading / spell menu / quest menu etc
-add final boss
+
 
         Entity)
 (minor) add attack damage popups

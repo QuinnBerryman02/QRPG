@@ -11,6 +11,7 @@ import java.io.ObjectOutputStream;
 public class NPC extends Entity {
     private String name;
     private ArrayList<TopicResponse> topicResponses = new ArrayList<TopicResponse>(); 
+    private boolean commonKnowledge = true;
     //private Face face;
 
     protected NPC() {
@@ -31,8 +32,10 @@ public class NPC extends Entity {
         for (TopicResponse topicResponse : topicResponses) {
             known.add(topicResponse.getTopic());
         }
-        for (TopicResponse defaults : TopicLoader.getCommonKnowledge()) {
-            known.add(defaults.getTopic());
+        if(commonKnowledge) {
+            for (TopicResponse defaults : TopicLoader.getCommonKnowledge()) {
+                known.add(defaults.getTopic());
+            }
         }
         return known;
     }
@@ -47,16 +50,30 @@ public class NPC extends Entity {
                 return true;
             }
         }
-        for (TopicResponse defaults : TopicLoader.getCommonKnowledge()) {
-            if(defaults.getTopic().equals(topic)) {
-                return true;
+        if(commonKnowledge) {
+            for (TopicResponse defaults : TopicLoader.getCommonKnowledge()) {
+                if(defaults.getTopic().equals(topic)) {
+                    return true;
+                }
             }
         }
         return false;
     }
+    
+    public boolean hasCommonKnowledge() {
+        return commonKnowledge;
+    }
+
+    public void setCommonKnowledge(boolean commonKnowledge) {
+        this.commonKnowledge = commonKnowledge;
+    }
 
     public void addTopicResponse(TopicResponse tr) {
         topicResponses.add(tr);
+    }
+
+    public ArrayList<TopicResponse> getTopicResponses() {
+        return topicResponses;
     }
 
     public Response getResponse(Topic topic) {
@@ -65,11 +82,13 @@ public class NPC extends Entity {
                 return topicResponse.getResponse();
             }
         }
-        for (TopicResponse defaults : TopicLoader.getCommonKnowledge()) {
-            if(defaults.getTopic().equals(topic)) {
-                return defaults.getResponse();
+        if(commonKnowledge) {
+            for (TopicResponse defaults : TopicLoader.getCommonKnowledge()) {
+                if(defaults.getTopic().equals(topic)) {
+                    return defaults.getResponse();
+                }
             }
-        }
+        }   
         return null;
     }
 

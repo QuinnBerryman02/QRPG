@@ -48,7 +48,8 @@ public class Dialogue extends Menu {
         this.player = player;
         player.getController().clear();
         this.npc = npc;
-        
+        availableTopics = player.findCommonTopics(npc);
+        boolean lastConversation = !npc.hasCommonKnowledge() && npc.getName().equals("John");
         availableTopics = player.findCommonTopics(npc);
         availableTopics.add(Topic.getTopic("Quest"));
 
@@ -72,8 +73,13 @@ public class Dialogue extends Menu {
         pack();
         setVisible(true);
         repaint();
-
-        overview.triggerButton(Topic.getTopic("Introduction"));
+        if(lastConversation) {
+            overview.setVisible(false);
+            overview.triggerButton(Topic.getTopic("Final Words"));
+            npc.die();  // :(
+        } else {
+            overview.triggerButton(Topic.getTopic("Introduction"));
+        }
     }
 
     public void update() {
@@ -301,7 +307,7 @@ public class Dialogue extends Menu {
                         @Override
                         public void run() {
                             try {
-                                Thread.sleep(100000);
+                                Thread.sleep(10000);
                                 NPC npc = NPCLoader.getNPCByName("John");
                                 npc.move(new Point3f(56,-95,0).minusPoint(npc.getCentre()));
                             } catch(InterruptedException e) {}
@@ -310,14 +316,14 @@ public class Dialogue extends Menu {
                 } else if(topic.getName().equals("Notoriety")) {
                     int done = player.numberOfQuestsCompleted();
                     String s = "You have done " + done + " (quest" + (done==1? "" : "s") + "=Quests) so far.";
-                    if(done >= 2) {
+                    if(done >= 10 && MainWindow.getModel().getStage().ordinal() <= 1) {
                         s += " Well done for doing so many. I have one final quest to give you. Pick it up at the (guild=Guild) and meet me downstairs, in (the room=The Room).";
                         MainWindow.getModel().setStage(Model.STAGE.ENDGAME);
                         new Thread() {
                             @Override
                             public void run() {
                                 try {
-                                    Thread.sleep(100000);
+                                    Thread.sleep(10000);
                                     NPC npc = NPCLoader.getNPCByName("John");
                                     npc.move(new Point3f(143,-142,0).minusPoint(npc.getCentre()));
                                     player.getKnownTopics().add(Topic.getTopic("Final Quest"));

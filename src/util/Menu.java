@@ -19,8 +19,7 @@ public abstract class Menu extends JFrame{
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                MainWindow.setMenu(null);
-                System.gc();
+                MainWindow.closeMenu(true);
             }
         });
     }

@@ -244,6 +244,8 @@ public class Viewer extends JPanel {
 			w = Math.round((hb.getRightX() - hb.getLeftX()) * UNIT_DEF);
 			h = Math.round((hb.getBotY() - hb.getTopY()) * UNIT_DEF);
 			g.fillRect(x - w/2, y - h/2, w, h);
+			g.setColor(Color.CYAN);
+			g.fillOval(x, y, 6, 6);
 		}
 	}
 
@@ -275,6 +277,8 @@ public class Viewer extends JPanel {
 				h = Math.round((hb.getBotY() - hb.getTopY()) * UNIT_DEF);
 				g.setColor(new Color(1f,0f,0f,0.5f));
 				g.fillRect(x - w/2, y - h/2, w, h);
+				g.setColor(Color.CYAN);
+				g.fillOval(x, y, 6, 6);
 			}
 			
 		}

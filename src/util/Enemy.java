@@ -12,6 +12,7 @@ import mvc.MageController;
 
 public class Enemy extends Entity{
     private Type type;
+    private int bossPhase;
     public enum Type {
         SPIDER,
         VAMPIRE,
@@ -27,7 +28,8 @@ public class Enemy extends Entity{
         WIND_ELEMENTAL,
         EARTH_ELEMENTAL,
         LIGHT_ELEMENTAL,
-        DARK_ELEMENTAL
+        DARK_ELEMENTAL,
+        BOSS
     }
 
     protected Enemy() {
@@ -37,6 +39,7 @@ public class Enemy extends Entity{
     public Enemy(Type type, float width, float height, Point3f centre, float maxHealth, float damage, float maxMana) { 
         super(getSkin(type), width, height, centre, null, maxHealth, damage, maxMana);
         this.type = type;
+        bossPhase = (!type.equals(Type.BOSS)) ? -1 : 1; 
         setController(generateController(this));
         generateSpell(type);
         setHostileSpeed(getHostileSpeed());
@@ -69,11 +72,14 @@ public class Enemy extends Entity{
             case GHOST:
             case SLIME:
             case SPIDER:
-            return getPhase().equals(AnimationPhase.NEUTRAL) ? 1 : 4;
+                return getPhase().equals(AnimationPhase.NEUTRAL) ? 1 : 4;
+            case BOSS:
+                return 3;
             default:
                 return -1;
         }   
     }
+
     public float getHostileSpeed(){
         switch(type) {
             case BLACK_KNIGHT:
@@ -92,7 +98,9 @@ public class Enemy extends Entity{
             case GHOST:
             case SLIME:
             case SPIDER:
-            return 2.5f;
+                return 2.5f;
+            case BOSS:
+                return 3f;
             default:
                 return -1;
         }   
@@ -129,6 +137,8 @@ public class Enemy extends Entity{
             case SLIME:
             case SPIDER:
                 return "res/sprites/enemies/enemies.png";   
+            case BOSS:
+                return "res/sprites/enemies/boss.png";
             default:
                 return null;
         }
@@ -155,6 +165,8 @@ public class Enemy extends Entity{
             case SLIME:
             case SPIDER:
                 return getSourceEnemy();   
+            case BOSS:
+                return getSourceBoss();
         }
         return null;
     }
@@ -185,6 +197,40 @@ public class Enemy extends Entity{
         int sy1 = (row * dy2) + (dy2*4);
         int sx2 = sx1 + dx2;
         int sy2 = sy1 + dy2;
+        return new int[] {dx2, dy2, sx1, sy1, sx2, sy2};
+    }
+
+    public int[] getSourceBoss() {
+        if(getHealth() > getMaxHealth()*0.66) {
+            bossPhase = 1;
+        } else if (getHealth() > getMaxHealth()*0.33){
+            bossPhase = 2;
+        } else {
+            bossPhase = 3;
+        }
+        float dir = getController().getMoveDirection().getX();      //boss only has 1 (2 if flipped) static sprites for each phase
+        int sy1 = dir >= 0 ? 0 : 110;
+        int dy2 = (int)(2.9*16);
+        int sy2 = sy1 + 110;
+        int sx1, dx2;
+        switch(bossPhase) {
+            case 1:
+                sx1 = 0;
+                dx2 = 80;
+                break;
+            case 2:
+                sx1 = 80;
+                dx2 = 141;
+                break;
+            case 3:
+                sx1 = 223;
+                dx2 = 94;
+                break;
+            default:
+                throw new IllegalArgumentException("Unknown phase");
+        }
+        int sx2 = sx1 + dx2;
+        dx2 = (int)(2.9*16);
         return new int[] {dx2, dy2, sx1, sy1, sx2, sy2};
     }
 
@@ -221,12 +267,17 @@ public class Enemy extends Entity{
             case GHOST:
             case SLIME:
             case SPIDER:
+            case BOSS:
             default:
                 return null;
         }
     }
 
     public void generateSpell(Type t){
+        if(t.equals(Type.BOSS)) {
+            generateBossSpells();
+            return;
+        }
         Spell s = new Spell();
         s.setAim(Spell.Aim.values()[(new Random()).nextInt((int)getMaxMana()/100)]);
         s.setDamage((new Random()).nextInt(25));
@@ -262,6 +313,21 @@ public class Enemy extends Entity{
         setCurrentSpell(s);
     }
 
+    public void generateBossSpells() {
+        for (Projectile.Type element : Projectile.Type.values()) {
+            Spell s = new Spell();
+            s.setAim(Spell.Aim.values()[(new Random()).nextInt(4)]);
+            s.setDamage(25);
+            s.setElement(element);
+            s.setRadius((new Random()).nextFloat() * 2.5f);
+            s.updateFrames();
+            s.calculateCost();
+            getSpells().add(s);
+        }
+        
+        setCurrentSpell(getSpells().get(0));
+    }
+
     public static Controller generateController(Enemy e) {
         switch(e.getType()) {
             case CULTIST:
@@ -274,6 +340,7 @@ public class Enemy extends Entity{
             case LIGHT_ELEMENTAL:
             case ELDER_WITCH:
             case YOUNG_WITCH:
+            case BOSS:
                 MageController mc = new MageController();
                 mc.setEntity(e);
                 return mc;

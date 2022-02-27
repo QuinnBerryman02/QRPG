@@ -310,11 +310,21 @@ public class MainWindow {
 		if(!menu.isVisible()) return true;
 		return (!menu.getClass().equals(newMenu));
 	}
-
-	public static void closeMenu() {
-		if(menu!=null) menu.dispatchEvent(new WindowEvent(menu, WindowEvent.WINDOW_CLOSING));
+	public static void closeMenu(boolean internal) {
+		if(menu!=null && !internal) menu.dispatchEvent(new WindowEvent(menu, WindowEvent.WINDOW_CLOSING));
+		if(menu instanceof Dialogue && gameworld.getStage().equals(Model.STAGE.BOSS_FIGHT)) {
+			NPC john = NPCLoader.getNPCByName("John");
+			Point3f loc = john.getCentre().plusVector(new Vector3f());
+			john.move(new Vector3f(10000,0,0)); 
+			//play roar sound
+			Enemy boss = new Enemy(Enemy.Type.BOSS, 2.9f, 2.9f, loc, 1000, 10, 10000);
+			gameworld.getEntities().add(boss);
+		}
 		menu = null;
 		System.gc();
+	}
+	public static void closeMenu() {
+		closeMenu(false);
 	}
 
 	public static Menu getMenu() {

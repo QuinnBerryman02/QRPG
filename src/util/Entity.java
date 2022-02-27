@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import main.MainWindow;
 import mvc.AIController;
 import mvc.Controller;
+import mvc.Model;
 import mvc.PlayerController;
 
 public abstract class Entity extends GameObject{
@@ -229,6 +230,7 @@ public abstract class Entity extends GameObject{
     public void updateCombat() {
         if(dead) {
             inCombatWith.forEach(e -> e.setHostile(false));
+            inCombatWith.clear();
             return;
         }
         for(int i=0;i<inCombatWith.size();i++) {
@@ -338,6 +340,19 @@ public abstract class Entity extends GameObject{
             System.out.println("Player died");
         } else if(this instanceof Enemy) {
             System.out.println(((Enemy)this).getType() + " died");
+            if (((Enemy)this).getType().equals(Enemy.Type.BOSS)) {
+                MainWindow.getModel().setStage(Model.STAGE.VICTORY);
+                NPC john = NPCLoader.getNPCByName("John");
+			    Point3f loc = getCentre().plusVector(new Vector3f());
+			    john.move(loc.minusPoint(john.getCentre())); 
+                Topic t = Topic.getTopic("Final Words");
+                Response r = new Response("Thank you, I am finally free...");
+                MainWindow.getModel().getPlayer().getKnownTopics().add(t);
+                john.getTopicResponses().clear();
+                john.setCommonKnowledge(false);
+                john.addTopicResponse(new TopicResponse(t, r));
+                MainWindow.getAudioManager().playSongByTileId(5152 + 1681);
+            }
         }
     }
     
