@@ -213,8 +213,13 @@ public class ControllerMenu extends Menu{
                 public void mouseClicked(MouseEvent e) {
                     if(controller.isControllerMode()) return;
                     keyboard.setText("PRESS A KEY");
-                    controller.listenKeyboard(b);
-                    refresh();
+                    keyboard.requestFocusInWindow();
+                    new Thread() {
+                        public void run() {
+                            controller.listenKeyboard(b);
+                            refresh();
+                        };
+                    }.start();
                 }
                 @Override
                 public void mousePressed(MouseEvent e) {}
@@ -230,8 +235,13 @@ public class ControllerMenu extends Menu{
                 public void mouseClicked(MouseEvent e) {
                     if(!controller.isControllerMode()) return;
                     gameController.setText("PRESS A BUTTON");
-                    controller.listenController(b);
-                    refresh();
+                    gameController.requestFocusInWindow();
+                    new Thread() {
+                        public void run() {
+                            controller.listenController(b);
+                            refresh();
+                        };
+                    }.start();
                 }
                 @Override
                 public void mousePressed(MouseEvent e) {}
