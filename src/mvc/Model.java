@@ -54,7 +54,9 @@ public class Model implements Serializable{
 	public enum STAGE {
 		BEGINING,
 		MIDGAME,
-		ENDGAME
+		ENDGAME,
+		BOSS_FIGHT,
+		VICTORY,
 	}
 
 	public Model() {
@@ -402,18 +404,22 @@ public class Model implements Serializable{
 		for (int i=0; i<collisions.length;i++) {
 			for (int j=0; j<collisions[i].length;j++) {
 				switch (collisions[i][j]) {
-					case 8224:
+					case 1654:
+						if(stage.ordinal() != 3) break;  //dont let player pass if in boss fight
+					case 8224:		//default collision block
 						Hitbox c = new Hitbox(new Point3f(px - SCAN_RANGE + .5f + j,py - SCAN_RANGE + .5f + i,0),1,1);
 						Vector3f v2 = hb.intersection(c, v);
 						if(v2 != null) return v2;
 						break;
-					case 3236:
+					case 3236:		//projectiles can fly over water
 						if(go instanceof Projectile) continue;
 						c = new Hitbox(new Point3f(px - SCAN_RANGE + .5f + j,py - SCAN_RANGE + .5f + i,0),1,1);
 						v2 = hb.intersection(c, v);
 						if(v2 != null) return v2;
 						break;
-					case 300:
+					case 1653:
+					case 1652:
+					case 300:					//teleport collision
 						c = new Hitbox(new Point3f(px - SCAN_RANGE + .5f + j,py - SCAN_RANGE + .5f + i,0),1,1);
 						Vector3f wasIntersecting = hb.intersection(c, new Vector3f());
 						v2 = hb.intersection(c, v);
@@ -422,20 +428,27 @@ public class Model implements Serializable{
 								break;
 							}
 							if(go instanceof Player) {
-								Player p = (Player)go;
-								//if(p.getController().isDoorPressed()) {
-									Point3f portalPoint = new Point3f(px - SCAN_RANGE + j, py - SCAN_RANGE + i, 0f);
-									String teleport = map.findTeleportTypeByPoint(portalPoint);
-									Point3f destinationPoint = map.findTeleportPointByOther(teleport, portalPoint); 
-									System.out.println("Teleporting from " + portalPoint + " to " + destinationPoint + " via " + teleport);
-									p.move(new Point3f(destinationPoint.getX()+0.5f,destinationPoint.getY()+0.5f,0f).minusPoint(p.getCentre()));
-									return new Vector3f();
-								//}
+								switch(collisions[i][j]) {
+									case 1653:			//only let player return from boss room when they win
+										if(stage.ordinal() < 4) break; 
+									case 1652:			//only let player enter boss room when they are in endgame
+										if(stage.ordinal() < 2 || !player.hasFinalQuest()) break; 
+									case 300:
+										int currentBlock = collisions[SCAN_RANGE][SCAN_RANGE];
+										if(currentBlock==300||currentBlock==1652||currentBlock==1653) break;
+										Player p = (Player)go;
+										Point3f portalPoint = new Point3f(px - SCAN_RANGE + j, py - SCAN_RANGE + i, 0f);
+										String teleport = map.findTeleportTypeByPoint(portalPoint);
+										Point3f destinationPoint = map.findTeleportPointByOther(teleport, portalPoint); 
+										System.out.println("Teleporting from " + portalPoint + " to " + destinationPoint + " via " + teleport);
+										p.move(new Point3f(destinationPoint.getX()+0.5f,destinationPoint.getY()+0.5f,0f).minusPoint(p.getCentre()));
+										return new Vector3f();
+								}
 							}
 							return v2;
 						}
 						break;
-					case 1028:
+					case 1028:					//guild board
 						c = new Hitbox(new Point3f(px - SCAN_RANGE + .5f + j,py - SCAN_RANGE + .5f + i,0),1,1);
 						v2 = hb.intersection(c, v);
 						if(v2 != null) {
@@ -450,7 +463,7 @@ public class Model implements Serializable{
 							return v2;
 						}
 						break;
-					case 1558:
+					case 1558:				//statue menu
 						c = new Hitbox(new Point3f(px - SCAN_RANGE + .5f + j,py - SCAN_RANGE + .5f + i,0),1,1);
 						v2 = hb.intersection(c, v);
 						if(v2 != null) {
@@ -465,7 +478,7 @@ public class Model implements Serializable{
 							return v2;
 						}
 						break;
-					default:
+					default:			//no collision
 						break;
 				}
 				

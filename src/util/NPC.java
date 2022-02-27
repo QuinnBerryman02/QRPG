@@ -55,6 +55,10 @@ public class NPC extends Entity {
         return false;
     }
 
+    public void addTopicResponse(TopicResponse tr) {
+        topicResponses.add(tr);
+    }
+
     public Response getResponse(Topic topic) {
         for (TopicResponse topicResponse : topicResponses) {
             if(topicResponse.getTopic().equals(topic)) {

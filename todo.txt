@@ -32,6 +32,9 @@
     <>add stat upgrades for gold
     <>add saving and loading
     <>fix npc amnesia
+    <>create final boss arena
+    <>endgame -> bossfight scripting
+    <>^ but playthrough tested
 
 fix menu glitching
 fix enemy hitboxes
@@ -40,9 +43,8 @@ fix open menu bug ? does it exist ?
 
 create the rest of the NPCs
 allow player to change buttons for actions
-[controls changing]  add esc / tab menu with settings
-create final boss arena
-[boss arena] add final boss
+[controls changing]  add esc / tab menu with button settings / saving / loading / spell menu / quest menu etc
+add final boss
 
         Entity)
 (minor) add attack damage popups
@@ -58,6 +60,7 @@ create final boss arena
 (parking lot) add special collision types, half blocks, custom collisions for chests etc
     <>fix projectile collisions
     <>allow projectiles to fly over water / low things
+    <>fix door to door exploit
 
         Music)
     <>add music
@@ -74,7 +77,6 @@ create final boss arena
         Spells / Projectiles)
     <>make spell damage proportional to entity damage 
 [shop]  lock progress of some elements / aims until unlocked / bought
-add pierce to projectiles
 (minor) replace circle with sprite in menu
     <>add projectile sprites
     <>add magic circle below feet when casting

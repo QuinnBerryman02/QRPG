@@ -89,6 +89,7 @@ public class GuildMenu extends Menu{
                 if(player.getQuests().size()>=1) return;
                 quests.add(new SlayerQuest(NPCLoader.getNPCByName("John"), 100, 5, Enemy.Type.SLIME));
                 break;
+            case VICTORY:
             case MIDGAME:
                 Random r = new Random();
                 for(int i=0;i<NUMBER_OF_QUESTS;i++) {
@@ -143,7 +144,9 @@ public class GuildMenu extends Menu{
                 }
                 break;
             case ENDGAME:
-                quests.add(new AssassinationQuest(NPCLoader.getNPCByName("John"),1000,NPCLoader.getNPCByName("John")));
+                if(!player.hasFinalQuest()) {
+                    quests.add(new AssassinationQuest(NPCLoader.getNPCByName("John"),1000,NPCLoader.getNPCByName("John")));
+                }
                 break;
             default:
                 break;

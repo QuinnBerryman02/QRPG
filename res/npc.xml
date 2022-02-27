@@ -22,6 +22,10 @@
         <topic name="The Room"> The Room lies behind the big locked door in the (Guild=Guild) Hall. </topic>
         <topic name="Notoriety"></topic>
         <topic name="Your house?"> My house is northeast of the (town=Town), take the bridge east by the beach, and head north along the river road until you see a house with a pond, that's mine </topic>
+        <topic name="Final Quest"> Did you see all the (statues=Statues?) on the way here...? </topic>
+        <topic name="Statues?"> Yes... Of the man and the woman. Long ago they were the founders of this (land=Land). Their names? No one remembers those anymore. I still remember... My name was (John=John)... </topic>
+        <topic name="John"> I fought the darkness for as long as I could but the Dungeons are too overwhelming... too endless... They began to (corrupt me=Corrupt you?). </topic>
+        <topic name="Corrupt you?"> Yes... Thank you for helping these villagers, for soon I shall not be able to help them. Please (free me=Free). </topic>
     </npc>
     <npc name="Jane" x="-9" y="5" skin="Magician_F">
         <topic name="Introduction"> Hello my name is Jane, nice to meet you. </topic>

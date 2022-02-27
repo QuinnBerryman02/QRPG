@@ -310,11 +310,34 @@ public class Dialogue extends Menu {
                 } else if(topic.getName().equals("Notoriety")) {
                     int done = player.numberOfQuestsCompleted();
                     String s = "You have done " + done + " (quest" + (done==1? "" : "s") + "=Quests) so far.";
-                    if(done >= 10) {
+                    if(done >= 2) {
                         s += " Well done for doing so many. I have one final quest to give you. Pick it up at the (guild=Guild) and meet me downstairs, in (the room=The Room).";
                         MainWindow.getModel().setStage(Model.STAGE.ENDGAME);
+                        new Thread() {
+                            @Override
+                            public void run() {
+                                try {
+                                    Thread.sleep(100000);
+                                    NPC npc = NPCLoader.getNPCByName("John");
+                                    npc.move(new Point3f(143,-142,0).minusPoint(npc.getCentre()));
+                                    player.getKnownTopics().add(Topic.getTopic("Final Quest"));
+                                } catch(InterruptedException e) {}
+                            };
+                        }.start();
                     }
                     response = new Response(s);
+                } else if(topic.getName().equals("Corrupt you?")) {
+                    response = npc.getResponse(topic);
+                    Topic t = Topic.getTopic("Free");
+                    Response r = new Response("Pleas- Plea- AAAAAAARRGH");
+                    TopicResponse tr = new TopicResponse(t,r);
+                    npc.addTopicResponse(tr);
+                    availableTopics.add(t);
+                    getOverview().addTopic(t);
+                } else if(topic.getName().equals("Free")) {
+                    response = npc.getResponse(topic);
+                    overview.setVisible(false);
+                    MainWindow.getModel().setStage(Model.STAGE.BOSS_FIGHT);
                 } else {
                     response = npc.getResponse(topic);
                 }

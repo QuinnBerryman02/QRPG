@@ -86,6 +86,19 @@ public class Player extends Entity {
 		out.writeObject(topicNames);
     }
 
+	public boolean hasFinalQuest() {
+		for (Quest quest : quests) {
+			if(quest instanceof AssassinationQuest) {
+				if(quest.getQuestGiver().equals(NPCLoader.getNPCByName("John"))) {
+					if(((AssassinationQuest)quest).getTarget().equals(NPCLoader.getNPCByName("John"))) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
     private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
         in.defaultReadObject();
 		PlayerController pc = (PlayerController)in.readObject();

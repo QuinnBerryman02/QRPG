@@ -211,5 +211,10 @@
 
    <door x="-46" y="3">caves</door>
    <door x="-66" y="70">sewer</door>
+
+   <door x="114" y="156">boss_door_1</door>
+   <door x="115" y="156">boss_door_2</door>
+   <door x="143" y="-78">boss_door_1</door>
+   <door x="144" y="-78">boss_door_2</door>
 </doors>
 
