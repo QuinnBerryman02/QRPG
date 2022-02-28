@@ -300,6 +300,10 @@ public class AudioManager {
                     playSongByType(lastNonCombatSong.getType());
                 }
                 break;
+            case (777):
+                if(!Song.Type.MAIN.equals(lastPlayedSong.getType())) {
+                    playSongByType(Song.Type.MAIN);
+                }
             default:
                 break;
         }

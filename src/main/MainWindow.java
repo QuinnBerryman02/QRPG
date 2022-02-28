@@ -230,6 +230,14 @@ public class MainWindow {
 		}
 	}
 
+	public static void newGamePrep() {//plays main theme and puts the camera to center if the player dies and selects new game
+		Point3f tl = Viewer.CAMERA_BOUND_TL;
+		Point3f br = Viewer.CAMERA_BOUND_BR;
+		canvas.setCameraOffset(new Point3f((br.getX()+tl.getX())/2,(br.getY()+tl.getY())/2,0));
+		audioManager.playSongByTileId(777); 
+		canvas.setInCameraMode(true);
+	}
+
 	public static void newGame() {
 		closeMenu();
 		gameworld = new Model();

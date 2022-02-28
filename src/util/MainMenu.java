@@ -30,8 +30,10 @@ public class MainMenu extends Menu{
     private int startY = 300;
     private Color defaultColor = new Color(51,51,51,255);
     private Font defaultFont = new Font("default",Font.BOLD,12);
+    boolean isGameOverMenu;
 
     public MainMenu() {
+        isGameOverMenu = MainWindow.getModel().getPlayer().isDead();
         setUndecorated(true);
         setSize(new Dimension(MainWindow.getW()-10, MainWindow.getH()-55));
         setLocation(5, 50);
@@ -52,6 +54,9 @@ public class MainMenu extends Menu{
         
 
         newGame.addActionListener(e -> {
+            if(isGameOverMenu) {
+                MainWindow.newGamePrep();
+            }
             MainWindow.newGame();
         });
         loadGame.addActionListener(e -> {

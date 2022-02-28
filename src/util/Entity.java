@@ -344,6 +344,7 @@ public abstract class Entity extends GameObject{
         if(this instanceof NPC) {
             System.out.println(((NPC)this).getName() + " died");
         } else if(this instanceof Player) {
+            MainWindow.openMainMenu();
             System.out.println("Player died");
         } else if(this instanceof Enemy) {
             System.out.println(((Enemy)this).getType() + " died");
