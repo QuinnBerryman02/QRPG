@@ -180,6 +180,7 @@ public class Model implements Serializable{
 				controller.setControllerPressed(false);
 			}
 			if(controller.isEscapePressed()) {
+				System.out.println("escaping");
 				MainWindow.closeMenu();
 				controller.setEscapePressed(false);
 			}

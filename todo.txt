@@ -43,12 +43,14 @@
     <>add boss roar sound effect
     <>add sewers footstep sound effect -> wood steps will do the job
     <>add game over stuff to allow player to load or start a new game / should really just be main menu tbh
+    <>fix load paralysis error
 
-fix open menu bug : nope still here }:(
+fix WHITE BOX OF DEATH }:(
 fix menu glitching
 fix loadgame not switching to correct song
 fix enemy hitboxes ? kinda okay at the moment
-fix frame drops for unknown reason
+fix cant find controller if connecting while in game
+improve performance
 
 create the rest of the NPCs
 create the manual save menu and make the manual load a quick load (using a quicksave file or something)

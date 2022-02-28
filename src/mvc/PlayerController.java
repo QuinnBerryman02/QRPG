@@ -83,6 +83,18 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		}
 	}
 
+	@Override
+	public String toString() {
+		String s = "";
+		for (Button b : buttonSet) {
+			s += b.toString() + "\n";
+		}
+		for (Toggle t : toggleSet) {
+			s += t.toString() + "\n";
+		}
+		return s;
+	}
+
 	public void listenController(Button b) {
 		for(;;) {
 			poll();
@@ -523,6 +535,17 @@ class Button implements Serializable{
 	public void setType(Type type) {
 		this.type = type;
 	}
+
+	@Override
+	public String toString() {
+		String s = "";
+		s += type + "\n";
+		s += name + "\n";
+		s += key + "\n";
+		s += button + "\n";
+		s += buttonName + "\n";
+		return s;
+	}
 	
 }
 
@@ -580,5 +603,16 @@ class Toggle implements Serializable{
 	private void readObject(ObjectInputStream in) throws ClassNotFoundException, IOException {
 		in.defaultReadObject();
 		values = new boolean[]{false,false,false,false};
+	}
+
+	@Override
+	public String toString() {
+		String s = "";
+		s += name + "\n";
+		s += Arrays.toString(keys) + "\n";
+		s += Arrays.toString(values) + "\n";
+		s += Arrays.toString(toggles) + "\n";
+		s += Arrays.toString(toggleNames) + "\n";
+		return s;
 	}
 }

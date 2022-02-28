@@ -61,6 +61,7 @@ public class MainWindow {
 	private static Model gameworld;
 	private static Viewer canvas;
 	private static Menu menu;
+	private static boolean inMenuMode = false;
 	private final static int targetFPS = 15;
 	private final static int W = Toolkit.getDefaultToolkit().getScreenSize().width;
 	private final static int H = Toolkit.getDefaultToolkit().getScreenSize().height;
@@ -103,11 +104,27 @@ public class MainWindow {
 
 	public static void establishListeners() {
 		PlayerController pc = (PlayerController)gameworld.getPlayer().getController();
+		removeListeners();
 		canvas.addKeyListener(pc); 
 		canvas.addMouseListener(pc);  
 		canvas.addMouseMotionListener(pc);
 		canvas.addMouseWheelListener(pc);
 		canvas.requestFocusInWindow(); 
+	}
+
+	public static void removeListeners() {
+		while(canvas.getKeyListeners().length>0) {
+			canvas.removeKeyListener(canvas.getKeyListeners()[0]);
+		}
+		while(canvas.getMouseListeners().length>0) {
+			canvas.removeMouseListener(canvas.getMouseListeners()[0]);
+		}
+		while(canvas.getMouseMotionListeners().length>0) {
+			canvas.removeMouseMotionListener(canvas.getMouseMotionListeners()[0]);
+		}
+		while(canvas.getMouseWheelListeners().length>0) {
+			canvas.removeMouseWheelListener(canvas.getMouseWheelListeners()[0]);
+		}
 	}
 
 	private static void beginGame() {
@@ -281,44 +298,41 @@ public class MainWindow {
 	}
 
 	public static void loadGame() {
-		JFileChooser chooser = new JFileChooser("saves");
-		chooser.setBounds(200, 200, W-400,H-400);
-		chooser.setVisible(true);
-		int option = chooser.showOpenDialog(frame);
-		if(option==JFileChooser.APPROVE_OPTION) {    
-			try {
-				File file = chooser.getSelectedFile();
-				FileInputStream fis = new FileInputStream(file);   
-				ObjectInputStream ois = new ObjectInputStream(fis);
-				System.out.println("____________________________________________");
-				Model loadedGame = (Model)ois.readObject();
-				gameworld = loadedGame;
-				closeMenu();
-				ois.close();
-				fis.close();
-				if(gameworld.getPlayer().isIndoors()) {
-					canvas.setCameraOffset(gameworld.getPlayer().getCentre());
-					canvas.setInCameraMode(false);
-					canvas.setGoingToPoint(null);
-					canvas.setListener(null);
-					establishListeners();
-				} else {
-					canvas.setGoingToPoint(gameworld.getPlayer().getCentre());
-					canvas.setListener(() -> {
+		if(inMenuMode) return;
+		new Thread() {
+			public void run() {
+				inMenuMode = true;
+				JFileChooser chooser = new JFileChooser("saves");
+				chooser.setBounds(200, 200, W-400,H-400);
+				chooser.setVisible(true);
+				int option = chooser.showOpenDialog(null);
+				if(option==JFileChooser.APPROVE_OPTION) {    
+					try {
+						inMenuMode = false;
+						File file = chooser.getSelectedFile();
+						FileInputStream fis = new FileInputStream(file);   
+						ObjectInputStream ois = new ObjectInputStream(fis);
+						System.out.println("____________________________________________");
+						Model loadedGame = (Model)ois.readObject();
+						gameworld = loadedGame;
+						closeMenu();
+						ois.close();
+						fis.close();
+						canvas.setCameraOffset(gameworld.getPlayer().getCentre());
 						canvas.setInCameraMode(false);
 						canvas.setGoingToPoint(null);
 						canvas.setListener(null);
 						establishListeners();
-					});
+						audioManager.playLastPlayed();
+						System.out.println("Game loaded SuccessFully");
+					} catch (Exception e) {
+						e.printStackTrace();
+						System.out.println("Couldn't load save file");
+					}        
+					System.out.println("____________________________________________");
 				}
-				audioManager.playLastPlayed();
-				System.out.println("Game loaded SuccessFully");
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("Couldn't load save file");
-			}        
-			System.out.println("____________________________________________");
-		}  
+			};
+		}.start();
 	}
 
 	public static boolean eligibleToOpenMenu(Class<?> newMenu) {
@@ -352,7 +366,7 @@ public class MainWindow {
 	}
 
 	public static boolean inAMenu() {
-		return menu!=null;
+		return menu != null || inMenuMode;
 	}
 
 	public static Model getModel() {
