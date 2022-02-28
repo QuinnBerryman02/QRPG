@@ -130,7 +130,9 @@ public class Model implements Serializable{
 				if(e instanceof Player) {
 					playerLogic(); 
 				} else {
+					
 					entityLogic(e); 
+
 				}
 			}
 			if(!cameraMode){
@@ -243,7 +245,8 @@ public class Model implements Serializable{
 
 	private boolean projectileLogic(Projectile p) {
 		Vector3f velocity = p.getVelocity().byScalar(1f / (float)MainWindow.getTargetFPS());
-		return collisionHandler(p, velocity);
+		ArrayList<Entity> closeTo = findReasonablyCloseEntities(p);
+		return collisionHandler(p, velocity, closeTo);
 	}
 
 	public void animationLogic(Entity e) {
@@ -323,8 +326,9 @@ public class Model implements Serializable{
 						}
 					}
 				}
-				collisionHandler(e, new Vector3f(v.getX(),0,0));
-				collisionHandler(e, new Vector3f(0,v.getY(),0));
+				ArrayList<Entity> closeTo = findReasonablyCloseEntities(e);
+				collisionHandler(e, new Vector3f(v.getX(),0,0),closeTo);
+				collisionHandler(e, new Vector3f(0,v.getY(),0),closeTo);
 				break;
             case ATTACKING:
 				if(e.getProgress()*2 + (e.progressMax()%2)==e.progressMax()) {
@@ -382,10 +386,22 @@ public class Model implements Serializable{
 		}
 	}
 
-	public boolean collisionHandler (GameObject go, Vector3f v0) {
+	public ArrayList<Entity> findReasonablyCloseEntities(GameObject go) {
+		ArrayList<Entity> close = new ArrayList<Entity>();
+		for (Entity e : entitiesLoaded) {
+			float dx = e.getCentre().getX() - go.getCentre().getX();
+			float dy = e.getCentre().getY() - go.getCentre().getY();
+			float rx = e.getWidth() + go.getWidth();
+			boolean check = (dx*dx) + (dy*dy) < (rx*rx*1.1);
+			if(check) close.add(e);
+		}
+		return close;
+	}
+
+	public boolean collisionHandler (GameObject go, Vector3f v0, ArrayList<Entity> closeTo) {
 		Vector3f v = wallCollisionHandler(go, v0);
 		if(go instanceof Projectile && v != v0) return true;
-		for (Entity other : entitiesLoaded) {
+		for (Entity other : closeTo) {
 			if(other == go) {
 				continue;
 			} else if (go instanceof Projectile && other.equals(((Projectile)go).getCaster())) {
@@ -435,6 +451,8 @@ public class Model implements Serializable{
 		for (int i=0; i<collisions.length;i++) {
 			for (int j=0; j<collisions[i].length;j++) {
 				switch (collisions[i][j]) {
+					case 0:
+						break;
 					case 1654:
 						if(stage.ordinal() != 3) break;  //dont let player pass if in boss fight
 					case 8224:		//default collision block

@@ -13,6 +13,7 @@ import org.w3c.dom.NodeList;
 import main.MainWindow;
 
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 public class Map {
     public static final int[] CAVE_START_CHUNK = {Dungeon.MAX_SIZE*16+96,0};
@@ -69,7 +70,7 @@ public class Map {
     }
 
     public ArrayList<Chunk> getChunksByCoordinate(int x, int y) {
-        Dungeon dungeon = MainWindow.getModel().getCurrentDungeon();
+        Dungeon dungeon = (MainWindow.getModel()==null) ? null : MainWindow.getModel().getCurrentDungeon();
         ArrayList<Chunk> chunksAtPosition = new ArrayList<Chunk>();
         if(dungeon!=null) {
             Dungeon.CTYPE c =  dungeon.getChunkByCoords(new Point3f(x,y,0));
@@ -164,26 +165,20 @@ public class Map {
         int y = tile[1];
         int positionInChunkX = (x % 16 + 16) % 16;
         int positionInChunkY = (y % 16 + 16) % 16;
-        //System.out.println((x - positionInChunkX) + " " + (y - positionInChunkY));
-        //System.out.println("x: " + (positionInChunkX) + " y: " + (positionInChunkY));
         for(int i=0;i<collisions.length;i++) {
+            int chunkY = y - positionInChunkY;
+            if(i < radius - positionInChunkY)                                   chunkY -= 16;
+            if(collisions.length - i - 1 < positionInChunkY - (15 - radius))    chunkY += 16;
             for(int j=0;j<collisions[i].length;j++) {
                 int chunkX = x - positionInChunkX;
-                int chunkY = y - positionInChunkY;
                 if(j < radius - positionInChunkX)                                   chunkX -= 16;
                 if(collisions[i].length - j - 1 < positionInChunkX - (15 - radius)) chunkX += 16;
-                if(i < radius - positionInChunkY)                                   chunkY -= 16;
-                if(collisions.length - i - 1 < positionInChunkY - (15 - radius))    chunkY += 16;
                 ArrayList<Chunk> allLayers = getChunksByCoordinate(chunkX, chunkY);
                 allLayers.removeIf((c) -> !c.getLayer().getAttribute("name").equals("collisions"));
                 if(allLayers.isEmpty()) {
                     collisions[i][j] = 0;
                 } else {
                     Chunk chunk = allLayers.get(0);
-                    //collisions[i][j] = chunkX * 1000 + chunkY;
-                    //collisions[i][j] = positionInChunkY * 100 + positionInChunkX;
-                    //collisions[i][j] = (y - radius + i) * 1000 + (x - radius + j);
-                    //collisions[i][j] = (((positionInChunkY - radius + i) % 16 + 16) % 16)*100 + (((positionInChunkX - radius + j) % 16 + 16) % 16);
                     collisions[i][j] = chunk.getTile(((positionInChunkY - radius + i) % 16 + 16) % 16, ((positionInChunkX - radius + j) % 16 + 16) % 16);
                 }
             }

@@ -7,6 +7,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.awt.image.BufferedImage;
@@ -66,12 +67,37 @@ public class Viewer extends JPanel {
 	private ArrayList<Entity> entitiesLoaded = new ArrayList<Entity>();
 	private Map map;
 	private int chunksOnScreen = 0;
+	private ArrayList<File> files = new ArrayList<File>();
+	private ArrayList<Image> images = new ArrayList<Image>();
 
 	public Viewer() {
 		this.gameWorld = MainWindow.getModel();
 		this.map = MainWindow.getMap();
 		cameraVector = new Vector3f(2f,2f,0f);
 		cameraOffset = Point3f.generateRandomPoint(CAMERA_BOUND_TL, CAMERA_BOUND_BR);
+		String[] fileNames = {"enemies/boss.png","enemies/enemies.png","enemies/witch1.png","enemies/witch2.png","attacking_transparent.png","casting_transparent.png","faces_transparent.png","walking_transparent.png"};
+		for(String s : fileNames) {
+			File f = new File("res/sprites/" + s);
+			files.add(f);
+			try {
+				images.add(ImageIO.read(f));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public String flipSlashes(String s) {
+		return s.replaceAll("\\\\", "/");
+	}
+
+	public Image imageByName(String s) {
+		for(int i=0;i<files.size();i++) {
+			if(flipSlashes(files.get(i).getPath()).equals(s)) {
+				return images.get(i);
+			}
+		}
+		return null;
 	}
 	public void updateview() {
 		repaint();
@@ -114,17 +140,18 @@ public class Viewer extends JPanel {
 			chunksLoaded = map.findClosestChunks(inCameraMode ? cameraOffset : gameWorld.getPlayer().getCentre());
 			entitiesLoaded = gameWorld.getEntitiesLoaded();
 			gameWorld.sortEntities(entitiesLoaded);
+
 			g.setColor(Color.BLACK);
 			g.fillRect(0, 0, MainWindow.getW(), MainWindow.getH());
 
 			drawBackground(g);
 
 			drawEntities(g);
-			
+
 			if(!inCameraMode) {
 				drawProjectiles(g);
 			}
-				
+
 			drawForeground(g);
 
 			if(!inCameraMode) {
@@ -171,7 +198,6 @@ public class Viewer extends JPanel {
 				Point3f relativePoint = worldSpaceToScreen(worldPoint);
 				int x = (int)relativePoint.getX();
 				int y = (int)relativePoint.getY();
-				//System.out.println("x: " + x+ " y: " + y + " " + chunk);
 				if (chunk.getLayer().getAttribute("name").equals("collisions")) continue;
 				if (chunk.getLayer().getAttribute("name").equals("audio")) continue;
 				if(x + UNIT_DEF * CHUNK_SIZE <= 0 || y + UNIT_DEF * CHUNK_SIZE <= 0 || x > MainWindow.getW() || y > MainWindow.getH()) {
@@ -182,18 +208,15 @@ public class Viewer extends JPanel {
 				int xoff = chunk.getXOffset() * SCALE;
 				int yoff = chunk.getYOffset() * SCALE;
 				for(int i=0;i<16;i++) {
+					int dy1 = y + yoff + i * UNIT_DEF;
 					for(int j=0;j<16;j++) {
-						//System.out.println("i=" + i + " j=" + j + " layer" + chunk.getLayer().getAttribute("name"));
 						int id = chunk.getTile(i, j);
-						//System.out.println("tile: " + id);
 						Tileset t = map.findTilesetByTileID(id);
 						if (t == null) continue;
 						int[] coords = t.getTile(id);
-						//System.out.println((x + xoff)+ " " + (y + yoff)+ " "+ (x + xoff + j*16*2)+ " "+ (y + yoff + i*16*2)+ " "+ coords[0]+ " " + coords[1]+ " " + coords[2]+ " " +coords[3]);
 						int tileSize = t.getTileWidth();
 						int tileUnit = tileSize * SCALE;
 						int dx1 = x + xoff + j * UNIT_DEF;
-						int dy1 = y + yoff + i * UNIT_DEF;
 						Image img = t.getImage();
 						g.drawImage(img, dx1, dy1, dx1 + tileUnit, dy1 + tileUnit, coords[0], coords[1], coords[2], coords[3], null); 
 					}
@@ -207,7 +230,7 @@ public class Viewer extends JPanel {
 	
 	private void drawPlayer(Graphics g) { 
 		Player p = gameWorld.getPlayer();
-		File TextureToLoad = new File(p.getCurrentTexture());
+		Image image = imageByName(p.getCurrentTexture());
 		Point3f relativePoint = worldSpaceToScreen(p.getCentre());
 		int x;
 		int y;
@@ -230,8 +253,7 @@ public class Viewer extends JPanel {
 			w = Math.round(p.getWidth()) * UNIT_DEF;
 			h = Math.round(p.getHeight()) * UNIT_DEF;
 			int[] source = p.getSource();
-			Image myImage = ImageIO.read(TextureToLoad);
-			g.drawImage(myImage, x - w/2, y - h/2, x - w/2 + source[0]*SCALE, y - h/2 + source[1]*SCALE, source[2],source[3],source[4],source[5], null); 
+			g.drawImage(image, x - w/2, y - h/2, x - w/2 + source[0]*SCALE, y - h/2 + source[1]*SCALE, source[2],source[3],source[4],source[5], null); 
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
@@ -255,7 +277,7 @@ public class Viewer extends JPanel {
 				drawPlayer(g);
 				continue;
 			}
-			File TextureToLoad = new File(e.getCurrentTexture());
+			Image image = imageByName(e.getCurrentTexture());
 			Point3f worldPoint = e.getCentre();
 			Point3f relativePoint = worldSpaceToScreen(worldPoint);
 			Hitbox hb = e.getHitbox();
@@ -265,8 +287,7 @@ public class Viewer extends JPanel {
 			int h = Math.round(e.getHeight()) * UNIT_DEF;
 			try {
 				int[] source = e.getSource();
-				Image myImage = ImageIO.read(TextureToLoad);
-				g.drawImage(myImage, x - w/2, y - h/2, x - w/2 + source[0]*SCALE, y - h/2 + source[1]*SCALE, source[2],source[3],source[4],source[5], null); 
+				g.drawImage(image, x - w/2, y - h/2, x - w/2 + source[0]*SCALE, y - h/2 + source[1]*SCALE, source[2],source[3],source[4],source[5], null); 
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}
