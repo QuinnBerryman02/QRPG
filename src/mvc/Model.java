@@ -156,11 +156,11 @@ public class Model implements Serializable{
 		if(!MainWindow.getCanvas().isInCameraMode()) {
 			player.regenMana();
 			if(controller.isMinusPressed()) {
-				MainWindow.saveGame();
+				MainWindow.quickSave();
 				controller.setMinusPressed(false);
 			}
 			if(controller.isPlusPressed()) {
-				MainWindow.loadGame();
+				MainWindow.quickLoad();
 				controller.setPlusPressed(false);
 			}
 			if(controller.isSettingsPressed()) {

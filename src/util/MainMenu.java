@@ -60,7 +60,7 @@ public class MainMenu extends Menu{
             MainWindow.newGame();
         });
         loadGame.addActionListener(e -> {
-            MainWindow.loadGame();
+            MainWindow.loadGameManually();
         });
         settings.addActionListener(e -> {
             //TODO

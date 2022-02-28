@@ -286,10 +286,9 @@ public class MainWindow {
 		});
 	}
 
-	public static void saveGame() {
+	public static void saveGame(File f) {
 		try {
-			File file = new File("saves/save.txt");
-			FileOutputStream fos = new FileOutputStream(file);
+			FileOutputStream fos = new FileOutputStream(f);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			System.out.println("____________________________________________");
 			oos.writeObject(gameworld);
@@ -304,7 +303,39 @@ public class MainWindow {
 		System.out.println("____________________________________________");
 	}
 
-	public static void loadGame() {
+	public static void loadGame(File f) {
+		try {
+			FileInputStream fis = new FileInputStream(f);   
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			System.out.println("____________________________________________");
+			Model loadedGame = (Model)ois.readObject();
+			gameworld = loadedGame;
+			closeMenu();
+			ois.close();
+			fis.close();
+			canvas.setCameraOffset(gameworld.getPlayer().getCentre());
+			canvas.setInCameraMode(false);
+			canvas.setGoingToPoint(null);
+			canvas.setListener(null);
+			establishListeners();
+			audioManager.playLastPlayed();
+			System.out.println("Game loaded SuccessFully");
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.out.println("Couldn't load save file");
+		}        
+		System.out.println("____________________________________________");
+	}
+
+	public static void quickLoad() {
+		loadGame(new File("saves/quicksave.txt"));
+	}
+
+	public static void quickSave() {
+		saveGame(new File("saves/quicksave.txt"));
+	}
+
+	public static void loadGameManually() {
 		if(inMenuMode) return;
 		new Thread() {
 			public void run() {
@@ -314,29 +345,27 @@ public class MainWindow {
 				chooser.setVisible(true);
 				int option = chooser.showOpenDialog(null);
 				if(option==JFileChooser.APPROVE_OPTION) {    
-					try {
-						inMenuMode = false;
-						File file = chooser.getSelectedFile();
-						FileInputStream fis = new FileInputStream(file);   
-						ObjectInputStream ois = new ObjectInputStream(fis);
-						System.out.println("____________________________________________");
-						Model loadedGame = (Model)ois.readObject();
-						gameworld = loadedGame;
-						closeMenu();
-						ois.close();
-						fis.close();
-						canvas.setCameraOffset(gameworld.getPlayer().getCentre());
-						canvas.setInCameraMode(false);
-						canvas.setGoingToPoint(null);
-						canvas.setListener(null);
-						establishListeners();
-						audioManager.playLastPlayed();
-						System.out.println("Game loaded SuccessFully");
-					} catch (Exception e) {
-						e.printStackTrace();
-						System.out.println("Couldn't load save file");
-					}        
-					System.out.println("____________________________________________");
+					inMenuMode = false;
+					File file = chooser.getSelectedFile();
+					loadGame(file);
+				}
+			};
+		}.start();
+	}
+
+	public static void saveGameManually() {
+		if(inMenuMode) return;
+		new Thread() {
+			public void run() {
+				inMenuMode = true;
+				JFileChooser chooser = new JFileChooser("saves");
+				chooser.setBounds(200, 200, W-400,H-400);
+				chooser.setVisible(true);
+				int option = chooser.showSaveDialog(null);
+				if(option==JFileChooser.APPROVE_OPTION) {    
+					inMenuMode = false;
+					File file = chooser.getSelectedFile();
+					saveGame(file);
 				}
 			};
 		}.start();

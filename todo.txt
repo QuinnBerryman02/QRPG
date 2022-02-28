@@ -44,23 +44,31 @@
     <>add sewers footstep sound effect -> wood steps will do the job
     <>add game over stuff to allow player to load or start a new game / should really just be main menu tbh
     <>fix load paralysis error
+    <>create the settings menu for sound volume and music volume
+    <>create the manual save menu and make the manual load a quick load (using a quicksave file or something)
 
-fix WHITE BOX OF DEATH }:(
-fix menu glitching
-fix loadgame not switching to correct song
-fix enemy hitboxes ? kinda okay at the moment
-fix cant find controller if connecting while in game
-improve performance
+(hard bug)fix WHITE BOX OF DEATH }:(
+(hard bug)fix menu glitching
+(bug)fix loadgame not switching to correct song
+(bug)fix enemy hitboxes ? kinda okay at the moment
+(bug)fix cant find controller if connecting while in game
+(???)improve performance
 
-create the rest of the NPCs
-create the manual save menu and make the manual load a quick load (using a quicksave file or something)
-create the settings menu for sound volume and music volume
-(minor)add esc / tab menu with button settings / saving / loading / spell menu / quest menu etc
-(if I have abundant time) add javadocs 
+(minor) replace circle with sprite in menu
+(long)create the rest of the NPCs
+(major)add esc / tab menu with button settings / saving / loading / spell menu / quest menu etc
 
-        Entity)
+        Parking Lot)
+(long)add javadocs 
 (minor) add attack damage popups
 (minor) increase quest rewards for harder enemies
+add special collision types, half blocks, custom collisions for chests etc
+add npc shop ui
+[shop]  lock progress of some elements / aims until unlocked / bought
+add more types of quest (layer reached, layer cleared etc)
+
+
+        Entity)
     <>create enemy class
     <>get enemy sprites and animations
     <>fix elder witch down direction
@@ -69,7 +77,6 @@ create the settings menu for sound volume and music volume
     <>make npc non hostile after not on screen
 
         Collisions)
-(parking lot) add special collision types, half blocks, custom collisions for chests etc
     <>fix projectile collisions
     <>allow projectiles to fly over water / low things
     <>fix door to door exploit
@@ -79,7 +86,6 @@ create the settings menu for sound volume and music volume
     <>make music correspond to each area
 
         UI)
-(parking lot) add shop ui
     <>add main menu ui
     <>add camera mode
     <>fixed bug with directions being odd
@@ -88,8 +94,6 @@ create the settings menu for sound volume and music volume
 
         Spells / Projectiles)
     <>make spell damage proportional to entity damage 
-[shop]  lock progress of some elements / aims until unlocked / bought
-(minor) replace circle with sprite in menu
     <>add projectile sprites
     <>add magic circle below feet when casting
     <>randomize variants per spell
@@ -97,7 +101,6 @@ create the settings menu for sound volume and music volume
     <>fix weird spell bugs
 
         Quests)
-(minor) add more types of quest (layer reached, layer cleared etc)
     <>add quest class
     <>add ability to claim reward from questgiver using dialogue
 
