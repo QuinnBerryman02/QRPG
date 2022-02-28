@@ -46,7 +46,7 @@
     <>fix load paralysis error
     <>create the settings menu for sound volume and music volume
     <>create the manual save menu and make the manual load a quick load (using a quicksave file or something)
-
+    <>create the rest of the NPCs
 (hard bug)fix WHITE BOX OF DEATH }:(
 (hard bug)fix menu glitching
 (bug)fix loadgame not switching to correct song
@@ -54,8 +54,8 @@
 (bug)fix cant find controller if connecting while in game
 (???)improve performance
 
+write npc dialogue
 (minor) replace circle with sprite in menu
-(long)create the rest of the NPCs
 (major)add esc / tab menu with button settings / saving / loading / spell menu / quest menu etc
 
         Parking Lot)

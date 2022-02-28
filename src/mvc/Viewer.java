@@ -60,7 +60,7 @@ public class Viewer extends JPanel {
 	private boolean inCameraMode = true;
 	private ReadyListener cameraListener;
 	private Point3f goingToPoint = null;
-	private boolean inDebugMode = false;
+	private boolean inDebugMode = true;
 	private Model gameWorld; 
 	private ArrayList<Chunk> chunksLoaded = new ArrayList<Chunk>();
 	private ArrayList<Entity> entitiesLoaded = new ArrayList<Entity>();

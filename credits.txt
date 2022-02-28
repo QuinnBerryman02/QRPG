@@ -154,3 +154,6 @@ under CC0
 [wood_steps, cave_steps] are from https://opengameart.org/content/different-steps-on-wood-stone-leaves-gravel-and-mud
 by "TinyWorlds"
 under CC0
+
+NPC Name Credits
+most NPC names are from http://www.npcgenerator.com/ some modified by me

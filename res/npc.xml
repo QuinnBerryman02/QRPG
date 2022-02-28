@@ -27,10 +27,44 @@
         <topic name="John"> I fought the darkness for as long as I could but the Dungeons are too overwhelming... too endless... They began to (corrupt me=Corrupt you?). </topic>
         <topic name="Corrupt you?"> Yes... Thank you for helping these villagers, for soon I shall not be able to help them. Please (free me=Free). </topic>
     </npc>
-    <npc name="Jane" x="-9" y="5" skin="Magician_F">
+    <npc name="Janet Carnove" x="-22" y="67" skin="Magician_F">
         <topic name="Introduction"> Hello my name is Jane, nice to meet you. </topic>
-
         <topic name="Mage"> I used to be a mage... A long time ago </topic>
     </npc>
+    <npc name="Jasmine Cartwright" x="-65" y="98" skin="NPC-B_F"></npc>			
+    <npc name="Joseph Truegust" x="-87" y="110" skin="Priest_M"></npc>		
+    <npc name="Peronell deGrey" x="-82" y="99" skin="Nun_F"></npc>		 
+    <npc name="Millicent de Mowbray" x="-49" y="107" skin="Merchant_M"></npc>	
+    <npc name="Letholdus Hillless" x="-44" y="107" skin="Berserk_M"></npc>			
+    <npc name="Sadon Destrian" x="-64" y="109" skin="Pirate_M"></npc>		
+    <npc name="Althalos Twoorb" x="-66" y="109" skin="Captain_M"></npc>		
+    <npc name="Bess Montagu" x="-49" y="96" skin="Berserk_F"></npc>		
+    <npc name="Peter Farlight" x="-45" y="96" skin="Boy_M"></npc>		
+    <npc name="Ayleth Farlight" x="-43" y="96" skin="Girl_F"></npc>		   
+    <npc name="Janshai Morningfall" x="-60" y="98" skin="Healer_M"></npc>		
+    <npc name="Loreena Lunadream" x="-77" y="99" skin="Healer_F"></npc>		
+    <npc name="Khorlos Bahlelvath" x="-87" y="99" skin="Samurai_M"></npc>			
+    <npc name="Isolde Stonesworn" x="-70" y="109" skin="Samurai_F"></npc>			
+    <npc name="Phrowenia" x="-82" y="110" skin="Ninja_F"></npc>		
+    <npc name="Syrreth" x="-70" y="98" skin="Ninja_M"></npc>		
+    <npc name="Diana Caskbow" x="-77" y="110" skin="Bunny-Girl_F"></npc>
+    <npc name="Dain Crewe" x="-59" y="109" skin="Soldier_M"></npc>		
+    <npc name="Esme Drake" x="-61" y="109" skin="Soldier_F"></npc>		
+    <npc name="Henry de Bolbec" x="80" y="138" skin="King_M"></npc>	 
+    <npc name="Evelyn de Bolbec" x="85" y="137" skin="Queen_F"></npc>			 		
+    <npc name="Fendrel Cromwell" x="114" y="143" skin="NPC-B_M"></npc>		
+    <npc name="Ryia Cleves" x="114" y="170" skin="Dark-Knight_F"></npc>	
+    <npc name="Caresta Nellynnthar" x="116" y="68" skin="Ranger_M"></npc>		    
+    <npc name="Hadrian Chaucer" x="-80" y="19" skin="NPC-A_M"></npc>		
+    <npc name="Fay Chaucer" x="115" y="-17" skin="NPC-A_F"></npc>		 
+    <npc name="Katrina Redstream" x="86" y="-70" skin="Ranger_F"></npc>			 
+    <npc name="Fira Chaucer" x="-24" y="-17" skin="NPC-C_F"></npc>		 
+    <npc name="Rainan Brickbrow" x="51" y="110" skin="Monk_F"></npc>		 
+    <npc name="Luanda Rowntree" x="114" y="-97" skin="Old-Lady_F"></npc>		    
+    <npc name="Thomas Rowntree" x="-72" y="-28" skin="Old-Man_M"></npc>		    
+    <npc name="Krea McKinnon" x="52" y="63" skin="Dancer_F"></npc>		
+    <npc name="Delemmak Bertanonel" x="51" y="86" skin="Bard_M"></npc>		        
+    <npc name="Charles Ashglade" x="54" y="-41" skin="Paladin_M"></npc>	
 </npcs>
 
+		
