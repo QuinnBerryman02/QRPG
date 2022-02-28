@@ -23,8 +23,7 @@ public class Player extends Entity {
     public Player(Skin s, float width, float height, Point3f centre, int maxHealth, int damage, int maxMana) { 
     	super(s, width, height, centre, new PlayerController(), maxHealth, damage, maxMana);
 		topics.add(Topic.getTopic("Introduction"));
-		topics.add(Topic.getTopic("Wizardry"));
-		topics.add(Topic.getTopic("Magic"));
+		topics.add(Topic.getTopic("About me"));
 		setHostile(true);
 	}
 

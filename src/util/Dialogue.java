@@ -43,6 +43,8 @@ public class Dialogue extends Menu {
     private DetailPanel details;
     private TopicResponsePanel text;
     private TopicPanel overview;
+    private Color defaultColor = new Color(51,51,51,255);
+    private Font defaultFont = new Font("default",Font.BOLD,12);
 
     public Dialogue(Player player, NPC npc) {
         this.player = player;
@@ -142,12 +144,10 @@ public class Dialogue extends Menu {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            g.setColor(new Color(0f,0f,0f,1f));
-            g.setFont(new Font("Details",Font.BOLD,20));
+            g.setColor(defaultColor);
+            g.setFont(defaultFont);
             char[] c = ("Name: " + npc.getName()).toCharArray();
             g.drawChars(c, 0, c.length, x, y+48*4+20);
-            c = ("Class: " + npc.getSkin().getName()).toCharArray();
-            g.drawChars(c, 0, c.length, x, y+48*4+40);
             //System.out.printf("Class:%s,x:%d y:%d w:%d h:%d\n",getClass().getName(),getX(), getY(), getWidth(), getHeight());
         }
     }

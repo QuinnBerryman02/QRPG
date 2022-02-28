@@ -2,8 +2,8 @@
 <topics>
     <topic name="Wizardry"> Wizardry is the study and use of (magic=Magic). </topic>
     <topic name="Magic"> Magic is a science used by (mages=Mage). It involves manipulating the (elements=Elements). </topic>
-    <topic name="Elements"> Earth, Fire, Wind, Lightning, Water are the elements. </topic>
-    <topic name="Mayor"> Mayor [insert Mayor Name] is the mayor of this (town=Town). </topic>
+    <topic name="Elements"> Earth, Water, Fire, Wind, Light, Arcane and Blood are the elements. </topic>
+    <topic name="Mayor"> Mayor Henry is the mayor of this (town=Town). He is a good, if pompous man. </topic>
     <topic name="Town"> This is the town of the Four Rivers. </topic>
     <topic name="Adventurer"> An Adventurer is someone who takes on (quests=Quests) in exchange for gold. </topic>
     <topic name="Quests"> Quests are tasks that local people post at a (guild=Guild). </topic>
@@ -14,4 +14,6 @@
     <topic name="Town Hall"> The northenmost building in town. </topic>
     <topic name="Sewers"> One of the (dungeons=Dungeon) that popped up recently. Nasty place. Endless rivers of filth and rot. I don't know why you'd want to go there but its in front of the (town hall=Town Hall) if you must. </topic>
     <topic name="Dungeon"> Horrible cursed places. Stay away from them if you have any sense. </topic>
+    <topic name="Academy"> The academy is where (mages=Mage) go to study (magic=Magic). </topic>
+    <topic name="Knight"> Knights fight against the dark for the nobility. </topic>
 </topics>

@@ -2,6 +2,7 @@
 <npcs>
     <npc name="John" x="-8" y="4" skin="Magician_M">
         <topic name="Introduction"> Hello my name is John, I have been (sent=Who sent you?) to (free you=Free me?) and (guide you=Guide me?). You can (ask me=Ask) about (anything=Anything) if you are unsure.</topic>
+        <topic name="About me"> I like to fish in my pond </topic>
         <topic name="Who sent you?"> Why the (mayor=Mayor) of course. He has determined that you are innocent of your (crimes=What crimes?).</topic>
         <topic name="What crimes?"> The past does not matter. You are (free=Free) now. </topic>
         <topic name="Free me?"> Well you aren't in this cell voluntarily... </topic>
@@ -29,42 +30,168 @@
     </npc>
     <npc name="Janet Carnove" x="-22" y="67" skin="Magician_F">
         <topic name="Introduction"> Hello my name is Jane, nice to meet you. </topic>
+        <topic name="About me"> I grow carrots in my garden. </topic>
         <topic name="Mage"> I used to be a mage... A long time ago </topic>
+        <topic name"John"> John? I've known him for ages. We trained in the (academy=Academy) together. </topis>
     </npc>
-    <npc name="Jasmine Cartwright" x="-65" y="98" skin="NPC-B_F"></npc>			
-    <npc name="Joseph Truegust" x="-87" y="110" skin="Priest_M"></npc>		
-    <npc name="Peronell deGrey" x="-82" y="99" skin="Nun_F"></npc>		 
-    <npc name="Millicent de Mowbray" x="-49" y="107" skin="Merchant_M"></npc>	
-    <npc name="Letholdus Hillless" x="-44" y="107" skin="Berserk_M"></npc>			
-    <npc name="Sadon Destrian" x="-64" y="109" skin="Pirate_M"></npc>		
-    <npc name="Althalos Twoorb" x="-66" y="109" skin="Captain_M"></npc>		
-    <npc name="Bess Montagu" x="-49" y="96" skin="Berserk_F"></npc>		
-    <npc name="Peter Farlight" x="-45" y="96" skin="Boy_M"></npc>		
-    <npc name="Ayleth Farlight" x="-43" y="96" skin="Girl_F"></npc>		   
-    <npc name="Janshai Morningfall" x="-60" y="98" skin="Healer_M"></npc>		
-    <npc name="Loreena Lunadream" x="-77" y="99" skin="Healer_F"></npc>		
-    <npc name="Khorlos Bahlelvath" x="-87" y="99" skin="Samurai_M"></npc>			
-    <npc name="Isolde Stonesworn" x="-70" y="109" skin="Samurai_F"></npc>			
-    <npc name="Phrowenia" x="-82" y="110" skin="Ninja_F"></npc>		
-    <npc name="Syrreth" x="-70" y="98" skin="Ninja_M"></npc>		
-    <npc name="Diana Caskbow" x="-77" y="110" skin="Bunny-Girl_F"></npc>
-    <npc name="Dain Crewe" x="-59" y="109" skin="Soldier_M"></npc>		
-    <npc name="Esme Drake" x="-61" y="109" skin="Soldier_F"></npc>		
-    <npc name="Henry de Bolbec" x="80" y="138" skin="King_M"></npc>	 
-    <npc name="Evelyn de Bolbec" x="85" y="137" skin="Queen_F"></npc>			 		
-    <npc name="Fendrel Cromwell" x="114" y="143" skin="NPC-B_M"></npc>		
-    <npc name="Ryia Cleves" x="114" y="170" skin="Dark-Knight_F"></npc>	
-    <npc name="Caresta Nellynnthar" x="116" y="68" skin="Ranger_M"></npc>		    
-    <npc name="Hadrian Chaucer" x="-80" y="19" skin="NPC-A_M"></npc>		
-    <npc name="Fay Chaucer" x="115" y="-17" skin="NPC-A_F"></npc>		 
-    <npc name="Katrina Redstream" x="86" y="-70" skin="Ranger_F"></npc>			 
-    <npc name="Fira Chaucer" x="-24" y="-17" skin="NPC-C_F"></npc>		 
-    <npc name="Rainan Brickbrow" x="51" y="110" skin="Monk_F"></npc>		 
-    <npc name="Luanda Rowntree" x="114" y="-97" skin="Old-Lady_F"></npc>		    
-    <npc name="Thomas Rowntree" x="-72" y="-28" skin="Old-Man_M"></npc>		    
-    <npc name="Krea McKinnon" x="52" y="63" skin="Dancer_F"></npc>		
-    <npc name="Delemmak Bertanonel" x="51" y="86" skin="Bard_M"></npc>		        
-    <npc name="Charles Ashglade" x="54" y="-41" skin="Paladin_M"></npc>	
+    <npc name="Jasmine Cartwright" x="-65" y="98" skin="NPC-B_F">
+        <topic name="Introduction"> My name is Jasmine, nice to meet you. </topic>
+        <topic name="About me"> I only recently moved so I stil havent finished unpacking... </topic>
+    </npc>			
+    <npc name="Joseph Truegust" x="-87" y="110" skin="Priest_M">
+        <topic name="Introduction"> Good day to you. My name is Joseph and I am a priest in this town, spreading the gospel of (the Lady of the Light=The Lady of the Light), thought this (town=Town) hardly needs it, being founded by the Lady herself of course. </topic>
+        <topic name="About me"> Have you seen the Farlight children... Tragic... I tried to teach them some of the books I possess but the boy was rebelious and the girl... Tragic indeed... </topic>
+    </npc>		
+    <npc name="Peronell deGrey" x="-82" y="99" skin="Nun_F">
+        <topic name="Introduction"> May (the Lady=The Lady of the Light) bring you freedom. My name is Peron, I am the sister of this nice (town=Town). </topic>
+        <topic name="About me"> As the sister I must maintain all of the statues of (the Lady=The Lady of the Light)... It is satisfying work. </topic>
+    </npc>		 
+    <npc name="Millicent de Mowbray" x="-49" y="107" skin="Merchant_M">
+        <topic name="Introduction"> Name's Millicent de Mowbray. I am a merchant of great quality from the capital. </topic>
+        <topic name="About me"> Lately with all the (dungeons=Dungeon) I haven't been able to see as much, maybe I will go back to the capital soon. </topic>
+    </npc>	
+    <npc name="Letholdus Hillless" x="-44" y="107" skin="Berserk_M">
+        <topic name="Introduction"> I am Leo. </topic>
+        <topic name="About me"> Not enough trees inside... Leo fix problem... </topic>
+    </npc>			
+    <npc name="Sadon Destrian" x="-64" y="109" skin="Pirate_M">
+        <topic name="Introduction"> The captain be very angry... Best be avoiding him. </topic>
+        <topic name="About me"> You can call me Sadon, kid. I have sailed the seas for many years with the captain. </topic>
+    </npc>		
+    <npc name="Althalos Twoorb" x="-66" y="109" skin="Captain_M">
+        <topic name="Introduction"> ARGGH ME SHIP CRASHED AT THIS (TOWN=Town), NOW I BE STUCK </topic>
+        <topic name="About me"> I BE CAPTAIN TWOORB, RENOUNED SAILER OF THE 6 SEAS </topic>
+    </npc>		
+    <npc name="Bess Montagu" x="-49" y="96" skin="Berserk_F">
+        <topic name="Introduction"> I am Bess. </topic>
+        <topic name="About me">Now that wild become dangerous, Bess make wild come inside. </topic>
+    </npc>		
+    <npc name="Peter Farlight" x="-45" y="96" skin="Boy_M">
+        <topic name="Introduction"> Muh names Peter. I look after muh sister now that (ma and pa are gone=Ma and Pa are gone?).</topic>
+        <topic name="About me"> If yuh ain't got nothing to say then leave... </topic>
+        <topic name="Ma and Pa are gone?"> They used to be (adventurers=Adventurer), but they never came back from the (dungeon=Dungeon)... Now me and Ayleth are alone. So I have to protect muh sister. </topic>
+    </npc>		
+    <npc name="Ayleth Farlight" x="-43" y="96" skin="Girl_F">
+        <topic name="Introduction"> ... </topic>
+        <topic name="Wizardry"> ... </topic>
+        <topic name="Magic"> ... </topic>
+        <topic name="Elements"> ... </topic>
+        <topic name="Mayor"> ... </topic>
+        <topic name="Town"> ... </topic>
+        <topic name="Adventurer"> ... </topic>
+        <topic name="Quests"> ... </topic>
+        <topic name="Guild"> ... </topic>
+        <topic name="Town Square"> ... </topic>
+        <topic name="The Lady of the Light"> ... </topic>
+        <topic name="Land"> ... </topic>
+        <topic name="Town Hall"> ... </topic>
+        <topic name="Sewers"> ... </topic>
+        <topic name="Dungeon"> ... </topic>
+        <topic name="Academy"> ... </topic>
+        <topic name="Knight"> ... </topic>
+        <topic name="Free"> F .. Fr .. Free? </topic>
+    </npc>		   
+    <npc name="Janshai Morningfall" x="-60" y="98" skin="Healer_M">
+        <topic name="Introduction"> Who keeps the lamps on in this (town=Town)? That's right. Me. Have some respect for Janshai Morningfall, second best bringer of the Light. </topic>
+        <topic name="About me"> WHADDYA MEAN THERE IS NO LAMPS! THATS SLANDER! ILL SUE YOU! </topic>
+    </npc>		
+    <npc name="Loreena Lunadream" x="-77" y="99" skin="Healer_F">
+        <topic name="Introduction"> Ahh Flowers... Can make so many ointments and cures from the flowers in this (land=Land)... AH! Forgive me, I'm being rude.. My name is Loreena.</topic>
+        <topic name="About me"> I'm a healer so I'm constantly growing new herbs to try and cure illnesses. Especially since the (dungeons=Dungeon) started, so many people have been getting uncurable diseases...</topic>
+    </npc>		
+    <npc name="Khorlos Bahlelvath" x="-87" y="99" skin="Samurai_M">
+        <topic name="Introduction"> My sword is yours, Stanger... </topic>
+        <topic name="About me">I have come to this land in search of great riches and reward. </topic>
+    </npc>			
+    <npc name="Isolde Stonesworn" x="-70" y="109" skin="Samurai_F">
+        <topic name="Introduction"> My sword is yours, Stanger... </topic>
+        <topic name="About me"> I have come to this (land=Land) following my teacher Khorlos, He still thinks the (dungeons=Dungeon) are too dangerous for me! I have already completed 5 (quests=Quests) without his help! Well I guess they were only (slimes=Slime) and spiders...</topic>
+    </npc>			
+    <npc name="Phrowenia" x="-82" y="110" skin="Ninja_F">
+        <topic name="Introduction">Slient Passages...</topic>
+        <topic name="About me"> Elementals may be weak, but get too distracted by them and even a bat could finish you off...</topic>
+    </npc>		
+    <npc name="Syrreth" x="-70" y="98" skin="Ninja_M">
+        <topic name="Introduction"> Slient Passages my friend... </topic>
+        <topic name="About me"> Watch out for the undead black kights in the (dungeons=Dungeon), They are very fast and strong...</topic>
+    </npc>		
+    <npc name="Diana Caskbow" x="-77" y="110" skin="Bunny-Girl_F">
+        <topic name="Introduction"> Nice to meet you, my name is Dia. </topic>
+        <topic name="About me">Have you met Krea and Ria yet? We are best friends! </topic>
+    </npc>
+    <npc name="Dain Crewe" x="-59" y="109" skin="Soldier_M">
+        <topic name="Introduction"> Names Crewe. Dain Crewe. Been a lot of suspicious activity in this area, what with all these (dungeons=Dungeon) popping up... Somethings fishy here and me and Esme (have orders=Have orders?) to find out what. </topic>
+        <topic name="About me"> We are residing in this home for the time being. The previous tenant took their eviction... well. </topic>
+        <topic name="Have orders?"> None of your business civilian. </topic>
+    </npc>		
+    <npc name="Esme Drake" x="-61" y="109" skin="Soldier_F">
+        <topic name="Introduction"> You can call me Esme. </topic>
+        <topic name="About me"> Remember... If you see any suspicious activity, tell me and Dain. </topic>
+    </npc>		
+    <npc name="Henry de Bolbec" x="80" y="138" skin="King_M">
+        <topic name="Introduction"> Ah yes, I see John has told you about the situation. I am the (mayor=Mayor) of this (town=Town), call me henry. </topic>
+        <topic name="About me"> I live in the (town hall=Town Hall) with my wife Eve. Have you met? </topic>
+        <topic name="Mayor"> My job may be difficult, but helping these people brings me joy. </topic>
+    </npc>
+    <npc name="Evelyn de Bolbec" x="85" y="137" skin="Queen_F">
+        <topic name="Introduction"> How are you dear? My name is Eve. I hope you'll try some of my cooking someday... </topic>
+        <topic name="About me"> I live here in (town hall=Town Hall) with Henry. </topic>
+    </npc>			 		
+    <npc name="Fendrel Cromwell" x="114" y="143" skin="NPC-B_M">
+        <topic name="Introduction"> Sigh... Don't talk to me, talk to the board... </topic>
+        <topic name="About me"> I have a part time job here at the (guild=Guild)... Its so boring now that all the (adventurers are gone=Adventurers are gone?)... </topic>
+        <topic name="Adventurers are gone?"> Back when the (dungeons=Dungeon) first appeared, a bunch of local (adventurers=Adventurer) got together and tried to clear one. Now all thats left is orphaned children and stragglers. </topic>
+    </npc>		
+    <npc name="Ryia Cleves" x="114" y="170" skin="Dark-Knight_F">
+        <topic name="Introduction"> I am the guild master here in the (Four rivers=Town). Will you be doing some (quests=Quests)? About time we got some decent (adventurers=Adventurer).</topic>
+        <topic name="About me"> I used to be a (knight=Knight) myself, but after I lost the rest of my order in the (dungeons=Dungeon), I had no choice but to retire.</topic>
+    </npc>	
+    <npc name="Caresta Nellynnthar" x="116" y="68" skin="Ranger_M">
+        <topic name="Introduction"> May the winds be with you... </topic>
+        <topic name="About me"> I have come to this ("Jiyuu"=Land) to be free, and that I have become. </topic>
+    </npc>		    
+    <npc name="Hadrian Chaucer" x="-80" y="19" skin="NPC-A_M">
+        <topic name="Introduction"> Old Thomas may think he has some nice trees... But my llamas will out-run his trees anyday. </topic>
+        <topic name="About me"> Best llamas in the (Four Rivers=Town). </topic>
+    </npc>		
+    <npc name="Fay Chaucer" x="115" y="-17" skin="NPC-A_F">
+        <topic name="Introduction"> Nice to meet you, my name is Fay. Have you met my daughter Fira? </topic>
+        <topic name="About me"> I wish my husband would stop competing over everything with Thomas... </topic>
+    </npc>		 
+    <npc name="Katrina Redstream" x="86" y="-70" skin="Ranger_F">
+        <topic name="Introduction"> I'm Kat, who are you? </topic>
+        <topic name="About me"> I raise sheep on my farm. </topic>
+    </npc>			 
+    <npc name="Fira Chaucer" x="-24" y="-17" skin="NPC-C_F">
+        <topic name="Introduction"> Hi! My name is Fira. I own this pig farm. Have you met my parents? They have a llama farm near here. </topic>
+        <topic name="About me"> I like living close to the river, as I can use it instead of a well. </topic>
+    </npc>		 
+    <npc name="Raina Brickbrow" x="51" y="110" skin="Monk_F">
+        <topic name="Introduction"> Pleased to meet you. My name is Raina, but you can call me Rai. </topic>
+        <topic name="About me"> I live in this house. Have you met my friend Krea? </topic>
+    </npc>		 
+    <npc name="Luanda Rowntree" x="114" y="-97" skin="Old-Lady_F">
+        <topic name="Introduction"> My name is Luanda. Nice to meet you dear. </topic>
+        <topic name="About me"> Have you seen my husband's trees? They are quite impressive but my cow castle is an unbeatable work of art. </topic>
+    </npc>		    
+    <npc name="Thomas Rowntree" x="-72" y="-28" skin="Old-Man_M">
+        <topic name="Introduction"> Impressive aren't they(=What?).</topic>
+        <topic name="About me"> I grow the best trees in the (Four Rivers=Town). </topic>
+        <topic name="What?"> THE (TREES=The trees?) YOU BLIND FOOL. </topic>
+        <topic name="The trees?"> Yeah... I grew them myself... </topic>
+    </npc>		    
+    <npc name="Krea McKinnon" x="52" y="63" skin="Dancer_F">
+        <topic name="Introduction"> Howya, My name is Krea. I run the inn in this (town=Town). </topic>
+        <topic name="About me"> This job is great! I get to meet tons of interesting people, take Del for example, he sings songs from all across the world, incredible. </topic>
+    </npc>		
+    <npc name="Delemmak Bertanonel" x="51" y="86" skin="Bard_M">
+        <topic name="Introduction"> Good day good sir. My name is Delemmak, a traveling bard, honored to make your aquaintance. </topic>
+        <topic name="About me"> Would you like to here a story? What shall I tell you? (The Lady of the Light=The Lady of the Light) bringer of freedom? The tales of the grand wizard? Or something else? Wait... Nevermind I can here Krea calling for me to tell her more stories. I must beg my pardon.</topic>
+    </npc>		        
+    <npc name="Charles Ashglade" x="54" y="-41" skin="Paladin_M">
+        <topic name="Introduction"> I am Charles Ashglade. How do you like my mansion? I had it built just like my villa in the capital. Ohh I'm sorry, you don't get to the capital much do you? </topic>
+        <topic name="About me"> The village reeks of poverty, good thing I am here to regain some quality. </topic>
+    </npc>	
 </npcs>
 
 		
