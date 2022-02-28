@@ -87,7 +87,7 @@ public class GuildMenu extends Menu{
         switch(MainWindow.getModel().getStage()) {
             case BEGINING:
                 if(player.getQuests().size()>=1) return;
-                quests.add(new SlayerQuest(NPCLoader.getNPCByName("John"), 100, 1, Enemy.Type.SLIME));
+                quests.add(new SlayerQuest(NPCLoader.getNPCByName("John"), 100, 5, Enemy.Type.SLIME));
                 //quests.add(new SlayerQuest(NPCLoader.getNPCByName("John"), 1000, 1, Enemy.Type.SLIME));
                 break;
             case VICTORY:

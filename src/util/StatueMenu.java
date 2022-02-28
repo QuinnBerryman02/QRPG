@@ -49,7 +49,7 @@ import java.io.IOException;
 
 
 public class StatueMenu extends Menu{
-    private static final String TLOTL_QUOTE = "insert tlotl quote";
+    private static final String TLOTL_QUOTE = "LET FREEDOM LIGHT YOUR WAY";
     private Stat[] stats;
     private MainPanel panel;
     private Player player;
@@ -151,10 +151,15 @@ public class StatueMenu extends Menu{
                 l.setMaximumSize(new Dimension(w/5,h));
                 add(l);
             });
+            refresh();
         }
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
+        }
+
+        public void refresh() {
+            labels.get(4).setText("GOLD: " + player.getGold());
         }
     }
 
@@ -213,6 +218,7 @@ public class StatueMenu extends Menu{
                         player.spendGold(stat.getCost());
                         stat.incrementCost();
                         refresh();
+                        labelPanel.refresh();
                     }
                 }
                 @Override

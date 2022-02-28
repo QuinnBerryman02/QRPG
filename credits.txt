@@ -7,7 +7,6 @@ under Public domain, GPL, OFL
 by "Qubodup"
 under CC-BY 3.0
 
-
 [faces, casting, attack, walking] are from https://opengameart.org/users/charlesgabriel
 by either "Antifarea" or "CharlesGabriel" (The original walking ones are by Antifarea and the subsequent art by CharlesGabriel as far as I know)
 under CC-BY 3.0 (all)
@@ -118,6 +117,10 @@ by "Buch"
 under GPL 2.0, GPL 3.0, CC-BY-SA 3.0 
 
 Sound Effect Credits
+
+[death_boss, hit_boss] are from https://opengameart.org/content/big-scary-troll-sounds
+by "Darsycho"
+under CC0
 
 [hit_female] are from https://opengameart.org/content/female-warrior-grunts
 by "SkyRae"

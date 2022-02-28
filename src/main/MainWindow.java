@@ -324,7 +324,7 @@ public class MainWindow {
 			NPC john = NPCLoader.getNPCByName("John");
 			Point3f loc = john.getCentre().plusVector(new Vector3f());
 			john.move(new Vector3f(10000,0,0)); 
-			//play roar sound
+			audioManager.playSoundByName("death_boss"); //roar
 			Enemy boss = new Enemy(Enemy.Type.BOSS, 2.9f, 2.9f, loc, 1000, 10, 10000);
 			gameworld.getEntities().add(boss);
 		}

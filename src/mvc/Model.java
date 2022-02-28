@@ -312,7 +312,8 @@ public class Model implements Serializable{
 					if(footSteps) {
 						if(player.isIndoors()) {
 							if(inADungeon()) {
-								MainWindow.getAudioManager().playSoundByName("cave_steps");
+								boolean inCave = getCurrentDungeon().getType().equals(Dungeon.DType.CAVE);
+								MainWindow.getAudioManager().playSoundByName(inCave ? "cave_steps" : "wood_steps");
 							} else {
 								MainWindow.getAudioManager().playSoundByName("wood_steps");
 							}

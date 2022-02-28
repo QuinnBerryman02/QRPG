@@ -17,6 +17,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 public class AudioManager {
@@ -58,8 +59,12 @@ public class AudioManager {
         try {
             AudioManager am = new AudioManager(false);
             JFrame f = new JFrame();
-            f.getContentPane().setLayout(new BoxLayout(f.getContentPane(), BoxLayout.Y_AXIS));
-            am.songs.forEach(s -> f.add(am.new SongButton(s)));
+            f.getContentPane().setLayout(new BoxLayout(f.getContentPane(), BoxLayout.X_AXIS));
+            JPanel p1 = new JPanel();
+            p1.setLayout(new BoxLayout(p1, BoxLayout.Y_AXIS));
+            JPanel p2 = new JPanel();
+            p2.setLayout(new BoxLayout(p2, BoxLayout.Y_AXIS));
+            am.songs.forEach(s -> p1.add(am.new SongButton(s)));
             
             JButton randomTown = new JButton("Random Town Song");
             randomTown.addActionListener(e -> {
@@ -73,10 +78,12 @@ public class AudioManager {
             randomCombat.addActionListener(e -> {
                 am.playSongByType(Song.Type.COMBAT);
             });
-            f.add(randomTown);
-            f.add(randomCombat);
-            f.add(randomOverworld);
-            am.sounds.forEach(s -> f.add(am.new SoundButton(s)));
+            p1.add(randomTown);
+            p1.add(randomCombat);
+            p1.add(randomOverworld);
+            am.sounds.forEach(s -> p2.add(am.new SoundButton(s)));
+            f.add(p1);
+            f.add(p2);
             f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             f.setBounds(0, 0, 600, 400);
             f.pack();

@@ -259,7 +259,7 @@ public abstract class Entity extends GameObject{
         if(health <= 0) {
             die();
         } else {
-            MainWindow.getAudioManager().playSoundByName("hit_" + (isFemale() ? "female" : isMale() ? "male" : "monster"));
+            MainWindow.getAudioManager().playSoundByName("hit_" + (isFemale() ? "female" : isMale() ? "male" : isBoss() ? "boss" : "monster"));
             if(other instanceof Player) {
                 commenceCombat(other);
             }
@@ -318,6 +318,13 @@ public abstract class Entity extends GameObject{
         return false;
     }
 
+    public boolean isBoss() {
+        if(this instanceof Enemy) {
+            return (((Enemy)this).getType().equals(Enemy.Type.BOSS));
+        }
+        return false;
+    }
+
     public boolean isMonster() {
         if(this instanceof Enemy && skin==null) {
             Enemy e = (Enemy)this;
@@ -331,7 +338,7 @@ public abstract class Entity extends GameObject{
     }
 
     public void die() {
-        MainWindow.getAudioManager().playSoundByName("death_" + (isFemale() ? "female" : isMale() ? "male" : "monster"));
+        MainWindow.getAudioManager().playSoundByName("death_" + (isFemale() ? "female" : isMale() ? "male" : isBoss() ? "boss" : "monster"));
         dead = true;
         setHostile(false);
         if(this instanceof NPC) {
