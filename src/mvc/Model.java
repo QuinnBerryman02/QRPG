@@ -163,9 +163,9 @@ public class Model implements Serializable{
 				MainWindow.loadGame();
 				controller.setPlusPressed(false);
 			}
-			if(controller.isChangeSkinPressed()) {
-				player.setSkin(Skin.getSkins()[(player.getSkin().getIndex()+1)%Skin.getSkins().length]);
-				controller.setChangeSkinPressed(false);
+			if(controller.isSettingsPressed()) {
+				MainWindow.openSettingsMenu();
+				controller.setSettingsPressed(false);
 			}
 			if(controller.isSpellPressed()) {
 				MainWindow.openSpellMenu(player);

@@ -233,6 +233,13 @@ public class MainWindow {
 		}
 	}
 
+	public static void openSettingsMenu() {
+		if(eligibleToOpenMenu(SettingsMenu.class)) {
+			closeMenu();
+			menu = new SettingsMenu();
+		}
+	}
+
 	public static void openControllerMenu(Player p) {
 		if(eligibleToOpenMenu(ControllerMenu.class)) {
 			closeMenu();

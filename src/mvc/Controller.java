@@ -35,7 +35,7 @@ public class Controller {
 	protected boolean attackPressed = false;
 	protected boolean castPressed = false;
 	protected boolean talkPressed = false;
-	protected boolean changeSkinPressed = false;
+	protected boolean settingsPressed = false;
 	protected boolean questPressed = false;
 	protected boolean spellPressed = false;
 	protected boolean controllerPressed = false;
@@ -56,8 +56,8 @@ public class Controller {
 	public boolean isCastPressed() {
 		return castPressed;
 	}
-	public boolean isChangeSkinPressed() {
-		return changeSkinPressed;
+	public boolean isSettingsPressed() {
+		return settingsPressed;
 	}
 	public boolean isNextSpell() {
 		return nextSpellPressed;
@@ -95,8 +95,8 @@ public class Controller {
 	public void setPrevSpellPressed(boolean prevSpellPressed) {
 		this.prevSpellPressed = prevSpellPressed;
 	}
-	public void setChangeSkinPressed(boolean changeSkinPressed) {
-		this.changeSkinPressed = changeSkinPressed;
+	public void setSettingsPressed(boolean settingsPressed) {
+		this.settingsPressed = settingsPressed;
 	}
 	public void setQuestPressed(boolean questPressed) {
 		this.questPressed = questPressed;
@@ -123,7 +123,7 @@ public class Controller {
 		attackPressed = false; 
 		talkPressed = false; 
 		castPressed = false; 
-		changeSkinPressed = false; 
+		settingsPressed = false; 
 		questPressed = false; 
 		spellPressed = false; 
 		controllerPressed = false;

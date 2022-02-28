@@ -29,6 +29,9 @@ public class AudioManager {
     private Song lastCombatPlayedSong;
     private Song lastOverworldPlayedSong;
     private Song lastTownPlayedSong;
+    private float masterVolume = 1f;
+    private float musicVolume = 0.5f;
+    private float soundVolume = 0.5f;
 
     public AudioManager() {
         setup(true);
@@ -152,6 +155,8 @@ public class AudioManager {
                 musicClip.close();
                 AudioInputStream as = AudioSystem.getAudioInputStream(file);
                 musicClip.open(as);
+                FloatControl volume = (FloatControl)musicClip.getControl(FloatControl.Type.MASTER_GAIN);
+                volume.setValue(20f * (float) Math.log10(musicVolume*masterVolume));
                 musicClip.start();
                 System.out.println("Playing song: " + file.getName());
                 LineListener ll = new LineListener() {
@@ -229,6 +234,8 @@ public class AudioManager {
                 //System.out.println("Playing sound: " + chooseRandom().getName());
                 try {
                     soundClip.open(as);
+                    FloatControl volume = (FloatControl)soundClip.getControl(FloatControl.Type.MASTER_GAIN);
+                    volume.setValue(20f * (float) Math.log10(soundVolume*masterVolume));
                     soundClip.start();
                     soundClip.addLineListener(e -> {
                         if(e.getType().equals(LineEvent.Type.STOP)) {
@@ -363,6 +370,34 @@ public class AudioManager {
     }
     public void playLastPlayed() {
         playSongByType(lastPlayedSong.getType());
+    }
+
+    public void setMasterVolume(float masterVolume) {
+        FloatControl volume = (FloatControl)musicClip.getControl(FloatControl.Type.MASTER_GAIN);
+        this.masterVolume = masterVolume;
+        volume.setValue(20f * (float) Math.log10(musicVolume*masterVolume));
+    }
+
+    public void setMusicVolume(float musicVolume) {
+        FloatControl volume = (FloatControl)musicClip.getControl(FloatControl.Type.MASTER_GAIN);
+        this.musicVolume = musicVolume;
+        volume.setValue(20f * (float) Math.log10(musicVolume*masterVolume));
+    }
+    
+    public void setSoundVolume(float soundVolume) {
+        this.soundVolume = soundVolume;
+    }
+
+    public float getMasterVolume() {
+        return masterVolume;
+    }
+
+    public float getMusicVolume() {
+        return musicVolume;
+    }
+
+    public float getSoundVolume() {
+        return soundVolume;
     }
 }
 

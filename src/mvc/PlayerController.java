@@ -270,7 +270,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 	}
 
 	public void initializeDefaultControls() {
-		buttonSet.add(makeButton("skin", KeyEvent.VK_H, "Button 0"));		//B
+		buttonSet.add(makeButton("settings", KeyEvent.VK_H, "Button 0"));		//B
 		buttonSet.add(makeButton("talk", KeyEvent.VK_T, "Button 1"));		//A
 		buttonSet.add(makeButton("quest", KeyEvent.VK_Y, "Button 2"));		//Y
 		buttonSet.add(makeButton("spell", KeyEvent.VK_U, "Button 3"));		//X
@@ -324,7 +324,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 			case "attack": attackPressed = value; break;
 			case "talk": talkPressed = value; break;
 			case "cast": castPressed = value; break;
-			case "skin": changeSkinPressed = value; break; 
+			case "settings": settingsPressed = value; break; 
 			case "quest": questPressed = value; break;
 			case "spell": spellPressed = value; break;
 			case "controller": controllerPressed = value; break;
