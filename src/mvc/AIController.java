@@ -1,5 +1,11 @@
 package mvc;
 
+//Programmed by Quinn Berrman
+//Student number: 20363251;
+
+//Programmed by Quinn Berrman
+//Student number: 20363251
+
 import java.util.Random;
 
 import main.MainWindow;

@@ -1,5 +1,9 @@
 package util;
 
+//Programmed by Quinn Berrman
+//Student number: 20363251
+
+
 import java.io.Serializable;
 
 public class Hitbox implements Serializable{

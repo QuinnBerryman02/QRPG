@@ -1,62 +1,37 @@
 package util;
 
+//Programmed by Quinn Berrman
+//Student number: 20363251
+
+
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.ScrollPaneLayout;
 import javax.swing.SwingConstants;
-import javax.swing.border.EmptyBorder;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 import java.awt.Image;
 import java.awt.Dimension;
-import java.awt.Component;
-import java.awt.Adjustable;
-import java.awt.event.AdjustmentListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.MouseMotionListener;
 
 import main.MainWindow;
-import mvc.PlayerController;
-import util.Spell.Aim;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Font;
 import java.io.File;
 import java.io.IOException;
 
 
 public class QuestMenu extends Menu{
     private MainPanel panel;
-    private Player player;
     private ArrayList<Quest> quests = new ArrayList<Quest>();
     private LabelPanel labelPanel;
     private QuestsPanel questPanel;
-    private Color defaultColor = new Color(51,51,51,255);
-    private Font defaultFont = new Font("default",Font.BOLD,12);
 
     public QuestMenu(Player player) {
-        this.player = player;
         player.getController().clear();
         player.sortQuests();
         quests = player.getQuests();
@@ -137,10 +112,8 @@ public class QuestMenu extends Menu{
     class QuestsPanel extends JPanel {
         private JPanel tempPanel = new JPanel();
         private ArrayList<QuestPane> questPanes = new ArrayList<QuestPane>();
-        private int w;
         private JScrollPane sp;
         public QuestsPanel(int w, int h, CustomBorder cb) {
-            this.w = w;
             sp = new JScrollPane(tempPanel);
             sp.setPreferredSize(new Dimension(w,h));
             setBackground(new Color(1f,1f,1f,0f));

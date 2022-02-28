@@ -1,5 +1,8 @@
 package mvc;
 
+//Programmed by Quinn Berrman
+//Student number: 20363251;
+
 import util.Vector3f;
 
 /*

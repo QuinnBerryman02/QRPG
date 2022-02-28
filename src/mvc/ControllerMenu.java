@@ -1,44 +1,30 @@
 package mvc;
 
+//Programmed by Quinn Berrman
+//Student number: 20363251;
+
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.ScrollPaneLayout;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 import java.awt.Image;
 import java.awt.Dimension;
-import java.awt.Component;
-import java.awt.Adjustable;
-import java.awt.event.AdjustmentListener;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.event.AdjustmentEvent;
+
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
@@ -46,8 +32,6 @@ import java.awt.event.MouseWheelListener;
 import main.MainWindow;
 import util.Menu;
 import util.Player;
-import util.Quest;
-import util.Spell.Aim;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -58,7 +42,6 @@ import java.io.IOException;
 
 public class ControllerMenu extends Menu{
     private MainPanel panel;
-    private Player player;
     private ModePanel modePanel;
     private PlayerController controller;
     private ButtonPanel buttonPanel;
@@ -67,7 +50,6 @@ public class ControllerMenu extends Menu{
     private Font defaultFont = new Font("default",Font.BOLD,12);
 
     public ControllerMenu(Player player) {
-        this.player = player;
         player.getController().clear();
         controller = (PlayerController)player.getController();
         
@@ -153,10 +135,8 @@ public class ControllerMenu extends Menu{
     class ButtonPanel extends JPanel {
         private JPanel tempPanel = new JPanel();
         private ArrayList<ButtonPane> buttonPanes = new ArrayList<ButtonPane>();
-        private int w;
         private JScrollPane sp;
         public ButtonPanel(int w, int h, Border cb) {
-            this.w = w;
             sp = new JScrollPane(tempPanel);
             sp.setPreferredSize(new Dimension(w,h));
             setBackground(new Color(1f,1f,1f,0f));
@@ -299,9 +279,7 @@ public class ControllerMenu extends Menu{
 
     class TogglePanel extends JPanel {
         private ArrayList<TogglePane> togglePanes = new ArrayList<TogglePane>();
-        private int w;
         public TogglePanel(int w, int h, Border cb) {
-            this.w = w;
             setPreferredSize(new Dimension(w,h));
             setBackground(new Color(1f,1f,1f,0f));
             setBorder(cb);

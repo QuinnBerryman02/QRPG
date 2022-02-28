@@ -1,44 +1,36 @@
 package util;
 
+//Programmed by Quinn Berrman
+//Student number: 20363251
+
+
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSlider;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.JTextPane;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneLayout;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 
 import java.awt.Image;
 import java.awt.Dimension;
 import java.awt.Component;
-import java.awt.Adjustable;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.MouseMotionListener;
 
 import main.MainWindow;
-import mvc.PlayerController;
-import util.Spell.Aim;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -49,7 +41,6 @@ import java.io.IOException;
 
 public class SpellMenu extends Menu{
     private MainPanel panel;
-    private Player player;
     private ArrayList<Spell> spells = new ArrayList<Spell>();
     private Spell currentSpell;
     private LabelPanel labelPanel;
@@ -64,7 +55,6 @@ public class SpellMenu extends Menu{
     private Font defaultFont = new Font("default",Font.BOLD,12);
 
     public SpellMenu(Player player) {
-        this.player = player;
         player.getController().clear();
         spells = player.getSpells();
         currentSpell = player.getCurrentSpell();
@@ -184,10 +174,8 @@ public class SpellMenu extends Menu{
     class SpellPanel extends JPanel {
         private JPanel buttonPanel;
         private ArrayList<SpellButton> buttons = new ArrayList<SpellButton>();
-        private int w;
         private JScrollPane sp;
         public SpellPanel(int w, int h, CustomBorder cb) {
-            this.w = w;
             buttonPanel = new JPanel();
             sp = new JScrollPane(buttonPanel);
             sp.setPreferredSize(new Dimension(w,h));

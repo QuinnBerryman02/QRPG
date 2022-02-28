@@ -1,5 +1,9 @@
 package util;
 
+//Programmed by Quinn Berrman
+//Student number: 20363251
+
+
 public class SlayerQuest extends Quest {
     private int numberToKill;
     private int progress = 0;

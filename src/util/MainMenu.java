@@ -1,5 +1,9 @@
 package util;
 
+//Programmed by Quinn Berrman
+//Student number: 20363251
+
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Component;
@@ -15,7 +19,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import main.MainWindow;
@@ -24,11 +27,8 @@ public class MainMenu extends Menu{
     private JPanel panel;
     private CustomButton newGame;
     private CustomButton loadGame;
-    private CustomButton settings;
     private CustomButton exit;
     private int spacing = 20;
-    private int startY = 300;
-    private Color defaultColor = new Color(51,51,51,255);
     private Font defaultFont = new Font("default",Font.BOLD,12);
     boolean isGameOverMenu;
 
@@ -49,7 +49,6 @@ public class MainMenu extends Menu{
         
         newGame = new CustomButton("NEW GAME");
         loadGame = new CustomButton("LOAD GAME");
-        settings = new CustomButton("SETTINGS");
         exit = new CustomButton("QUIT");
         
 
@@ -61,9 +60,6 @@ public class MainMenu extends Menu{
         });
         loadGame.addActionListener(e -> {
             MainWindow.loadGameManually();
-        });
-        settings.addActionListener(e -> {
-            //TODO
         });
         exit.addActionListener(e -> {
             System.exit(0);
@@ -79,8 +75,6 @@ public class MainMenu extends Menu{
         panel.add(newGame);
         panel.add(Box.createRigidArea(new Dimension(1,spacing)));
         panel.add(loadGame);
-        panel.add(Box.createRigidArea(new Dimension(1,spacing)));
-        panel.add(settings);
         panel.add(Box.createRigidArea(new Dimension(1,spacing)));
         panel.add(exit);
         add(panel);

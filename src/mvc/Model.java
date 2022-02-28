@@ -1,4 +1,7 @@
 package mvc;
+
+//Programmed by Quinn Berrman
+//Student number: 20363251;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -14,7 +17,6 @@ import java.awt.event.InputEvent;
 
 import main.MainWindow;
 import util.*;
-import util.Enemy.Type;
 import util.Entity.AnimationPhase;
 import util.Entity.Direction;
 /*
@@ -182,7 +184,6 @@ public class Model implements Serializable{
 				controller.setControllerPressed(false);
 			}
 			if(controller.isEscapePressed()) {
-				System.out.println("escaping");
 				MainWindow.closeMenu();
 				controller.setEscapePressed(false);
 			}

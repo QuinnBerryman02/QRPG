@@ -1,4 +1,8 @@
 package util;
+
+//Programmed by Quinn Berrman
+//Student number: 20363251
+
 /*
  * Modified by Abraham Campbell on 15/01/2020.
  *   Copyright (c) 2020  Abraham Campbell

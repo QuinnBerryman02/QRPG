@@ -1,5 +1,9 @@
 package util;
 
+//Programmed by Quinn Berrman
+//Student number: 20363251
+
+
 import javax.imageio.ImageIO;
 import javax.xml.parsers.DocumentBuilder;
 import java.awt.Image;

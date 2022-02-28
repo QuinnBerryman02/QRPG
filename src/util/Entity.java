@@ -1,16 +1,17 @@
 package util;
 
+//Programmed by Quinn Berrman
+//Student number: 20363251
+
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import main.MainWindow;
-import mvc.AIController;
 import mvc.Controller;
 import mvc.Model;
-import mvc.PlayerController;
 
 public abstract class Entity extends GameObject{
     transient private ArrayList<Entity> inCombatWith = new ArrayList<Entity>();

@@ -1,7 +1,9 @@
 package main;
 
+//Programmed by Quinn Berrman
+//Student number: 20363251
+
 import java.awt.Color;
-import java.awt.event.ActionEvent;
 import java.awt.image.BufferedImage;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -14,11 +16,8 @@ import java.io.ObjectOutputStream;
 import java.awt.Cursor;
 
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import java.awt.event.WindowEvent;
 
 import mvc.ControllerMenu;
@@ -62,7 +61,7 @@ public class MainWindow {
 	private static Viewer canvas;
 	private static Menu menu;
 	private static boolean inMenuMode = false;
-	private final static int targetFPS = 15;
+	private final static int targetFPS = 10;
 	private final static int W = Toolkit.getDefaultToolkit().getScreenSize().width;
 	private final static int H = Toolkit.getDefaultToolkit().getScreenSize().height;
 	private static int averageFPS = targetFPS;

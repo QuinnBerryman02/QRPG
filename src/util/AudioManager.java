@@ -1,5 +1,9 @@
 package util;
 
+//Programmed by Quinn Berrman
+//Student number: 20363251
+
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,9 +20,7 @@ import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 public class AudioManager {
     private ArrayList<Song> songs = new ArrayList<Song>();

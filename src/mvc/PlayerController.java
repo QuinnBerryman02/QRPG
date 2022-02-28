@@ -1,5 +1,8 @@
 package mvc;
 
+//Programmed by Quinn Berrman
+//Student number: 20363251;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseListener;
@@ -18,9 +21,6 @@ import javax.swing.SwingUtilities;
 
 import main.MainWindow;
 import net.java.games.input.ControllerEnvironment;
-import net.java.games.input.Component.POV;
-import util.Player;
-import util.Point3f;
 import util.Vector3f;
 import net.java.games.input.Component;
 
@@ -280,7 +280,7 @@ public class PlayerController extends mvc.Controller implements KeyListener, Mou
 		buttonSet.add(makeButton("escape", KeyEvent.VK_ESCAPE,"Button 7")); //ZR
 		buttonSet.add(makeButton("minus", KeyEvent.VK_O,"Button 8")); 		//-
 		buttonSet.add(makeButton("plus", KeyEvent.VK_P,"Button 9")); 		//+
-		buttonSet.add(makeButton("nextSpell", -4,"Hat Switch", "UP"));
+		buttonSet.add(makeButton("nextSpell", -4,"Hat Switch", "UP"));		
 		buttonSet.add(makeButton("prevSpell", -3,"Hat Switch", "DOWN"));
 		toggleSet.add(makeToggle("move", new int[] {KeyEvent.VK_W,KeyEvent.VK_D,KeyEvent.VK_S,KeyEvent.VK_A}, new String[]{"X Axis","Y Axis"}));
 		toggleSet.add(makeToggle("aim", new int[] {-1,-1,-1,-1}, new String[]{"X Rotation","Y Rotation"}));

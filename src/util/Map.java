@@ -1,5 +1,9 @@
 package util;
 
+//Programmed by Quinn Berrman
+//Student number: 20363251
+
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +17,6 @@ import org.w3c.dom.NodeList;
 import main.MainWindow;
 
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 
 public class Map {
     public static final int[] CAVE_START_CHUNK = {Dungeon.MAX_SIZE*16+96,0};

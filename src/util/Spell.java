@@ -1,7 +1,10 @@
 package util;
 
+//Programmed by Quinn Berrman
+//Student number: 20363251
+
+
 import main.MainWindow;
-import mvc.Viewer;
 
 import java.awt.Color;
 import java.io.File;

@@ -1,17 +1,17 @@
 package mvc;
+
+//Programmed by Quinn Berrman
+//Student number: 20363251;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.awt.image.BufferedImage;
-import java.awt.Toolkit;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
@@ -61,7 +61,7 @@ public class Viewer extends JPanel {
 	private boolean inCameraMode = true;
 	private ReadyListener cameraListener;
 	private Point3f goingToPoint = null;
-	private boolean inDebugMode = true;
+	private boolean inDebugMode = false;
 	private Model gameWorld; 
 	private ArrayList<Chunk> chunksLoaded = new ArrayList<Chunk>();
 	private ArrayList<Entity> entitiesLoaded = new ArrayList<Entity>();

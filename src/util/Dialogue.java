@@ -1,32 +1,29 @@
 package util;
 
+//Programmed by Quinn Berrman
+//Student number: 20363251
+
+
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.ScrollPaneLayout;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.Image;
 import java.awt.Dimension;
 import java.awt.Component;
-import java.awt.Adjustable;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.AdjustmentEvent;
 
 import main.MainWindow;
 import mvc.Model;
-import mvc.PlayerController;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -124,7 +121,6 @@ public class Dialogue extends Menu {
     }
 
     class DetailPanel extends JPanel {
-        private static final int SCALE = 2;
         public DetailPanel(int w, int h, CustomBorder cb) {
             setPreferredSize(new Dimension(w,h));
             setBackground(new Color(1f,1f,1f,0f));
@@ -316,7 +312,7 @@ public class Dialogue extends Menu {
                 } else if(topic.getName().equals("Notoriety")) {
                     int done = player.numberOfQuestsCompleted();
                     String s = "You have done " + done + " (quest" + (done==1? "" : "s") + "=Quests) so far.";
-                    if(done >= 10 && MainWindow.getModel().getStage().ordinal() <= 1) {
+                    if(done >= 1 && MainWindow.getModel().getStage().ordinal() <= 1) {
                         s += " Well done for doing so many. I have one final quest to give you. Pick it up at the (guild=Guild) and meet me downstairs, in (the room=The Room).";
                         MainWindow.getModel().setStage(Model.STAGE.ENDGAME);
                         new Thread() {

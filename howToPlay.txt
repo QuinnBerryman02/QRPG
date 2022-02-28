@@ -1,0 +1,19 @@
+Here are the controls
+Action			Key/Mouse		Controller
+"settings"  	H 				B
+"talk" 			T 				A
+"quest" 		Y 				Y
+"spell" 		U 				X
+"attack" 		Q 				L
+"cast" 			E 				R
+"controller" 	K				ZL
+"escape" 		ESCAPE 			ZR
+"minus" 		O				-
+"plus" 			P				+
+"nextSpell" 	MOUSE_UP		Hat Switch", "UP"));
+"prevSpell" 	MOUSE_DOWN		Hat Switch", "DOWN"));
+"move" 			W,D,S,A			Left Stick
+"aim" 			MOUSE_MOTION    Right Stick
+
+Talk to John and follow his instructions to progress the main story
+Otherwise have fun
