@@ -32,7 +32,7 @@
         <topic name="Introduction"> Hello my name is Jane, nice to meet you. </topic>
         <topic name="About me"> I grow carrots in my garden. </topic>
         <topic name="Mage"> I used to be a mage... A long time ago </topic>
-        <topic name"John"> John? I've known him for ages. We trained in the (academy=Academy) together. </topis>
+        <topic name="John"> John? I've known him for ages. We trained in the (academy=Academy) together. </topic>
     </npc>
     <npc name="Jasmine Cartwright" x="-65" y="98" skin="NPC-B_F">
         <topic name="Introduction"> My name is Jasmine, nice to meet you. </topic>
