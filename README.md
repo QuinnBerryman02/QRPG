@@ -63,6 +63,7 @@ I think I set my goals a little too high as a 2nd year, and so my game has a qua
 <br><hr><br>
 <h2>Video Demo</h2>
 <br>
-<video controls>
-    <source src="gameplay.mp4" type="video/mp4">
-  </video>
+
+
+https://github.com/user-attachments/assets/0ea16cbe-785a-4074-a472-58c4fdda1d2d
+
